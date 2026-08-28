@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anveshya — Explore the Universe</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <!--
+      Hidden static form so Netlify's build-time HTML scanner detects the
+      "solarshield-waitlist" form. The real, interactive version is rendered
+      by React in src/pages/SolarShield.jsx and posts to this same form name.
+      See: https://docs.netlify.com/manage/forms/setup/
+    -->
+    <form name="solarshield-waitlist" data-netlify="true" hidden>
+      <input type="email" name="email" />
+    </form>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
