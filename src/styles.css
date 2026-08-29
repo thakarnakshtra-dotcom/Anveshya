@@ -45,18 +45,36 @@ button {
   align-items: center;
 }
 
+/* Mode toggle: fully-rounded pill container matching the main Navbar's
+   .site-nav shape (border-radius:999px, small inner padding, individually
+   pill-shaped items, no divider lines) — sized ~18% more compact than the
+   original rectangular version. Colors intentionally stay Explorer's own
+   gold/cream language, not the Navbar's blue-gray palette. */
 .scale-toggle {
   display: grid;
-  grid-template-columns: repeat(3, minmax(96px, 1fr));
-  overflow: hidden;
+  grid-template-columns: repeat(3, minmax(78px, 1fr));
+  gap: 2px;
+  padding: 4px;
   border: 1px solid rgba(232, 218, 190, 0.28);
-  border-radius: 8px;
+  border-radius: 999px;
   background: rgba(5, 7, 13, 0.72);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(12px);
 }
 
-.scale-toggle button,
+.scale-toggle button {
+  min-height: 32px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 999px;
+  color: rgba(245, 241, 232, 0.72);
+  background: transparent;
+  font-size: 12.5px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease;
+}
+
 .tabs button {
   min-height: 38px;
   border: 0;
@@ -66,19 +84,10 @@ button {
   transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
 }
 
-.scale-toggle button {
-  padding: 0 14px;
-  white-space: nowrap;
-}
-
 .scale-toggle button.active,
 .tabs button.active {
   color: #fff8df;
   background: rgba(255, 210, 129, 0.16);
-}
-
-.scale-toggle button + button {
-  border-left: 1px solid rgba(232, 218, 190, 0.18);
 }
 
 /* Return button intentionally uses the newer design system's pill/glass
@@ -142,6 +151,169 @@ button {
   pointer-events: none;
 }
 
+/* ---------- Planet dial (circular planet selector) ---------- */
+
+.planet-dial {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  z-index: 10;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px 11px;
+  border: 1px solid rgba(232, 218, 190, 0.22);
+  border-radius: 20px;
+  background: rgba(5, 7, 13, 0.62);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+}
+
+.planet-dial-ring {
+  fill: none;
+  stroke: rgba(232, 218, 190, 0.26);
+  stroke-width: 1;
+}
+
+.planet-dial-dot-group {
+  cursor: pointer;
+}
+
+.planet-dial-hit {
+  fill: transparent;
+}
+
+.planet-dial-dot {
+  fill: rgba(245, 241, 232, 0.5);
+  transition: fill 200ms ease, r 200ms ease;
+}
+
+.planet-dial-dot-group:hover .planet-dial-dot {
+  fill: rgba(245, 241, 232, 0.85);
+}
+
+.planet-dial-dot.active {
+  fill: #ffd281;
+}
+
+.planet-dial-center {
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(245, 241, 232, 0.75);
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .planet-dial {
+    display: none;
+  }
+}
+
+/* ---------- About panel (slide-in detail view) ---------- */
+
+.about-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 30;
+  width: min(440px, 92vw);
+  padding: 100px 30px 40px;
+  overflow-y: auto;
+  border-right: 1px solid rgba(232, 218, 190, 0.22);
+  color: #f7f0df;
+  background: linear-gradient(180deg, rgba(14, 17, 27, 0.96), rgba(7, 10, 18, 0.98));
+  box-shadow: 30px 0 70px rgba(0, 0, 0, 0.5);
+  transform: translateX(-100%);
+  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.about-panel.open {
+  transform: translateX(0);
+}
+
+.about-panel h1 {
+  margin: 0 0 20px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 500;
+  line-height: 0.98;
+}
+
+.about-panel-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+  padding: 8px 14px;
+  border: 1px solid rgba(232, 218, 190, 0.26);
+  border-radius: 999px;
+  background: rgba(5, 7, 13, 0.4);
+  color: rgba(245, 241, 232, 0.72);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.about-panel-close:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.about-section {
+  margin-bottom: 26px;
+}
+
+.about-section h2 {
+  margin: 0 0 8px;
+  color: #cbbf9e;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.about-section p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: rgba(247, 240, 223, 0.88);
+}
+
+.about-section dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.about-section dl div {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.about-section dt {
+  color: #cbbf9e;
+  font-size: 12px;
+}
+
+.about-section dd {
+  margin: 0;
+  color: #fff8df;
+  font-size: 13px;
+}
+
+.about-formula {
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12.5px;
+}
+
 .info-panel {
   position: absolute;
   right: 22px;
@@ -151,11 +323,40 @@ button {
   min-height: 312px;
   padding: 22px;
   border: 1px solid rgba(232, 218, 190, 0.22);
-  border-radius: 8px;
+  border-radius: 22px;
   color: #f7f0df;
   background: linear-gradient(180deg, rgba(14, 17, 27, 0.82), rgba(7, 10, 18, 0.88));
   box-shadow: 0 22px 70px rgba(0, 0, 0, 0.46);
   backdrop-filter: blur(16px);
+}
+
+.info-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.know-more-btn,
+.about-toggle-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 210, 129, 0.4);
+  background: rgba(255, 210, 129, 0.1);
+  color: #ffd281;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.know-more-btn:hover,
+.about-toggle-btn:hover {
+  background: rgba(255, 210, 129, 0.18);
+  border-color: rgba(255, 210, 129, 0.6);
 }
 
 .panel-kicker {
@@ -270,11 +471,6 @@ button {
 
   .scale-toggle {
     grid-template-columns: 1fr;
-  }
-
-  .scale-toggle button + button {
-    border-top: 1px solid rgba(232, 218, 190, 0.18);
-    border-left: 0;
   }
 
   .tabs {
@@ -1035,6 +1231,70 @@ button {
   font-size: 12.5px;
   line-height: 1.6;
   color: #8391a7;
+}
+
+/* Section toggle: same rounded-pill toggle pattern as Explorer's mode
+   selector, restyled in the marketing pages' own blue-gray/Archivo tokens
+   rather than Explorer's gold. */
+.section-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  margin-bottom: 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.section-toggle button {
+  padding: 9px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #93a0b5;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.section-toggle button:hover {
+  color: #fff;
+}
+
+.section-toggle button.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.event-item {
+  padding: 18px 20px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+}
+
+.event-status {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: #7fd9a0;
+  background: rgba(127, 217, 160, 0.14);
+}
+
+.event-meta-row {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #8391a7;
+}
+
+.event-meta-row span + span::before {
+  content: " · ";
+  color: #4a5568;
 }
 
 /* ---------- Notify form (SolarShield) ---------- */

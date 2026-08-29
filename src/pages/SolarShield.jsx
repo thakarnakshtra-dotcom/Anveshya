@@ -108,7 +108,7 @@ function NotifyForm() {
 export default function SolarShield() {
   return (
     <main className="home">
-      <AmbientBackground />
+      <AmbientBackground variant="page" />
       <section className="page-hero">
         <div className="page-hero-inner">
           <div className="hero-eyebrow">

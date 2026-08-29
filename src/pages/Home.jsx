@@ -217,6 +217,25 @@ export default function Home({ introActive = false }) {
             }}
           />
 
+          {/* Added depth layer: a wider, softer half-ring arc that wraps
+              over the top, sitting further out than the existing lensed
+              arcs above — additive only, the existing ring/arcs above are
+              untouched. */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%,-50%)",
+              width: "80%",
+              aspectRatio: "3.6",
+              border: "1px solid rgba(220,230,248,.32)",
+              borderRadius: "50%",
+              clipPath: "inset(0 0 68% 0)",
+              filter: "blur(2.6px)",
+            }}
+          />
+
           <div
             style={{
               position: "absolute",

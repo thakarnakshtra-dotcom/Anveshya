@@ -4,6 +4,7 @@ import AmbientBackground from "../components/AmbientBackground.jsx";
 const NASA_FEED = "https://www.nasa.gov/news-release/feed/";
 const ISRO_SATELLITES = "https://isro.vercel.app/api/customer_satellites";
 const ESA_FEED = "https://www.esa.int/rssfeed/TopNews";
+const LAUNCH_LIBRARY = "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=8&mode=normal";
 
 function stripHtml(html) {
   const doc = new DOMParser().parseFromString(html || "", "text/html");
@@ -83,12 +84,35 @@ async function fetchEsa() {
     }));
 }
 
+// Upcoming launches: The Space Devs' Launch Library 2 API — free, no key,
+// CORS-open (verified: access-control-allow-origin: *). Real scheduled
+// launches across every provider, not just NASA/ISRO/ESA.
+async function fetchUpcomingLaunches() {
+  const res = await fetch(LAUNCH_LIBRARY);
+  if (!res.ok) throw new Error(`Launch Library responded ${res.status}`);
+  const json = await res.json();
+  const list = json?.results;
+  if (!Array.isArray(list)) throw new Error("No launch data");
+  return list.map((l) => ({
+    name: l.name,
+    date: l.net ? new Date(l.net) : null,
+    status: l.status?.name || "Scheduled",
+    provider: l.launch_service_provider?.name,
+    rocket: l.rocket?.configuration?.full_name,
+    location: l.pad?.location?.name,
+    mission: l.mission?.description,
+  }));
+}
+
 const SOURCES = [fetchNasa, fetchIsro, fetchEsa];
 const TAG_CLASS = { NASA: "news-tag-nasa", ISRO: "news-tag-isro", ESA: "news-tag-esa" };
 
 export default function News() {
+  const [tab, setTab] = useState("latest");
   const [items, setItems] = useState(null);
   const [failedCount, setFailedCount] = useState(0);
+  const [events, setEvents] = useState(null);
+  const [eventsFailed, setEventsFailed] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -106,6 +130,17 @@ export default function News() {
       setFailedCount(failed);
     });
 
+    fetchUpcomingLaunches()
+      .then((list) => {
+        if (!cancelled) setEvents(list);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setEvents([]);
+          setEventsFailed(true);
+        }
+      });
+
     return () => {
       cancelled = true;
     };
@@ -113,7 +148,7 @@ export default function News() {
 
   return (
     <main className="home">
-      <AmbientBackground />
+      <AmbientBackground variant="page" />
       <section className="page-hero">
         <div className="page-hero-inner">
           <div className="hero-eyebrow">
@@ -122,40 +157,111 @@ export default function News() {
           </div>
           <h1 className="page-heading">Mission Updates, Straight From the Source</h1>
           <p className="page-lede">
-            Fetched live from NASA, ISRO, and ESA's own public data &mdash; no rewrites, no fabricated summaries.
+            Fetched live from NASA, ISRO, ESA, and The Space Devs' public launch data &mdash; no rewrites, no
+            fabricated summaries.
           </p>
         </div>
       </section>
 
       <section className="modules-section" style={{ paddingTop: 0 }}>
         <div className="section-grid">
-          <div className="section-eyebrow">01 &mdash; Latest</div>
+          <div className="section-eyebrow">01 &mdash; {tab === "latest" ? "Latest" : "Upcoming"}</div>
           <div>
-            {items === null ? (
-              <p className="page-lede">Loading the latest updates…</p>
-            ) : items.length === 0 ? (
-              <p className="page-lede">No updates could be fetched right now &mdash; please check back later.</p>
+            <div className="section-toggle" role="tablist" aria-label="News section">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={tab === "latest"}
+                className={tab === "latest" ? "active" : ""}
+                onClick={() => setTab("latest")}
+              >
+                Latest Updates
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={tab === "upcoming"}
+                className={tab === "upcoming" ? "active" : ""}
+                onClick={() => setTab("upcoming")}
+              >
+                Upcoming Events
+              </button>
+            </div>
+
+            {tab === "latest" ? (
+              <>
+                {items === null ? (
+                  <p className="page-lede">Loading the latest updates…</p>
+                ) : items.length === 0 ? (
+                  <p className="page-lede">No updates could be fetched right now &mdash; please check back later.</p>
+                ) : (
+                  <div className="news-list">
+                    {items.map((item, i) => (
+                      <a
+                        key={`${item.source}-${i}`}
+                        href={item.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="news-item"
+                      >
+                        <div className="news-meta">
+                          <span className={`news-tag ${TAG_CLASS[item.source]}`}>{item.source}</span>
+                          <span className="news-date">
+                            {item.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                          </span>
+                        </div>
+                        <div className="news-title">{item.title}</div>
+                        {item.excerpt ? <div className="news-excerpt">{item.excerpt}</div> : null}
+                      </a>
+                    ))}
+                  </div>
+                )}
+                {failedCount > 0 ? (
+                  <p className="page-lede" style={{ marginTop: 26, fontSize: 12.5 }}>
+                    {failedCount} of {SOURCES.length} sources didn't respond and were skipped.
+                  </p>
+                ) : null}
+              </>
             ) : (
-              <div className="news-list">
-                {items.map((item, i) => (
-                  <a key={`${item.source}-${i}`} href={item.link} target="_blank" rel="noreferrer" className="news-item">
-                    <div className="news-meta">
-                      <span className={`news-tag ${TAG_CLASS[item.source]}`}>{item.source}</span>
-                      <span className="news-date">
-                        {item.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
-                      </span>
-                    </div>
-                    <div className="news-title">{item.title}</div>
-                    {item.excerpt ? <div className="news-excerpt">{item.excerpt}</div> : null}
-                  </a>
-                ))}
-              </div>
+              <>
+                {events === null ? (
+                  <p className="page-lede">Loading upcoming launches…</p>
+                ) : eventsFailed || events.length === 0 ? (
+                  <p className="page-lede">
+                    No upcoming launch data could be fetched right now &mdash; please check back later.
+                  </p>
+                ) : (
+                  <div className="news-list">
+                    {events.map((ev, i) => (
+                      <div key={i} className="event-item">
+                        <div className="news-meta">
+                          <span className="event-status">{ev.status}</span>
+                          {ev.date ? (
+                            <span className="news-date">
+                              {ev.date.toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              })}
+                            </span>
+                          ) : null}
+                        </div>
+                        <div className="news-title">{ev.name}</div>
+                        <div className="event-meta-row">
+                          {ev.provider ? <span>{ev.provider}</span> : null}
+                          {ev.rocket ? <span>{ev.rocket}</span> : null}
+                          {ev.location ? <span>{ev.location}</span> : null}
+                        </div>
+                        {ev.mission ? <div className="news-excerpt">{truncate(ev.mission, 180)}</div> : null}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <p className="page-lede" style={{ marginTop: 26, fontSize: 12.5 }}>
+                  Launch schedules sourced from The Space Devs' Launch Library and subject to change.
+                </p>
+              </>
             )}
-            {failedCount > 0 ? (
-              <p className="page-lede" style={{ marginTop: 26, fontSize: 12.5 }}>
-                {failedCount} of {SOURCES.length} sources didn't respond and were skipped.
-              </p>
-            ) : null}
           </div>
         </div>
       </section>

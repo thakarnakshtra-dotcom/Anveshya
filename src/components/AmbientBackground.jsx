@@ -3,7 +3,15 @@ import React from "react";
 // Shared subtle backdrop (vignette, drifting light streaks, two soft
 // "moon" spheres, and a slow starfield) used behind every marketing page's
 // content. Pure CSS/inline-gradient — no canvas, no render loop.
-export default function AmbientBackground() {
+//
+// variant="hero"  — original Home placement (roomy 2-column hero layout).
+// variant="page"  — safer corner-hugging placement for the narrower,
+//                    single-column .page-hero/.section-grid pages (Learn,
+//                    SolarShield, News), where the "hero" positions were
+//                    landing behind body text at common viewport widths.
+export default function AmbientBackground({ variant = "hero" }) {
+  const isPage = variant === "page";
+
   return (
     <>
       <div
@@ -18,8 +26,8 @@ export default function AmbientBackground() {
       <div
         style={{
           position: "fixed",
-          left: "6%",
-          top: "16%",
+          left: isPage ? "-6%" : "6%",
+          top: isPage ? "3%" : "16%",
           width: "min(520px,45vw)",
           height: 190,
           pointerEvents: "none",
@@ -33,8 +41,8 @@ export default function AmbientBackground() {
       <div
         style={{
           position: "fixed",
-          right: "9%",
-          top: "62%",
+          right: isPage ? "-6%" : "9%",
+          top: isPage ? "89%" : "62%",
           width: "min(300px,28vw)",
           height: 110,
           pointerEvents: "none",
@@ -48,8 +56,8 @@ export default function AmbientBackground() {
       <div
         style={{
           position: "fixed",
-          right: "6%",
-          top: "70%",
+          right: isPage ? "-3%" : "6%",
+          top: isPage ? "93%" : "70%",
           width: 84,
           height: 84,
           borderRadius: "50%",
@@ -63,8 +71,9 @@ export default function AmbientBackground() {
       <div
         style={{
           position: "fixed",
-          left: "11%",
-          top: "26%",
+          left: isPage ? "auto" : "11%",
+          right: isPage ? "2%" : "auto",
+          top: isPage ? "6%" : "26%",
           width: 34,
           height: 34,
           borderRadius: "50%",
