@@ -57,33 +57,13 @@ export default function Home() {
           style={{
             position: "absolute",
             left: "50%",
-            top: "46%",
+            top: "calc(46% + 70px)",
             transform: "translate(-50%,-50%)",
             width: "min(1180px,100vw,152vh)",
             aspectRatio: "2/1",
             pointerEvents: "none",
           }}
         >
-          {/* Depth-effect addition: a second, larger ring arcing above and
-              behind the main disk — its own separate element, painted
-              first so everything below (glow, disk, horizon, existing
-              arcs) draws on top of it. The existing ring/disk elements
-              further down are completely untouched. */}
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "30%",
-              transform: "translate(-50%,-50%)",
-              width: "96%",
-              aspectRatio: "3.1",
-              border: "2.4px solid rgba(255,255,255,.46)",
-              borderRadius: "50%",
-              clipPath: "inset(0 0 50% 0)",
-              filter: "blur(1.6px)",
-            }}
-          />
-
           <div
             style={{
               position: "absolute",

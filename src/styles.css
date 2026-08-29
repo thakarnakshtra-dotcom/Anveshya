@@ -713,6 +713,57 @@ button {
   background: #d9e4fa;
 }
 
+/* ---------- Shooting stars (global background texture) ---------- */
+
+.shooting-star {
+  position: absolute;
+  height: 2.4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(232, 220, 200, 0.85), rgba(232, 220, 200, 0));
+  filter: blur(1.2px);
+  transform: rotate(35deg);
+  opacity: 0;
+  animation-name: shooting-star-fly;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes shooting-star-fly {
+  0% {
+    opacity: 0;
+    transform: rotate(35deg) translateX(0);
+  }
+  12% {
+    opacity: 0.4;
+  }
+  85% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(35deg) translateX(420px);
+  }
+}
+
+@media (max-width: 640px) {
+  @keyframes shooting-star-fly {
+    0% {
+      opacity: 0;
+      transform: rotate(35deg) translateX(0);
+    }
+    12% {
+      opacity: 0.4;
+    }
+    85% {
+      opacity: 0.35;
+    }
+    100% {
+      opacity: 0;
+      transform: rotate(35deg) translateX(220px);
+    }
+  }
+}
+
 /* ---------- Shared design-system keyframes ---------- */
 
 @keyframes an-spin { to { transform: rotate(360deg); } }
@@ -1695,6 +1746,86 @@ video.sound-media {
 .event-meta-row span + span::before {
   content: " · ";
   color: #4a5568;
+}
+
+/* ---------- Astronomical events (News, Upcoming tab) ---------- */
+
+.astro-filter {
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.astro-section {
+  margin-bottom: 34px;
+}
+
+.astro-section-title {
+  margin-bottom: 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.astro-title-launch {
+  color: #4ade80;
+}
+
+.astro-title-eclipse {
+  color: #60a5fa;
+}
+
+.astro-title-meteor {
+  color: #facc15;
+}
+
+.astro-title-iss {
+  color: #c084fc;
+}
+
+.astro-title-conjunction {
+  color: #fb923c;
+}
+
+.astro-badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.astro-badge-launch {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.14);
+}
+
+.astro-badge-eclipse {
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.14);
+}
+
+.astro-badge-meteor {
+  color: #facc15;
+  background: rgba(250, 204, 21, 0.14);
+}
+
+.astro-badge-iss {
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.14);
+}
+
+.astro-badge-conjunction {
+  color: #fb923c;
+  background: rgba(251, 146, 60, 0.14);
+}
+
+.astro-empty-note {
+  margin: 0;
+  color: #6f7d94;
+  font-size: 12.5px;
+  line-height: 1.6;
 }
 
 /* ---------- Notify form (SolarShield) ---------- */

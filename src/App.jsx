@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
+import ShootingStars from "./components/ShootingStars.jsx";
 import { RingIntro, RingBadge, shouldPlayIntro } from "./components/RingSystem.jsx";
 import Home from "./pages/Home.jsx";
 import Explorer from "./pages/Explorer.jsx";
@@ -15,10 +16,12 @@ function AppShell() {
   const location = useLocation();
   const [introPlaying, setIntroPlaying] = useState(() => location.pathname === "/" && shouldPlayIntro());
   const showBadge = !introPlaying && location.pathname !== "/explorer";
+  const showShootingStars = location.pathname !== "/explorer";
 
   return (
     <>
       <Navbar />
+      {showShootingStars ? <ShootingStars /> : null}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/explorer" element={<Explorer />} />
