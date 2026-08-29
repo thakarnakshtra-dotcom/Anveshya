@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import AmbientBackground from "../components/AmbientBackground.jsx";
 
 const NASA_FEED = "https://www.nasa.gov/news-release/feed/";
 const ISRO_SATELLITES = "https://isro.vercel.app/api/customer_satellites";
@@ -112,6 +113,7 @@ export default function News() {
 
   return (
     <main className="home">
+      <AmbientBackground />
       <section className="page-hero">
         <div className="page-hero-inner">
           <div className="hero-eyebrow">

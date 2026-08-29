@@ -1,4 +1,5 @@
 import React from "react";
+import AmbientBackground from "../components/AmbientBackground.jsx";
 
 const beliefs = [
   {
@@ -21,6 +22,7 @@ const beliefs = [
 export default function About() {
   return (
     <main className="home">
+      <AmbientBackground />
       <section className="page-hero">
         <div className="page-hero-inner">
           <div className="hero-eyebrow">

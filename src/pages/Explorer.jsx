@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, Stars, useTexture, Line } from "@react-three/drei";
+import { OrbitControls, Stars, useTexture, Line, Html } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
@@ -58,9 +58,11 @@ function Moon({ moon, planetRadius, mode, selected, onSelect, registerPosition }
   const speed = moon.retrograde ? -baseSpeed : baseSpeed;
 
   useFrame(({ clock }, delta) => {
-    const angle = clock.elapsedTime * speed + moon.orbitFactor;
+    const angle = mode === "static" ? moon.orbitFactor : clock.elapsedTime * speed + moon.orbitFactor;
     orbitRef.current.position.set(Math.cos(angle) * distance, 0, Math.sin(angle) * distance);
-    meshRef.current.rotation.y += delta * 0.4;
+    if (mode !== "static") {
+      meshRef.current.rotation.y += delta * 0.4;
+    }
     orbitRef.current.getWorldPosition(tmpPosition);
     registerPosition(moon.name, tmpPosition, radius);
   });
@@ -81,11 +83,16 @@ function Moon({ moon, planetRadius, mode, selected, onSelect, registerPosition }
           <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.22} />
         </mesh>
       ) : null}
+      {mode === "static" ? (
+        <Html center position={[0, radius * 2 + 0.15, 0]} style={{ pointerEvents: "none" }}>
+          <div className="object-label object-label-moon">{moon.name}</div>
+        </Html>
+      ) : null}
     </group>
   );
 }
 
-function AsteroidBelt({ innerRadius, outerRadius, baseSize, count = 1500 }) {
+function AsteroidBelt({ innerRadius, outerRadius, baseSize, count = 1500, mode }) {
   const meshRef = useRef();
   const groupRef = useRef();
 
@@ -107,7 +114,7 @@ function AsteroidBelt({ innerRadius, outerRadius, baseSize, count = 1500 }) {
   }, [count, innerRadius, outerRadius, baseSize]);
 
   useFrame((_, delta) => {
-    if (groupRef.current) groupRef.current.rotation.y += delta * 0.012;
+    if (groupRef.current && mode !== "static") groupRef.current.rotation.y += delta * 0.012;
   });
 
   return (
@@ -154,9 +161,11 @@ function Planet({ planet, mode, selected, selectedName, onSelect, registerPositi
   cloudTexture.colorSpace = THREE.SRGBColorSpace;
 
   useFrame(({ clock }, delta) => {
-    const angle = clock.elapsedTime * speed + planet.au;
+    const angle = mode === "static" ? planet.au : clock.elapsedTime * speed + planet.au;
     orbitRef.current.position.set(Math.cos(angle) * distance, 0, Math.sin(angle) * distance);
-    planetRef.current.rotation.y += delta * selfRotation * 7;
+    if (mode !== "static") {
+      planetRef.current.rotation.y += delta * selfRotation * 7;
+    }
     orbitRef.current.getWorldPosition(tmpPosition);
     registerPosition(planet.name, tmpPosition, radius);
   });
@@ -214,12 +223,17 @@ function Planet({ planet, mode, selected, selectedName, onSelect, registerPositi
             <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.18} />
           </mesh>
         ) : null}
+        {mode === "static" ? (
+          <Html center position={[0, radius * 1.8 + 0.4, 0]} style={{ pointerEvents: "none" }}>
+            <div className="object-label">{planet.name}</div>
+          </Html>
+        ) : null}
       </group>
     </group>
   );
 }
 
-function Sun({ radius }) {
+function Sun({ radius, mode }) {
   const texture = useTexture("/textures/2k_sun.jpg");
   texture.colorSpace = THREE.SRGBColorSpace;
 
@@ -240,6 +254,11 @@ function Sun({ radius }) {
         />
       </mesh>
       <pointLight color="#ffe8c2" intensity={4200} distance={900} decay={1.8} />
+      {mode === "static" ? (
+        <Html center position={[0, radius * 1.4 + 0.5, 0]} style={{ pointerEvents: "none" }}>
+          <div className="object-label">Sun</div>
+        </Html>
+      ) : null}
     </group>
   );
 }
@@ -351,8 +370,8 @@ function SceneContents({ mode, selectedName, setSelectedName, interacted, setInt
       <color attach="background" args={["#05070d"]} />
       <ambientLight intensity={mode === "true" ? 0.32 : 0.14} />
       <Stars radius={360} depth={70} count={1600} factor={3.5} saturation={0} fade speed={0.25} />
-      <Sun radius={sunRadius} />
-      <AsteroidBelt innerRadius={beltInner} outerRadius={beltOuter} baseSize={asteroidSize} count={1500} />
+      <Sun radius={sunRadius} mode={mode} />
+      <AsteroidBelt innerRadius={beltInner} outerRadius={beltOuter} baseSize={asteroidSize} count={1500} mode={mode} />
       {planets.map((planet) => (
         <Planet
           key={`${mode}-${planet.name}`}
@@ -489,9 +508,11 @@ export default function SolarSystemScene() {
             </button>
           ))}
         </div>
-        <button className="return-button" type="button" onClick={returnToSystem}>
-          Return
-        </button>
+        {selectedName ? (
+          <button className="return-button" type="button" onClick={returnToSystem}>
+            Return
+          </button>
+        ) : null}
       </div>
       {selectedPlanet ? (
         <InfoPanel selectedPlanet={selectedPlanet} activeTab={activeTab} setActiveTab={setActiveTab} />

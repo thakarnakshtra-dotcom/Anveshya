@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import AmbientBackground from "../components/AmbientBackground.jsx";
 import MissionCard from "../components/MissionCard.jsx";
 import { missions } from "../data/missions.js";
 
 export default function Learn() {
   return (
     <main className="home">
+      <AmbientBackground />
       <section className="page-hero">
         <div className="page-hero-inner">
           <div className="hero-eyebrow">

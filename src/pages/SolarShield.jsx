@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AmbientBackground from "../components/AmbientBackground.jsx";
 
 const audiences = [
   {
@@ -107,6 +108,7 @@ function NotifyForm() {
 export default function SolarShield() {
   return (
     <main className="home">
+      <AmbientBackground />
       <section className="page-hero">
         <div className="page-hero-inner">
           <div className="hero-eyebrow">

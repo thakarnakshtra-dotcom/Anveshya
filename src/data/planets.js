@@ -356,4 +356,10 @@ export const scaleModes = {
     planetRadius: (planet) => Math.max(0.22, planet.radiusEarth * 0.09),
     orbitDistance: (planet) => planet.au * 16,
   },
+  static: {
+    label: "Static",
+    sunRadius: 3.1,
+    planetRadius: (planet) => Math.max(0.35, Math.pow(planet.radiusEarth, 0.42) * 0.75),
+    orbitDistance: (planet) => 5.6 + Math.pow(planet.au, 0.72) * 7.1,
+  },
 };
