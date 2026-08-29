@@ -1,111 +1,102 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import AmbientBackground from "../components/AmbientBackground.jsx";
 
-const audiences = [
-  {
-    kicker: "01",
-    title: "Satellite Operators",
-    body: "Track geomagnetic storm risk and solar flare activity that can disrupt orbits, communications, and onboard electronics.",
-  },
-  {
-    kicker: "02",
-    title: "Researchers & Scientists",
-    body: "Access structured space-weather context alongside Anveshya's orbital data for research and teaching.",
-  },
-  {
-    kicker: "03",
-    title: "Agencies & Mission Planners",
-    body: "Evaluate launch-window and mission-timeline risk from solar activity forecasts.",
-  },
-];
+const FUNCTION_URL = "/.netlify/functions/solarshield";
+const AUTO_REFRESH_MS = 5 * 60 * 1000;
 
-const capabilities = [
-  {
-    no: "01",
-    title: "Solar Flares",
-    body: "Classification and timing of X, M, and C-class flare events as they're detected.",
-    icon: "M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
+const ORBIT_INFO = {
+  leo: {
+    title: "LEO",
+    full: "Low Earth Orbit",
+    desc: "Storm-driven thermospheric heating increases atmospheric drag, perturbing orbits and raising decay/collision risk — LEO feels geomagnetic storms first and hardest.",
   },
-  {
-    no: "02",
-    title: "Geomagnetic Storms",
-    body: "Kp-index tracking and storm-severity alerts for satellite and ground-system risk.",
-    icon: "M12 3 5 5.6v5.9c0 4 2.9 7.6 7 9.5 4.1-1.9 7-5.5 7-9.5V5.6zM12 8.6v6.8M8.9 12h6.2",
+  meo: {
+    title: "MEO",
+    full: "Medium Earth Orbit",
+    desc: "Enhanced radiation-belt electrons during storms can degrade GNSS/GPS satellite electronics and raise single-event-upset risk.",
   },
-  {
-    no: "03",
-    title: "CME Tracking",
-    body: "Coronal mass ejection trajectories and estimated Earth-arrival windows.",
-    icon: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15.5 8.5l-2.1 5-5 2.1 2.1-5z",
+  geo: {
+    title: "GEO",
+    full: "Geostationary Orbit",
+    desc: "Geomagnetic storms increase surface and deep-dielectric charging risk for geostationary communications and weather satellites.",
   },
-  {
-    no: "04",
-    title: "Risk Scoring",
-    body: "A single, plain-language risk score built from live solar and geomagnetic inputs.",
-    icon: "M9 11.2 12 14l6.5-6.5M20 12a8 8 0 1 1-4.4-7.1",
-  },
-];
+};
 
-function encode(data) {
-  return Object.keys(data)
-    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-    .join("&");
+const COLOR_HEX = {
+  green: "#4ade80",
+  yellow: "#facc15",
+  orange: "#fb923c",
+  red: "#f87171",
+};
+
+function kpColor(kp) {
+  if (kp <= 2) return COLOR_HEX.green;
+  if (kp <= 4) return COLOR_HEX.yellow;
+  if (kp <= 6) return COLOR_HEX.orange;
+  return COLOR_HEX.red;
 }
 
-function NotifyForm() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle");
+function timeAgo(iso) {
+  if (!iso) return "unknown";
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.round(diffMs / 60000);
+  if (mins <= 0) return "just now";
+  if (mins === 1) return "1 min ago";
+  if (mins < 60) return `${mins} min ago`;
+  const hours = Math.round(mins / 60);
+  return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+}
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setStatus("submitting");
-    try {
-      const res = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode({ "form-name": "solarshield-waitlist", email }),
-      });
-      if (!res.ok) throw new Error(`Form submission failed (${res.status})`);
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
-  };
+function magAnomalies({ bz, bt }, { speed, density }) {
+  const notes = [];
+  if (bz != null && bz < -10) notes.push("Bz strongly southward — highly geoeffective");
+  if (bt != null && bt > 20) notes.push("Bt elevated — stronger-than-usual total field");
+  if (speed != null && speed > 600) notes.push("High-speed solar wind stream");
+  if (density != null && density > 20) notes.push("Dense solar wind plasma");
+  return notes;
+}
 
-  if (status === "success") {
-    return <p className="notify-status">Thanks &mdash; we'll be in touch when SolarShield opens up.</p>;
-  }
-
-  return (
-    <form
-      name="solarshield-waitlist"
-      method="post"
-      data-netlify="true"
-      className="notify-form"
-      onSubmit={handleSubmit}
-    >
-      <input type="hidden" name="form-name" value="solarshield-waitlist" />
-      <input
-        type="email"
-        name="email"
-        required
-        placeholder="you@example.com"
-        className="notify-input"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        disabled={status === "submitting"}
-      />
-      <button type="submit" className="site-launch notify-submit" disabled={status === "submitting"}>
-        {status === "submitting" ? "Sending…" : "Notify Me"}
-      </button>
-      {status === "error" ? (
-        <p className="notify-status notify-status-error">Something went wrong &mdash; please try again.</p>
-      ) : null}
-    </form>
-  );
+function Spinner() {
+  return <div className="ss-spinner" aria-label="Loading" />;
 }
 
 export default function SolarShield() {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [, forceTick] = useState(0);
+  const intervalRef = useRef(null);
+
+  const load = useCallback(async (isManual) => {
+    if (isManual) setRefreshing(true);
+    try {
+      const res = await fetch(FUNCTION_URL);
+      if (!res.ok) throw new Error(`Function responded ${res.status}`);
+      const json = await res.json();
+      if (json.error && !json.timestamp) throw new Error(json.error);
+      setData(json);
+      setError(null);
+    } catch (err) {
+      setError(err.message || "Failed to load live data");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load(false);
+    intervalRef.current = setInterval(() => load(false), AUTO_REFRESH_MS);
+    const tickTimer = setInterval(() => forceTick((t) => t + 1), 30000);
+    return () => {
+      clearInterval(intervalRef.current);
+      clearInterval(tickTimer);
+    };
+  }, [load]);
+
+  const anomalies = data ? magAnomalies(data.magnetometer || {}, data.solar_wind || {}) : [];
+
   return (
     <main className="home">
       <AmbientBackground variant="page" />
@@ -117,91 +108,186 @@ export default function SolarShield() {
           </div>
           <h1 className="page-heading">Space Weather Risk Intelligence</h1>
           <p className="page-lede">
-            SolarShield turns solar activity and geomagnetic data into clear, actionable risk signals for the
-            people who operate and study spacecraft &mdash; before a storm becomes a problem.
+            Live geomagnetic and solar-wind conditions from NOAA's Space Weather Prediction Center, reduced to a
+            plain risk signal for satellite operators and researchers.
           </p>
         </div>
       </section>
 
       <section className="modules-section">
         <div className="section-grid">
-          <div className="section-eyebrow">01 &mdash; Who It's For</div>
-          <div className="hero-cards" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
-            {audiences.map((a) => (
-              <div key={a.kicker} className="hero-card">
-                <div className="hero-card-kicker">{a.kicker}</div>
-                <div className="hero-card-title">{a.title}</div>
-                <div className="hero-card-body">{a.body}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="modules-section" style={{ paddingTop: 0 }}>
-        <div className="section-grid">
-          <div className="section-eyebrow">02 &mdash; What It Monitors</div>
+          <div className="section-eyebrow">Live Status</div>
           <div>
-            <div className="modules-grid">
-              {capabilities.map((c) => (
-                <div key={c.no} className="module-card">
-                  <div className="module-card-top">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#9DB9F2"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d={c.icon} />
-                    </svg>
-                    <span className="module-no">{c.no}</span>
+            <div className="ss-status-bar">
+              <span className="ss-timestamp">
+                {data ? `Last updated: ${timeAgo(data.timestamp)}` : loading ? "Loading…" : "No data yet"}
+                {data?.stale ? <span className="ss-stale-tag">stale &mdash; retrying</span> : null}
+              </span>
+              <button type="button" className="ss-refresh-btn" onClick={() => load(true)} disabled={refreshing}>
+                {refreshing ? "Refreshing…" : "Refresh Now"}
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="ss-loading-block">
+                <Spinner />
+                <p>Fetching live NOAA data&hellip;</p>
+              </div>
+            ) : error && !data ? (
+              <div className="ss-error-block">
+                <p>Live data unavailable right now &mdash; {error}</p>
+                <button type="button" className="ss-refresh-btn" onClick={() => load(true)}>
+                  Try Again
+                </button>
+              </div>
+            ) : data ? (
+              <>
+                {error ? (
+                  <p className="ss-inline-error">Last refresh failed ({error}) &mdash; showing most recent good data.</p>
+                ) : null}
+
+                <div className="ss-header-grid">
+                  <div className="ss-stat-block">
+                    <div className="ss-stat-label">Planetary Kp Index</div>
+                    <div className="ss-kp-value" style={{ color: kpColor(data.kp_index) }}>
+                      {data.kp_index.toFixed(1)}
+                    </div>
                   </div>
-                  <div className="module-title">{c.title}</div>
-                  <div className="module-body">{c.body}</div>
+                  <div className="ss-stat-block">
+                    <div className="ss-stat-label">Risk Level</div>
+                    <div
+                      className="ss-risk-badge"
+                      style={{
+                        color: kpColor(data.kp_index),
+                        borderColor: kpColor(data.kp_index),
+                        background: `${kpColor(data.kp_index)}1f`,
+                      }}
+                    >
+                      {data.risk_level}
+                    </div>
+                    <div className="ss-risk-score">{data.risk_score.toFixed(1)} / 10</div>
+                  </div>
+                  <div className="ss-stat-block">
+                    <div className="ss-stat-label">Storm Likelihood (Heuristic)</div>
+                    <div className="ss-prob-value">{Math.round(data.ml_storm_probability * 100)}%</div>
+                    <div className="ss-prob-note">
+                      Estimated from live Kp, Bz, and solar-wind speed &mdash; not a trained ML forecast.
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </>
+            ) : null}
           </div>
         </div>
       </section>
 
-      <section className="metrics-section" style={{ paddingTop: 0 }}>
-        <div className="section-grid">
-          <div className="section-eyebrow">03 &mdash; Status</div>
-          <div>
-            <div className="metrics-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+      {data ? (
+        <>
+          <section className="modules-section" style={{ paddingTop: 0 }}>
+            <div className="section-grid">
+              <div className="section-eyebrow">Orbit Risk</div>
               <div>
-                <div className="metric-label">Development Stage</div>
-                <div className="metric-value">Building</div>
-                <div className="metric-note">Data pipeline & risk models underway</div>
-              </div>
-              <div>
-                <div className="metric-label">Live Data</div>
-                <div className="metric-value">Not Yet</div>
-                <div className="metric-note">This page is the explainer, not the feed</div>
+                <div className="ss-orbit-grid">
+                  {["leo", "meo", "geo"].map((key) => {
+                    const orbit = data.orbit_risk?.[key];
+                    if (!orbit) return null;
+                    const hex = COLOR_HEX[orbit.color] || COLOR_HEX.green;
+                    return (
+                      <div
+                        key={key}
+                        className="ss-orbit-card"
+                        style={{ borderColor: `${hex}55`, background: `${hex}12` }}
+                      >
+                        <div className="ss-orbit-top">
+                          <span className="ss-orbit-title">{ORBIT_INFO[key].title}</span>
+                          <span className="ss-orbit-label" style={{ color: hex }}>
+                            {orbit.label}
+                          </span>
+                        </div>
+                        <div className="ss-orbit-full">{ORBIT_INFO[key].full}</div>
+                        <div className="ss-orbit-bar-track">
+                          <div
+                            className="ss-orbit-bar-fill"
+                            style={{ width: `${(orbit.score / 10) * 100}%`, background: hex }}
+                          />
+                        </div>
+                        <div className="ss-orbit-score">{orbit.score} / 10</div>
+                        <p className="ss-orbit-desc">{ORBIT_INFO[key].desc}</p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-            <p className="metrics-caption">
-              SolarShield doesn't have a live feed yet &mdash; this page describes what's being built. Leave your
-              email below and we'll let you know the moment it opens up.
-            </p>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      <section className="modules-section" style={{ paddingTop: 0, paddingBottom: 100 }}>
-        <div className="section-grid">
-          <div className="section-eyebrow">04 &mdash; Get Notified</div>
-          <div>
-            <h2 className="modules-heading">Be First When SolarShield Ships</h2>
-            <NotifyForm />
-          </div>
-        </div>
-      </section>
+          <section className="modules-section" style={{ paddingTop: 0 }}>
+            <div className="section-grid">
+              <div className="section-eyebrow">Magnetometer &amp; Solar Wind</div>
+              <div>
+                <div className="ss-metrics-row">
+                  <div className="ss-metric-chip">
+                    <div className="ss-metric-label">Bz (GSM)</div>
+                    <div className="ss-metric-value">
+                      {data.magnetometer.bz != null ? `${data.magnetometer.bz.toFixed(1)} nT` : "N/A"}
+                    </div>
+                  </div>
+                  <div className="ss-metric-chip">
+                    <div className="ss-metric-label">Bt</div>
+                    <div className="ss-metric-value">
+                      {data.magnetometer.bt != null ? `${data.magnetometer.bt.toFixed(1)} nT` : "N/A"}
+                    </div>
+                  </div>
+                  <div className="ss-metric-chip">
+                    <div className="ss-metric-label">Solar Wind Speed</div>
+                    <div className="ss-metric-value">
+                      {data.solar_wind.speed != null ? `${Math.round(data.solar_wind.speed)} km/s` : "N/A"}
+                    </div>
+                  </div>
+                  <div className="ss-metric-chip">
+                    <div className="ss-metric-label">Proton Density</div>
+                    <div className="ss-metric-value">
+                      {data.solar_wind.density != null ? `${data.solar_wind.density.toFixed(1)} p/cm³` : "N/A"}
+                    </div>
+                  </div>
+                </div>
+                {anomalies.length ? (
+                  <ul className="ss-anomaly-list">
+                    {anomalies.map((note, i) => (
+                      <li key={i}>{note}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="ss-no-anomaly">No anomalies flagged in current readings.</p>
+                )}
+              </div>
+            </div>
+          </section>
+
+          <section className="modules-section" style={{ paddingTop: 0, paddingBottom: 100 }}>
+            <div className="section-grid">
+              <div className="section-eyebrow">Active Alerts</div>
+              <div>
+                {data.active_alerts?.length ? (
+                  <ul className="ss-alerts-list">
+                    {data.active_alerts.map((alert, i) => (
+                      <li key={i} className="ss-alert-item">
+                        {alert}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="ss-no-anomaly">No active alerts.</p>
+                )}
+                <p className="ss-source-note">
+                  Source: NOAA Space Weather Prediction Center &mdash; real-time solar wind, magnetometer, planetary
+                  K-index, and alerts feeds. Refreshes automatically every 5 minutes.
+                </p>
+              </div>
+            </div>
+          </section>
+        </>
+      ) : null}
     </main>
   );
 }
