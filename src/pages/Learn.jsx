@@ -7,6 +7,7 @@ import { missions } from "../data/missions.js";
 import { roverAndLanderSounds, sonifications, historicalSounds } from "../data/sounds.js";
 import { videos } from "../data/videos.js";
 import { agencies } from "../data/agencies.js";
+import { mediaGallery } from "../data/mediaGallery.js";
 
 const TABS = ["Images & Videos", "Audio", "Missions", "Organizations"];
 
@@ -134,14 +135,34 @@ function OrgPanel({ agency }) {
   return (
     <div className="org-panel">
       <div className="org-header">
-        <h3>{agency.fullName}</h3>
-        <span className="org-founded">Founded {agency.founded} &middot; {agency.headquarters}</span>
+        {agency.logo ? (
+          <img src={agency.logo} alt={`${agency.name} logo`} className="org-logo" />
+        ) : (
+          <div className="org-logo org-logo-fallback">{agency.code}</div>
+        )}
+        <div>
+          <h3>{agency.fullName}</h3>
+          <span className="org-founded">Founded {agency.founded} &middot; {agency.headquarters}</span>
+        </div>
       </div>
       <p className="org-history">{agency.history}</p>
 
+      <div className="org-subhead">Current Missions</div>
+      <div className="org-missions-list" style={{ marginBottom: 22 }}>
+        {agency.currentMissions.map((m) => (
+          <div key={m.name} className="org-mission-row org-mission-row-detailed">
+            <div className="org-mission-row-top">
+              <span className="org-mission-name">{m.name}</span>
+              <span className="org-mission-date">{m.date}</span>
+            </div>
+            <div className="org-mission-status">{m.status}</div>
+          </div>
+        ))}
+      </div>
+
       <div className="org-subhead">Missions Covered On This Site</div>
       {agencyMissions.length ? (
-        <div className="org-missions-list">
+        <div className="org-missions-list" style={{ marginBottom: 22 }}>
           {agencyMissions.map((m) => (
             <div key={m.name} className="org-mission-row">{m.name}</div>
           ))}
@@ -154,15 +175,15 @@ function OrgPanel({ agency }) {
 
       <div className="org-subhead">{updatesLabel}</div>
       {updates === null ? (
-        <p className="org-empty-note">Loading…</p>
+        <p className="org-empty-note" style={{ marginBottom: 22 }}>Loading…</p>
       ) : updates.length === 0 ? (
-        <p className="org-empty-note">
+        <p className="org-empty-note" style={{ marginBottom: 22 }}>
           {failed
             ? `No live data could be fetched right now — ${agency.code} does not expose a public CORS-open API for this.`
             : "Nothing found."}
         </p>
       ) : (
-        <div className="org-updates-list">
+        <div className="org-updates-list" style={{ marginBottom: 22 }}>
           {updates.map((u, i) => (
             <a key={i} href={u.link} target="_blank" rel="noreferrer" className="org-update-row">
               {u.date ? (
@@ -174,6 +195,24 @@ function OrgPanel({ agency }) {
             </a>
           ))}
         </div>
+      )}
+
+      <div className="org-subhead">Official Videos</div>
+      {agency.videos.length ? (
+        <div className="videos-grid">
+          {agency.videos.map((v) => (
+            <VideoCard key={v.videoId} title={v.title} videoId={v.videoId} credit={v.credit} category={agency.code} body="" />
+          ))}
+        </div>
+      ) : (
+        <p className="org-empty-note">
+          {agency.noVideoNote}{" "}
+          {agency.noVideoLink ? (
+            <a href={agency.noVideoLink} target="_blank" rel="noreferrer">
+              {agency.noVideoLink.replace("https://", "")}
+            </a>
+          ) : null}
+        </p>
       )}
     </div>
   );
@@ -253,6 +292,19 @@ export default function Learn() {
               <div className="videos-grid">
                 {videos.map((v) => (
                   <VideoCard key={v.videoId} {...v} />
+                ))}
+              </div>
+
+              <div className="section-eyebrow" style={{ margin: "34px 0 14px" }}>Mission Imagery Gallery</div>
+              <p className="page-lede" style={{ margin: "0 0 22px", fontSize: 13 }}>
+                Fetched live from NASA's public Image and Video Library, which indexes real imagery from partner
+                agencies too &mdash; not just NASA's own missions. Some agency-specific searches (Aditya-L1, Hera,
+                Zhurong by name, Gaia) return no results in NASA's library and are left out rather than padded with
+                irrelevant matches.
+              </p>
+              <div className="missions-grid">
+                {mediaGallery.map((m) => (
+                  <MissionCard key={m.name} name={m.name} query={m.query} agency={m.agency} />
                 ))}
               </div>
             </div>

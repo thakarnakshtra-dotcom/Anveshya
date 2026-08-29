@@ -17,7 +17,7 @@ export default function VideoCard({ title, videoId, category, credit, body }) {
           <span className="agency-badge video-category-badge">{category}</span>
         </div>
         <div className="mission-title">{title}</div>
-        <div className="mission-desc">{body}</div>
+        {body ? <div className="mission-desc">{body}</div> : null}
         <div className="mission-credit">Source: {credit}</div>
       </div>
     </div>

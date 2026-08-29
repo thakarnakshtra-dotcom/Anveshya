@@ -1401,9 +1401,35 @@ video.sound-media {
 .org-header {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 14px;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 6px;
+}
+
+.org-logo {
+  width: 52px;
+  height: 52px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.org-logo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #93a0b5;
+  flex-shrink: 0;
 }
 
 .org-header h3 {
@@ -1452,6 +1478,39 @@ video.sound-media {
   background: rgba(255, 255, 255, 0.02);
   font-size: 13px;
   color: #e7ecf5;
+}
+
+.org-mission-row-detailed {
+  padding: 12px 14px;
+}
+
+.org-mission-row-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.org-mission-name {
+  color: #fff;
+  font-weight: 500;
+}
+
+.org-mission-date {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6f7d94;
+  white-space: nowrap;
+}
+
+.org-mission-status {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #93a0b5;
 }
 
 .org-updates-list {
