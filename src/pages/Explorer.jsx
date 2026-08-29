@@ -2,9 +2,10 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Stars, useTexture, Line, Html } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import * as THREE from "three";
 import { planets, scaleModes, tabs } from "../data/planets.js";
+
+const detailSections = ["Physical Data", "Atmosphere", "Exploration", "Discovery", "Moons"];
 
 const dummyObject = new THREE.Object3D();
 
@@ -399,7 +400,7 @@ function SceneContents({ mode, selectedName, setSelectedName, interacted, setInt
   );
 }
 
-function InfoPanel({ selectedPlanet, activeTab, setActiveTab }) {
+function InfoPanel({ selectedPlanet, activeTab, setActiveTab, onExpand }) {
   const planet = selectedPlanet || {
     name: "Sun",
     overview: "An emissive central star and warm point-light source for the model. Select any planet to fly closer.",
@@ -452,12 +453,96 @@ function InfoPanel({ selectedPlanet, activeTab, setActiveTab }) {
       </div>
       {isRealPlanet ? (
         <div className="info-panel-actions">
-          <Link to={`/learn/${planet.name.toLowerCase()}`} className="know-more-btn">
+          <button type="button" className="know-more-btn" onClick={onExpand}>
             More &rarr;
-          </Link>
+          </button>
         </div>
       ) : null}
     </aside>
+  );
+}
+
+function ExpandedPlanetView({ planet, onClose }) {
+  const [section, setSection] = useState("Physical Data");
+  const diameterKm = planet.radiusEarth != null ? Math.round(planet.radiusEarth * 12742) : null;
+  const distanceMillionKm = planet.au != null ? Math.round(planet.au * 149.6) : null;
+  const nasaUrl = `https://science.nasa.gov/${planet.name.toLowerCase()}/`;
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="expanded-overlay" role="dialog" aria-modal="true" aria-label={`${planet.name} details`}>
+      <div className="expanded-overlay-backdrop" onClick={onClose} />
+      <div className="expanded-view">
+        <button type="button" className="expanded-close" onClick={onClose} aria-label="Close">
+          &times;
+        </button>
+        <div className="expanded-header">
+          <img className="expanded-image" src={planet.texture} alt={`${planet.name} surface texture`} />
+          <div className="expanded-header-text">
+            <div className="panel-kicker">Full Profile</div>
+            <h1>{planet.name}</h1>
+            <p className="expanded-overview">{planet.overview}</p>
+          </div>
+        </div>
+
+        <div className="expanded-quickstats">
+          <div><dt>Diameter</dt><dd>{diameterKm != null ? `${diameterKm.toLocaleString()} km` : "N/A"}</dd></div>
+          <div><dt>Distance from Sun</dt><dd>{distanceMillionKm != null ? `${distanceMillionKm.toLocaleString()} million km` : "N/A"}</dd></div>
+          <div><dt>Year</dt><dd>{planet.yearEarthYears ? yearLabel(planet.yearEarthYears) : "N/A"}</dd></div>
+          <div><dt>Moons</dt><dd>{planet.moonCount}</dd></div>
+        </div>
+
+        <div className="section-toggle expanded-section-toggle" role="group" aria-label="Detail section">
+          {detailSections.map((s) => (
+            <button key={s} type="button" className={s === section ? "active" : ""} onClick={() => setSection(s)}>
+              {s}
+            </button>
+          ))}
+        </div>
+
+        <div className="expanded-body">
+          {section === "Physical Data" ? (
+            <dl>
+              <div><dt>Mass</dt><dd>{Number(planet.massEarth).toLocaleString()} x Earth</dd></div>
+              <div><dt>Gravity</dt><dd>{planet.gravityEarth} x Earth</dd></div>
+              <div><dt>Day length</dt><dd>{planet.day}</dd></div>
+              <div><dt>Axial tilt</dt><dd>{planet.axialTilt}&deg;</dd></div>
+              <div><dt>Moons</dt><dd>{planet.moonCount}</dd></div>
+            </dl>
+          ) : null}
+          {section === "Atmosphere" ? <p>{planet.atmosphere}</p> : null}
+          {section === "Exploration" ? <p>{planet.exploration}</p> : null}
+          {section === "Discovery" ? <p>{planet.discovery || "No discovery record available."}</p> : null}
+          {section === "Moons" ? (
+            planet.moons?.length ? (
+              <div className="expanded-moons">
+                {planet.moons.map((moon) => (
+                  <div key={moon.name} className="expanded-moon-item">
+                    <div className="expanded-moon-name">{moon.name}</div>
+                    <p>{moon.overview}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>{planet.name} has no known moons.</p>
+            )
+          ) : null}
+        </div>
+
+        <div className="expanded-footer">
+          <a className="know-more-btn" href={nasaUrl} target="_blank" rel="noopener noreferrer">
+            Know more on NASA &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -486,6 +571,7 @@ export default function SolarSystemScene() {
   const [selectedName, setSelectedName] = useState(null);
   const [activeTab, setActiveTab] = useState("Overview");
   const [interacted, setInteracted] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const selectedPlanet = planets.find((planet) => planet.name === selectedName) || findMoonInfo(selectedName);
 
   const changeMode = (nextMode) => {
@@ -497,11 +583,13 @@ export default function SolarSystemScene() {
     setSelectedName(name);
     setActiveTab("Overview");
     setInteracted(false);
+    setExpanded(false);
   };
 
   const returnToSystem = () => {
     setSelectedName(null);
     setInteracted(false);
+    setExpanded(false);
   };
 
   return (
@@ -532,7 +620,15 @@ export default function SolarSystemScene() {
         ) : null}
       </div>
       {selectedPlanet ? (
-        <InfoPanel selectedPlanet={selectedPlanet} activeTab={activeTab} setActiveTab={setActiveTab} />
+        <InfoPanel
+          selectedPlanet={selectedPlanet}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onExpand={() => setExpanded(true)}
+        />
+      ) : null}
+      {expanded && selectedPlanet && !selectedPlanet.isMoon ? (
+        <ExpandedPlanetView planet={selectedPlanet} onClose={() => setExpanded(false)} />
       ) : null}
       <div className="status-line">
         {mode === "true"

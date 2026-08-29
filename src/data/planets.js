@@ -16,6 +16,7 @@ export const planets = [
     atmosphere: "Exosphere: oxygen, sodium, hydrogen, helium, potassium",
     exploration: "Visited by Mariner 10 and MESSENGER; BepiColombo is en route.",
     overview: "The smallest planet and closest to the Sun, with a cratered surface and extreme day-night temperatures.",
+    discovery: "Known since antiquity — visible to the naked eye, no single discoverer. Its motion was recorded by Sumerian astronomers as early as the 14th century BCE.",
   },
   {
     name: "Venus",
@@ -33,6 +34,7 @@ export const planets = [
     atmosphere: "Carbon dioxide, nitrogen; sulfuric acid clouds",
     exploration: "Explored by Venera, Pioneer Venus, Magellan, Venus Express, Akatsuki, and flybys.",
     overview: "A rocky world similar in size to Earth but wrapped in a dense, hot atmosphere.",
+    discovery: "Known since antiquity — one of the brightest objects in the night sky, recorded by Babylonian astronomers by 1600 BCE.",
     glow: "#f6d18b",
   },
   {
@@ -51,6 +53,7 @@ export const planets = [
     atmosphere: "78% nitrogen, 21% oxygen, argon, carbon dioxide, trace gases",
     exploration: "Continuously observed by crewed spacecraft, robotic missions, and Earth-observing satellites.",
     overview: "Our ocean-covered home planet, the only known world with life.",
+    discovery: "Not applicable — home planet.",
     moons: [
       {
         name: "Moon",
@@ -80,6 +83,7 @@ export const planets = [
     atmosphere: "Carbon dioxide, nitrogen, argon",
     exploration: "Mapped and sampled by orbiters, landers, and rovers including Viking, Spirit, Opportunity, Curiosity, Perseverance, and Ingenuity.",
     overview: "A cold desert planet with polar caps, canyons, volcanoes, and signs of ancient water.",
+    discovery: "Known since antiquity — its reddish color made it visible and recorded by ancient Egyptian astronomers as early as 1534 BCE.",
     moons: [
       {
         name: "Phobos",
@@ -118,6 +122,7 @@ export const planets = [
     atmosphere: "Hydrogen, helium; ammonia, methane, water vapor traces",
     exploration: "Visited by Pioneer, Voyager, Galileo, Cassini, New Horizons, and Juno; Europa Clipper is targeted at the Jovian system.",
     overview: "The largest planet, a fast-spinning gas giant with banded clouds and the Great Red Spot.",
+    discovery: "Known since antiquity — bright enough for naked-eye observation; Galileo's 1610 telescopic observation of its four largest moons was the first evidence a body could orbit something other than Earth.",
     moons: [
       {
         name: "Io",
@@ -176,6 +181,7 @@ export const planets = [
     atmosphere: "Hydrogen, helium; methane and ammonia traces",
     exploration: "Explored by Pioneer 11, Voyager 1 and 2, and Cassini-Huygens.",
     overview: "A low-density gas giant encircled by the solar system's broadest, brightest ring system.",
+    discovery: "Known since antiquity — the farthest planet easily visible to the naked eye; Galileo first observed its rings (though not resolved as such) in 1610.",
     ring: {
       texture: "/textures/2k_saturn_ring_alpha.png",
       inner: 1.35,
@@ -251,6 +257,7 @@ export const planets = [
     atmosphere: "Hydrogen, helium, methane",
     exploration: "Visited closely by Voyager 2 in 1986; studied from Earth and space telescopes.",
     overview: "An ice giant tipped almost onto its side, giving it extreme seasons and a faint ring system.",
+    discovery: "Discovered March 13, 1781 by William Herschel — the first planet found with a telescope rather than known since antiquity.",
     ring: {
       texture: "/textures/2k_saturn_ring_alpha.png",
       inner: 1.45,
@@ -326,6 +333,7 @@ export const planets = [
     atmosphere: "Hydrogen, helium, methane",
     exploration: "Visited by Voyager 2 in 1989; monitored by Hubble, JWST, and major ground observatories.",
     overview: "The outermost major planet, a windy blue ice giant with dynamic storms and Triton, its retrograde-orbiting captured moon.",
+    discovery: "Discovered September 23, 1846 by Johann Galle, based on mathematical predictions by Urbain Le Verrier — the first planet found by mathematical prediction rather than direct observation.",
     moons: [
       {
         name: "Triton",

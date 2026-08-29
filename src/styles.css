@@ -356,6 +356,209 @@ button {
   to { opacity: 1; }
 }
 
+/* Explorer "More" expanded detail view — full profile modal, stays on the
+   Explore page (no navigation). Reuses the info-panel/section-toggle
+   design tokens so it reads as part of the same system, just bigger. */
+.expanded-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.expanded-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 5, 10, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.expanded-view {
+  position: relative;
+  z-index: 1;
+  width: min(720px, 100%);
+  max-height: min(760px, calc(100vh - 48px));
+  overflow-y: auto;
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  color: #e7ecf5;
+  background: linear-gradient(180deg, rgba(10, 14, 24, 0.96), rgba(6, 9, 16, 0.98));
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+  font-family: "Archivo", system-ui, sans-serif;
+  animation: panelIn 0.28s ease-out;
+}
+
+.expanded-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: #e7ecf5;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.expanded-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.expanded-header {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  margin-bottom: 22px;
+  padding-right: 34px;
+}
+
+.expanded-image {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  object-fit: cover;
+  background: #0a0e18;
+}
+
+.expanded-header-text h1 {
+  margin: 2px 0 8px;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.expanded-overview {
+  margin: 0;
+  color: #93a0b5;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.expanded-quickstats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.expanded-quickstats div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.expanded-quickstats dt {
+  color: #7e8ca3;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.expanded-quickstats dd {
+  margin: 0;
+  color: #fff;
+  font-size: 14px;
+}
+
+.expanded-section-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.expanded-body {
+  min-height: 120px;
+  margin-bottom: 24px;
+  color: #93a0b5;
+  font-size: 13.5px;
+  line-height: 1.7;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.expanded-body p {
+  margin: 0;
+}
+
+.expanded-body dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.expanded-body dl div {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.expanded-body dt {
+  color: #7e8ca3;
+}
+
+.expanded-body dd {
+  margin: 0;
+  color: #fff;
+}
+
+.expanded-moons {
+  display: grid;
+  gap: 14px;
+}
+
+.expanded-moon-item {
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.expanded-moon-name {
+  margin-bottom: 6px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.expanded-moon-item p {
+  margin: 0;
+}
+
+.expanded-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 620px) {
+  .expanded-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-right: 0;
+  }
+
+  .expanded-view {
+    padding: 22px;
+  }
+}
+
 /* ---------- Site header / navbar (Claude Design template) ---------- */
 
 .site-header {
@@ -1103,6 +1306,185 @@ video.sound-media {
   font-size: 10px;
   letter-spacing: 0.05em;
   color: #93a0b5;
+}
+
+/* ---------- Video cards (Learn / Images & Videos tab) ---------- */
+
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.video-card {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+  transition: border-color 260ms ease;
+}
+
+.video-card:hover {
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.video-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #06090f;
+}
+
+.video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-body {
+  padding: 16px 18px 18px;
+}
+
+.video-category-badge {
+  color: #9db9f2;
+  background: rgba(157, 185, 242, 0.14);
+}
+
+/* ---------- Organizations tab (Learn) ---------- */
+
+.org-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 26px;
+}
+
+.org-picker button {
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #93a0b5;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.org-picker button:hover {
+  color: #fff;
+}
+
+.org-picker button.active {
+  color: #fff;
+  border-color: rgba(157, 185, 242, 0.4);
+  background: rgba(157, 185, 242, 0.14);
+}
+
+.org-panel {
+  padding: 24px 26px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+}
+
+.org-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.org-header h3 {
+  margin: 0;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.org-founded {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6f7d94;
+}
+
+.org-history {
+  margin: 14px 0 22px;
+  max-width: 68ch;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #93a0b5;
+}
+
+.org-subhead {
+  margin: 0 0 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6f7d94;
+}
+
+.org-missions-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.org-mission-row {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 13px;
+  color: #e7ecf5;
+}
+
+.org-updates-list {
+  display: grid;
+  gap: 10px;
+}
+
+.org-update-row {
+  display: block;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 160ms ease;
+}
+
+.org-update-row:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.org-update-date {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6f7d94;
+}
+
+.org-update-title {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #e7ecf5;
+}
+
+.org-empty-note {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #6f7d94;
 }
 
 .coming-soon-note {
