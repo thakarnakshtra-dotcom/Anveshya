@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
+import { RingIntro, RingBadge, shouldPlayIntro } from "./components/RingSystem.jsx";
 import Home from "./pages/Home.jsx";
 import Explorer from "./pages/Explorer.jsx";
 import Learn from "./pages/Learn.jsx";
@@ -10,28 +11,16 @@ import SolarShield from "./pages/SolarShield.jsx";
 import News from "./pages/News.jsx";
 import About from "./pages/About.jsx";
 
-const INTRO_FLAG = "anveshya-intro-seen";
-
-function computeIntroActive(pathname) {
-  if (pathname !== "/") return false;
-  try {
-    if (sessionStorage.getItem(INTRO_FLAG)) return false;
-    sessionStorage.setItem(INTRO_FLAG, "1");
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function AppShell() {
   const location = useLocation();
-  const [introActive] = useState(() => computeIntroActive(location.pathname));
+  const [introPlaying, setIntroPlaying] = useState(() => location.pathname === "/" && shouldPlayIntro());
+  const showBadge = !introPlaying && location.pathname !== "/explorer";
 
   return (
     <>
-      <Navbar introActive={introActive} />
+      <Navbar />
       <Routes>
-        <Route path="/" element={<Home introActive={introActive} />} />
+        <Route path="/" element={<Home />} />
         <Route path="/explorer" element={<Explorer />} />
         <Route path="/learn" element={<Learn />} />
         <Route path="/learn/sounds" element={<SoundsOfSpace />} />
@@ -40,6 +29,8 @@ function AppShell() {
         <Route path="/news" element={<News />} />
         <Route path="/about" element={<About />} />
       </Routes>
+      {showBadge ? <RingBadge /> : null}
+      {introPlaying ? <RingIntro onComplete={() => setIntroPlaying(false)} /> : null}
     </>
   );
 }

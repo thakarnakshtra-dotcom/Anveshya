@@ -46,15 +46,10 @@ const metrics = [
   { label: "Data Sources", value: "3", note: "NASA · ISRO · ESA" },
 ];
 
-export default function Home({ introActive = false }) {
-  const veilAnim = introActive ? "an-veil 3.6s ease forwards" : "none";
-  const chromeAnim = introActive ? "an-chrome 4.1s ease forwards" : "none";
-
+export default function Home() {
   return (
     <main className="home">
       <AmbientBackground />
-
-      <div className="intro-veil" style={{ animation: veilAnim }} />
 
       {/* ---- hero ---- */}
       <section className="home-hero">
@@ -274,7 +269,7 @@ export default function Home({ introActive = false }) {
           </div>
         </div>
 
-        <div className="hero-grid" style={{ animation: chromeAnim }}>
+        <div className="hero-grid">
           <div>
             <div className="hero-eyebrow">
               <span className="hero-eyebrow-rule" />

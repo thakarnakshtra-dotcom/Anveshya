@@ -399,7 +399,7 @@ function SceneContents({ mode, selectedName, setSelectedName, interacted, setInt
   );
 }
 
-function InfoPanel({ selectedPlanet, activeTab, setActiveTab, aboutOpen, setAboutOpen }) {
+function InfoPanel({ selectedPlanet, activeTab, setActiveTab }) {
   const planet = selectedPlanet || {
     name: "Sun",
     overview: "An emissive central star and warm point-light source for the model. Select any planet to fly closer.",
@@ -450,131 +450,14 @@ function InfoPanel({ selectedPlanet, activeTab, setActiveTab, aboutOpen, setAbou
         {activeTab === "Atmosphere" ? <p>{planet.atmosphere}</p> : null}
         {activeTab === "Exploration" ? <p>{planet.exploration}</p> : null}
       </div>
-      {selectedPlanet ? (
+      {isRealPlanet ? (
         <div className="info-panel-actions">
-          {isRealPlanet ? (
-            <Link to={`/learn/${planet.name.toLowerCase()}`} className="know-more-btn">
-              More &rarr;
-            </Link>
-          ) : null}
-          <button type="button" className="about-toggle-btn" onClick={() => setAboutOpen(!aboutOpen)}>
-            {aboutOpen ? "Close details" : "About / Info"}
-          </button>
+          <Link to={`/learn/${planet.name.toLowerCase()}`} className="know-more-btn">
+            More &rarr;
+          </Link>
         </div>
       ) : null}
     </aside>
-  );
-}
-
-function AboutPanel({ selectedPlanet, onClose }) {
-  const planet = selectedPlanet;
-  if (!planet) return null;
-  const diameterKm = planet.radiusEarth != null ? Math.round(planet.radiusEarth * 12742) : null;
-  const distanceMillionKm = planet.au != null ? Math.round(planet.au * 149.6) : null;
-  const keplerCheck =
-    planet.au != null && planet.yearEarthYears
-      ? { a3: Math.pow(planet.au, 3).toFixed(2), t2: Math.pow(planet.yearEarthYears, 2).toFixed(2) }
-      : null;
-
-  return (
-    <aside className="about-panel open">
-      <button type="button" className="about-panel-close" onClick={onClose} aria-label="Close details">
-        &larr; Close
-      </button>
-      <div className="panel-kicker">{planet.isMoon ? "Selected Moon" : "Selected Planet"}</div>
-      <h1>{planet.name}</h1>
-
-      <div className="about-section">
-        <h2>Overview</h2>
-        <p>{planet.overview}</p>
-      </div>
-
-      <div className="about-section">
-        <h2>Physical Data</h2>
-        <dl>
-          <div><dt>Mass</dt><dd>{planet.massEarth != null ? `${Number(planet.massEarth).toLocaleString()} x Earth` : "N/A"}</dd></div>
-          <div><dt>Gravity</dt><dd>{planet.gravityEarth != null ? `${planet.gravityEarth} x Earth` : "N/A"}</dd></div>
-          <div><dt>Day</dt><dd>{planet.day}</dd></div>
-          <div><dt>{planet.isMoon ? "Orbit" : "Year"}</dt><dd>{planet.yearEarthYears ? yearLabel(planet.yearEarthYears) : "Reference frame"}</dd></div>
-          <div><dt>Moons</dt><dd>{planet.moonCount}</dd></div>
-          {diameterKm != null ? <div><dt>Diameter</dt><dd>{diameterKm.toLocaleString()} km</dd></div> : null}
-          {distanceMillionKm != null ? (
-            <div><dt>Distance</dt><dd>{planet.au} AU (~{distanceMillionKm.toLocaleString()} million km)</dd></div>
-          ) : null}
-        </dl>
-      </div>
-
-      <div className="about-section">
-        <h2>Atmosphere</h2>
-        <p>{planet.atmosphere}</p>
-      </div>
-
-      <div className="about-section">
-        <h2>Exploration History</h2>
-        <p>{planet.exploration}</p>
-      </div>
-
-      {keplerCheck ? (
-        <div className="about-section">
-          <h2>Orbital Formula</h2>
-          <p className="about-formula">
-            Kepler's third law: T&sup2; &asymp; a&sup3; (years, AU) &mdash; for {planet.name}, a&sup3; = {keplerCheck.a3},
-            T&sup2; = {keplerCheck.t2}.
-          </p>
-        </div>
-      ) : null}
-
-      {!planet.isMoon ? (
-        <Link to={`/learn/${planet.name.toLowerCase()}`} className="know-more-btn">
-          Read the full Learn page &rarr;
-        </Link>
-      ) : null}
-    </aside>
-  );
-}
-
-function PlanetDial({ selectedName, onSelect }) {
-  const count = planets.length;
-  const cx = 55;
-  const cy = 55;
-  const radius = 42;
-  const isPlanetSelected = planets.some((p) => p.name === selectedName);
-  const activeIndex = Math.max(0, planets.findIndex((p) => p.name === selectedName));
-  const rotation = -(360 / count) * activeIndex;
-
-  return (
-    <div className="planet-dial">
-      <svg viewBox="0 0 110 110" width="92" height="92">
-        <circle cx={cx} cy={cy} r={radius} className="planet-dial-ring" />
-        <g
-          style={{
-            transform: `rotate(${rotation}deg)`,
-            transformOrigin: `${cx}px ${cy}px`,
-            transition: "transform 600ms cubic-bezier(.2,.8,.2,1)",
-          }}
-        >
-          {planets.map((p, i) => {
-            const angle = ((i * (360 / count) - 90) * Math.PI) / 180;
-            const x = cx + radius * Math.cos(angle);
-            const y = cy + radius * Math.sin(angle);
-            const isActive = p.name === selectedName;
-            return (
-              <g
-                key={p.name}
-                transform={`translate(${x},${y})`}
-                className="planet-dial-dot-group"
-                onClick={() => onSelect(p.name)}
-              >
-                <title>{p.name}</title>
-                <circle r={9} className="planet-dial-hit" />
-                <circle r={isActive ? 5 : 3.2} className={isActive ? "planet-dial-dot active" : "planet-dial-dot"} />
-              </g>
-            );
-          })}
-        </g>
-      </svg>
-      <div className="planet-dial-center">{isPlanetSelected ? selectedName : "Solar System"}</div>
-    </div>
   );
 }
 
@@ -603,7 +486,6 @@ export default function SolarSystemScene() {
   const [selectedName, setSelectedName] = useState(null);
   const [activeTab, setActiveTab] = useState("Overview");
   const [interacted, setInteracted] = useState(false);
-  const [aboutOpen, setAboutOpen] = useState(false);
   const selectedPlanet = planets.find((planet) => planet.name === selectedName) || findMoonInfo(selectedName);
 
   const changeMode = (nextMode) => {
@@ -615,13 +497,11 @@ export default function SolarSystemScene() {
     setSelectedName(name);
     setActiveTab("Overview");
     setInteracted(false);
-    setAboutOpen(false);
   };
 
   const returnToSystem = () => {
     setSelectedName(null);
     setInteracted(false);
-    setAboutOpen(false);
   };
 
   return (
@@ -651,17 +531,8 @@ export default function SolarSystemScene() {
           </button>
         ) : null}
       </div>
-      <PlanetDial selectedName={selectedName} onSelect={selectObject} />
-      {aboutOpen && selectedPlanet ? (
-        <AboutPanel selectedPlanet={selectedPlanet} onClose={() => setAboutOpen(false)} />
-      ) : selectedPlanet ? (
-        <InfoPanel
-          selectedPlanet={selectedPlanet}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          aboutOpen={aboutOpen}
-          setAboutOpen={setAboutOpen}
-        />
+      {selectedPlanet ? (
+        <InfoPanel selectedPlanet={selectedPlanet} activeTab={activeTab} setActiveTab={setActiveTab} />
       ) : null}
       <div className="status-line">
         {mode === "true"

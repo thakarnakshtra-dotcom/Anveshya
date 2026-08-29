@@ -22,13 +22,10 @@ const navItems = [
   { label: "About", to: "/about", icon: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 10.6V16M12 7.6h.01" },
 ];
 
-export default function Navbar({ introActive = false }) {
-  const lockupAnim = introActive ? "an-lockup 3.4s cubic-bezier(.2,.75,.15,1) forwards" : "none";
-  const chromeAnim = introActive ? "an-chrome 4.1s ease forwards" : "none";
-
+export default function Navbar() {
   return (
     <header className="site-header">
-      <NavLink to="/" end className="site-logo" style={{ animation: lockupAnim }} aria-label="Anveshya home">
+      <NavLink to="/" end className="site-logo" aria-label="Anveshya home">
         <span className="site-logo-badge">
           <span className="badge-ring" />
           <span className="badge-shine" />
@@ -37,7 +34,7 @@ export default function Navbar({ introActive = false }) {
         <span className="site-logo-text">Anveshya</span>
       </NavLink>
 
-      <nav className="site-nav" style={{ animation: chromeAnim }}>
+      <nav className="site-nav">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
@@ -64,7 +61,7 @@ export default function Navbar({ introActive = false }) {
         ))}
       </nav>
 
-      <div className="site-header-actions" style={{ animation: chromeAnim }}>
+      <div className="site-header-actions">
         <NavLink to="/explorer" className="site-launch">
           Launch
         </NavLink>
