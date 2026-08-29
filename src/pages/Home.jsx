@@ -53,13 +53,11 @@ export default function Home() {
 
       {/* ---- hero ---- */}
       <section className="home-hero">
+        <div className="hero-ring-stage">
         <div
           style={{
-            position: "absolute",
-            left: "50%",
-            top: "calc(46% + 70px)",
-            transform: "translate(-50%,-50%)",
-            width: "min(1180px,100vw,152vh)",
+            position: "relative",
+            width: "min(1180px,92vw,116vh)",
             aspectRatio: "2/1",
             pointerEvents: "none",
           }}
@@ -247,6 +245,7 @@ export default function Home() {
               />
             </div>
           </div>
+        </div>
         </div>
 
         <div className="hero-grid">

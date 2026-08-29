@@ -1,5 +1,5 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 const navItems = [
   { label: "Home", to: "/", end: true, icon: "M4 11.2 12 4.5l8 6.7V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z" },
@@ -23,6 +23,26 @@ const navItems = [
 ];
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  // Close the mobile menu whenever the route actually changes (not on
+  // every render) so navigating never leaves it stuck open.
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+
+  // Lock page scroll behind the slide-out menu while it's open.
+  useEffect(() => {
+    if (open) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [open]);
+
   return (
     <header className="site-header">
       <NavLink to="/" end className="site-logo" aria-label="Anveshya home">
@@ -65,7 +85,58 @@ export default function Navbar() {
         <NavLink to="/explorer" className="site-launch">
           Launch
         </NavLink>
+        <button
+          type="button"
+          className="nav-hamburger"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="mobile-nav-menu"
+          onClick={() => setOpen((o) => !o)}
+        >
+          <span className={open ? "nav-hamburger-line open" : "nav-hamburger-line"} />
+          <span className={open ? "nav-hamburger-line open" : "nav-hamburger-line"} />
+          <span className={open ? "nav-hamburger-line open" : "nav-hamburger-line"} />
+        </button>
       </div>
+
+      <div
+        className={open ? "nav-mobile-backdrop open" : "nav-mobile-backdrop"}
+        onClick={() => setOpen(false)}
+        aria-hidden="true"
+      />
+
+      <nav
+        id="mobile-nav-menu"
+        className={open ? "nav-mobile-menu open" : "nav-mobile-menu"}
+        aria-hidden={!open}
+      >
+        {navItems.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.end}
+            className={({ isActive }) => (isActive ? "nav-mobile-link active" : "nav-mobile-link")}
+            tabIndex={open ? 0 : -1}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d={item.icon} />
+            </svg>
+            <span>{item.label}</span>
+          </NavLink>
+        ))}
+        <NavLink to="/explorer" className="nav-mobile-launch" tabIndex={open ? 0 : -1}>
+          Launch Explorer &rarr;
+        </NavLink>
+      </nav>
     </header>
   );
 }
