@@ -22,7 +22,20 @@ function pickLargeImage(links) {
   );
 }
 
-function MissionDetailModal({ mission, onClose }) {
+const AGENCY_CLASS = {
+  NASA: "agency-badge-nasa",
+  ISRO: "agency-badge-isro",
+  ESA: "agency-badge-esa",
+  CNSA: "agency-badge-cnsa",
+  JAXA: "agency-badge-jaxa",
+};
+
+function AgencyBadge({ agency }) {
+  if (!agency) return null;
+  return <span className={`agency-badge ${AGENCY_CLASS[agency] || ""}`}>{agency}</span>;
+}
+
+function MissionDetailModal({ mission, agency, onClose }) {
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") onClose();
@@ -39,7 +52,10 @@ function MissionDetailModal({ mission, onClose }) {
         </button>
         <img className="mission-modal-image" src={mission.largeImage} alt={mission.title} />
         <div className="mission-modal-body">
-          {mission.date ? <div className="mission-date">{mission.date}</div> : null}
+          <div className="mission-meta">
+            <AgencyBadge agency={agency} />
+            {mission.date ? <div className="mission-date">{mission.date}</div> : null}
+          </div>
           <h3 className="mission-modal-title">{mission.title}</h3>
           <p className="mission-modal-desc">{mission.description}</p>
           {mission.keywords?.length ? (
@@ -66,7 +82,7 @@ function MissionDetailModal({ mission, onClose }) {
   );
 }
 
-export default function MissionCard({ name, query }) {
+export default function MissionCard({ name, query, agency }) {
   const [status, setStatus] = useState("loading");
   const [mission, setMission] = useState(null);
   const [open, setOpen] = useState(false);
@@ -91,7 +107,11 @@ export default function MissionCard({ name, query }) {
             title: data.title || name,
             description: data.description || "",
             date: formatDate(data.date_created),
-            credit: data.center ? `Credit: NASA/${data.center}` : "Credit: NASA",
+            credit: data.secondary_creator
+              ? `Credit: ${data.secondary_creator}`
+              : data.center
+              ? `Credit: NASA/${data.center}`
+              : "Credit: NASA",
             image,
             largeImage: pickLargeImage(item.links) || image,
             keywords: Array.isArray(data.keywords) ? data.keywords : [],
@@ -117,7 +137,10 @@ export default function MissionCard({ name, query }) {
       <div className="mission-card">
         <div className="mission-image mission-image-skeleton" />
         <div className="mission-body">
-          <div className="mission-date">&nbsp;</div>
+          <div className="mission-meta">
+            <AgencyBadge agency={agency} />
+            <div className="mission-date">&nbsp;</div>
+          </div>
           <div className="mission-title">{name}</div>
         </div>
       </div>
@@ -129,13 +152,16 @@ export default function MissionCard({ name, query }) {
       <button type="button" className="mission-card mission-card-button" onClick={() => setOpen(true)}>
         <img className="mission-image" src={mission.image} alt={mission.title} loading="lazy" />
         <div className="mission-body">
-          {mission.date ? <div className="mission-date">{mission.date}</div> : null}
+          <div className="mission-meta">
+            <AgencyBadge agency={agency} />
+            {mission.date ? <div className="mission-date">{mission.date}</div> : null}
+          </div>
           <div className="mission-title">{mission.title}</div>
           <div className="mission-desc">{truncate(mission.description, 200)}</div>
           <div className="mission-credit">{mission.credit}</div>
         </div>
       </button>
-      {open ? <MissionDetailModal mission={mission} onClose={() => setOpen(false)} /> : null}
+      {open ? <MissionDetailModal mission={mission} agency={agency} onClose={() => setOpen(false)} /> : null}
     </>
   );
 }

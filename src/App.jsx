@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
 import Explorer from "./pages/Explorer.jsx";
 import Learn from "./pages/Learn.jsx";
+import SoundsOfSpace from "./pages/SoundsOfSpace.jsx";
 import PlanetDetail from "./pages/PlanetDetail.jsx";
 import SolarShield from "./pages/SolarShield.jsx";
 import News from "./pages/News.jsx";
@@ -33,6 +34,7 @@ function AppShell() {
         <Route path="/" element={<Home introActive={introActive} />} />
         <Route path="/explorer" element={<Explorer />} />
         <Route path="/learn" element={<Learn />} />
+        <Route path="/learn/sounds" element={<SoundsOfSpace />} />
         <Route path="/learn/:planetSlug" element={<PlanetDetail />} />
         <Route path="/solarshield" element={<SolarShield />} />
         <Route path="/news" element={<News />} />

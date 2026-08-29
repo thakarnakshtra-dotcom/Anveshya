@@ -1034,6 +1034,48 @@ button {
   padding: 16px 15px 18px;
 }
 
+.mission-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.agency-badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.agency-badge-nasa {
+  color: #9db9f2;
+  background: rgba(157, 185, 242, 0.14);
+}
+
+.agency-badge-isro {
+  color: #f4a15d;
+  background: rgba(244, 161, 93, 0.14);
+}
+
+.agency-badge-esa {
+  color: #6ea8e0;
+  background: rgba(110, 168, 224, 0.14);
+}
+
+.agency-badge-cnsa {
+  color: #e0736e;
+  background: rgba(224, 115, 110, 0.14);
+}
+
+.agency-badge-jaxa {
+  color: #b98ee0;
+  background: rgba(185, 142, 224, 0.14);
+}
+
 .mission-date {
   font-family: "JetBrains Mono", monospace;
   font-size: 9.5px;
@@ -1159,6 +1201,82 @@ button {
 .mission-modal-link {
   display: inline-block;
   margin-top: 22px;
+}
+
+/* ---------- Sound cards (Sounds and Voices of Space) ---------- */
+
+.sounds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.sound-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+  transition: border-color 260ms ease;
+}
+
+.sound-card:hover {
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.sound-title {
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: #fff;
+}
+
+.sound-desc {
+  margin-top: 8px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #8391a7;
+}
+
+/* The player is the visual centerpiece of the card — generous space,
+   nothing competing with it, per the "stand visually central without text
+   interference" requirement. */
+.sound-player {
+  margin: 20px 0 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.sound-media {
+  width: 100%;
+}
+
+audio.sound-media {
+  height: 40px;
+}
+
+video.sound-media {
+  border-radius: 6px;
+  background: #000;
+  max-height: 220px;
+}
+
+.sound-credit {
+  margin-top: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: #93a0b5;
+}
+
+.coming-soon-note {
+  padding: 22px 24px;
+  border-radius: 6px;
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.02);
+  max-width: 520px;
 }
 
 /* ---------- News feed (News) ---------- */

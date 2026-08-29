@@ -27,16 +27,51 @@ export default function Learn() {
         <div className="section-grid">
           <div className="section-eyebrow">03 &mdash; Historic Missions</div>
           <div>
-            <h2 className="modules-heading">Real Imagery, Straight From NASA</h2>
+            <h2 className="modules-heading">Real Imagery, From Five Space Agencies</h2>
             <p className="page-lede" style={{ margin: "0 0 34px" }}>
               Fetched live from NASA's public Image and Video Library &mdash; no stored copies, no fabricated
-              credits.
+              credits. Each card's badge shows which agency owns the mission; the credit line shows who actually
+              took the photo, which isn't always the same agency.
             </p>
             <div className="missions-grid">
               {missions.map((m) => (
-                <MissionCard key={m.name} name={m.name} query={m.query} />
+                <MissionCard key={m.name} name={m.name} query={m.query} agency={m.agency} />
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="modules-section" style={{ paddingTop: 0 }}>
+        <div className="section-grid">
+          <div className="section-eyebrow">04 &mdash; Sounds of Space</div>
+          <div>
+            <h2 className="modules-heading">Real Audio From Real Missions</h2>
+            <p className="page-lede" style={{ margin: "0 0 26px" }}>
+              Rover microphones, black-hole data turned into music, and the actual recordings of "one small step"
+              and "Houston, we've had a problem."
+            </p>
+            <Link to="/learn/sounds" className="module-card" style={{ maxWidth: 420 }}>
+              <div className="module-card-top">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#9DB9F2"
+                  strokeWidth="1.3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                </svg>
+                <span className="module-no">14 tracks</span>
+              </div>
+              <div className="module-title">Sounds and Voices of Space</div>
+              <div className="module-body">
+                Rover audio, NASA sonifications of nebulae and black holes, and historic mission recordings.
+              </div>
+            </Link>
           </div>
         </div>
       </section>
