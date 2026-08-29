@@ -5,8 +5,8 @@ import React, { useEffect, useRef, useState } from "react";
 // Explorer, which has its own 3D aesthetic). Pure CSS keyframe animation;
 // each star is a short rotated streak that fades in, translates along its
 // own diagonal, and fades out, then is removed from state.
-const MIN_DELAY_MS = 4000;
-const MAX_DELAY_MS = 6000;
+const MIN_DELAY_MS = 2000;
+const MAX_DELAY_MS = 3000;
 const DURATION_S = 1.8;
 let nextId = 0;
 

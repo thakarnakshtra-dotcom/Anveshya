@@ -8,8 +8,9 @@ import { roverAndLanderSounds, sonifications, historicalSounds } from "../data/s
 import { videos } from "../data/videos.js";
 import { agencies } from "../data/agencies.js";
 import { mediaGallery } from "../data/mediaGallery.js";
+import { ancientAstronomyTopics } from "../data/ancientAstronomy.js";
 
-const TABS = ["Images & Videos", "Audio", "Missions", "Organizations"];
+const TABS = ["Images & Videos", "Audio", "Missions", "Organizations", "Ancient Indian Astronomy"];
 
 const NASA_FEED = "https://www.nasa.gov/news-release/feed/";
 const ISRO_SATELLITES = "https://isro.vercel.app/api/customer_satellites";
@@ -243,6 +244,126 @@ function Organizations() {
   );
 }
 
+function AncientAstronomyTopicView({ topic }) {
+  if (topic.status !== "full") {
+    return (
+      <div className="ancient-panel ancient-coming-soon">
+        <div className="ancient-kicker">Coming Soon</div>
+        <h3>{topic.title}</h3>
+        <p className="astro-empty-note">
+          This topic isn't researched to the standard the rest of this page holds itself to yet &mdash; real
+          verses, real sources, real accuracy comparisons &mdash; rather than filled in with a guess. Check back in
+          a later pass.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="ancient-panel">
+      <div className="ancient-kicker">{topic.kicker}</div>
+      <h3>{topic.title}</h3>
+      <div className="ancient-known-by">Known by: {topic.knownBy}</div>
+
+      {topic.sanskrit ? (
+        <div className="ancient-shloka-block">
+          <div className="ancient-shloka">{topic.sanskrit}</div>
+          <div className="ancient-transliteration">{topic.transliteration}</div>
+          <div className="ancient-reference">{topic.reference}</div>
+        </div>
+      ) : null}
+
+      {topic.translation ? (
+        <>
+          <div className="ancient-subhead">English Translation</div>
+          <p className="ancient-body">{topic.translation}</p>
+        </>
+      ) : null}
+
+      <div className="ancient-subhead">What It Meant</div>
+      <p className="ancient-body">{topic.context}</p>
+
+      {topic.modernEquivalent ? (
+        <>
+          <div className="ancient-subhead">Modern Equivalent</div>
+          <p className="ancient-body">{topic.modernEquivalent}</p>
+        </>
+      ) : null}
+
+      {topic.modernFact ? (
+        <>
+          <div className="ancient-subhead">The Numbers</div>
+          <p className="ancient-body">{topic.modernFact}</p>
+        </>
+      ) : null}
+
+      {topic.comparisonTable ? (
+        <>
+          <div className="ancient-subhead">Ancient vs. Modern</div>
+          <div className="ancient-table-wrap">
+            <table className="ancient-table">
+              <thead>
+                <tr>
+                  <th>Quantity</th>
+                  <th>Sūrya Siddhānta</th>
+                  <th>Modern Value</th>
+                  <th>Verdict</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topic.comparisonTable.map((row) => (
+                  <tr key={row.quantity}>
+                    <td>{row.quantity}</td>
+                    <td>{row.ancient}</td>
+                    <td>{row.modern}</td>
+                    <td>{row.verdict}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      ) : null}
+
+      <div className="ancient-subhead">Accuracy, Honestly</div>
+      <p className="ancient-body">{topic.accuracyNote}</p>
+
+      <div className="ancient-subhead">Sources</div>
+      <ul className="ancient-sources">
+        {topic.sources.map((s) => (
+          <li key={s}>{s}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function AncientAstronomy() {
+  const [activeId, setActiveId] = useState(ancientAstronomyTopics[0].id);
+  const activeTopic = ancientAstronomyTopics.find((t) => t.id === activeId);
+
+  return (
+    <div>
+      <div className="org-picker" role="tablist" aria-label="Ancient astronomy topic">
+        {ancientAstronomyTopics.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={t.id === activeId}
+            className={t.id === activeId ? "active" : ""}
+            onClick={() => setActiveId(t.id)}
+          >
+            {t.title}
+            {t.status !== "full" ? <span className="ancient-picker-flag">soon</span> : null}
+          </button>
+        ))}
+      </div>
+      <AncientAstronomyTopicView key={activeTopic.id} topic={activeTopic} />
+    </div>
+  );
+}
+
 export default function Learn() {
   const [tab, setTab] = useState("Images & Videos");
 
@@ -363,6 +484,18 @@ export default function Learn() {
                 honestly instead of invented.
               </p>
               <Organizations />
+            </div>
+          ) : null}
+
+          {tab === "Ancient Indian Astronomy" ? (
+            <div>
+              <h2 className="modules-heading">Ancient Sky, Modern Science</h2>
+              <p className="page-lede" style={{ margin: "0 0 30px" }}>
+                Real verses from real texts (Āryabhaṭīya, Sūrya Siddhānta), set next to their modern scientific
+                equivalents &mdash; with the accuracy stated honestly, mixed record included. Three topics are fully
+                researched and sourced for this first pass; the rest are marked Coming Soon rather than guessed at.
+              </p>
+              <AncientAstronomy />
             </div>
           ) : null}
           </div>

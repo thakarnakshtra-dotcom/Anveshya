@@ -1764,6 +1764,145 @@ video.sound-media {
   color: #6f7d94;
 }
 
+/* ---------- Ancient Indian Astronomy (Learn) ---------- */
+
+.ancient-picker-flag {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #6f7d94;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.ancient-panel {
+  padding: 26px 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+}
+
+.ancient-coming-soon {
+  text-align: left;
+}
+
+.ancient-kicker {
+  margin-bottom: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d9b273;
+}
+
+.ancient-panel h3 {
+  margin: 0 0 6px;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.ancient-known-by {
+  margin-bottom: 20px;
+  font-size: 12.5px;
+  color: #93a0b5;
+}
+
+/* Sanskrit block: the one deliberate gold/cream accent on an otherwise
+   blue-gray page, per the explicit design note — visually sets the
+   primary-source verse apart from everything else on the page. */
+.ancient-shloka-block {
+  margin-bottom: 22px;
+  padding: 20px 22px;
+  border-radius: 10px;
+  border: 1px solid rgba(217, 178, 115, 0.28);
+  background: linear-gradient(180deg, rgba(217, 178, 115, 0.09), rgba(217, 178, 115, 0.02));
+}
+
+.ancient-shloka {
+  white-space: pre-line;
+  font-family: "Noto Sans Devanagari", "Archivo", system-ui, sans-serif;
+  font-size: 19px;
+  line-height: 1.7;
+  color: #f0dcb0;
+}
+
+.ancient-transliteration {
+  margin-top: 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-style: italic;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #d9b273;
+}
+
+.ancient-reference {
+  margin-top: 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #a98c5c;
+}
+
+.ancient-subhead {
+  margin: 20px 0 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6f7d94;
+}
+
+.ancient-body {
+  margin: 0;
+  max-width: 70ch;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #c3cbd9;
+}
+
+.ancient-table-wrap {
+  overflow-x: auto;
+}
+
+.ancient-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.ancient-table th {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  color: #6f7d94;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.ancient-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #c3cbd9;
+}
+
+.ancient-sources {
+  margin: 0;
+  padding-left: 18px;
+  color: #6f7d94;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
 .coming-soon-note {
   padding: 22px 24px;
   border-radius: 6px;
