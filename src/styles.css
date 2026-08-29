@@ -35,7 +35,7 @@ button {
 
 .topbar {
   position: absolute;
-  top: 76px;
+  top: 96px;
   left: 50%;
   z-index: 10;
   display: flex;
@@ -52,7 +52,7 @@ button {
    gold/cream language, not the Navbar's blue-gray palette. */
 .scale-toggle {
   display: grid;
-  grid-template-columns: repeat(3, minmax(78px, 1fr));
+  grid-template-columns: repeat(3, minmax(86px, 1fr));
   gap: 2px;
   padding: 4px;
   border: 1px solid rgba(232, 218, 190, 0.28);
@@ -63,13 +63,13 @@ button {
 }
 
 .scale-toggle button {
-  min-height: 32px;
-  padding: 0 11px;
+  min-height: 36px;
+  padding: 0 13px;
   border: 0;
   border-radius: 999px;
   color: rgba(245, 241, 232, 0.72);
   background: transparent;
-  font-size: 12.5px;
+  font-size: 13.5px;
   white-space: nowrap;
   cursor: pointer;
   transition: color 160ms ease, background 160ms ease;
@@ -339,16 +339,16 @@ button {
 
 .know-more-btn,
 .about-toggle-btn {
-  padding: 8px 14px;
+  padding: 7px 13px;
   border-radius: 999px;
   border: 1px solid rgba(255, 210, 129, 0.4);
   background: rgba(255, 210, 129, 0.1);
   color: #ffd281;
+  font-family: "Archivo", system-ui, sans-serif;
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
-  font: inherit;
   cursor: pointer;
   transition: background 160ms ease, border-color 160ms ease;
 }
@@ -445,7 +445,7 @@ button {
 
 @media (max-width: 860px) {
   .topbar {
-    top: 66px;
+    top: 82px;
     width: calc(100vw - 24px);
     justify-content: center;
   }
@@ -1421,7 +1421,28 @@ button {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset -14px -14px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Simulated directional lighting so the flat 2D texture image reads as a
+   lit sphere (matching the Explorer's real WebGL lighting) instead of a
+   flat photo cropped into a circle — this was the main source of the
+   "flat/cartoonish" look on planets with little inherent surface detail
+   (Uranus, Neptune). */
+.planet-detail-shading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 32% 28%,
+    transparent 0%,
+    transparent 45%,
+    rgba(0, 0, 0, 0.35) 68%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+  mix-blend-mode: multiply;
 }
 
 .planet-detail-back {

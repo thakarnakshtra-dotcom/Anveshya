@@ -80,6 +80,7 @@ export default function PlanetDetail() {
         >
           <div className="planet-detail-glow" style={{ background: `radial-gradient(circle, ${glow}55, transparent 70%)` }} />
           <img src={planet.texture} alt={`${planet.name} surface imagery`} className="planet-detail-image" />
+          <div className="planet-detail-shading" aria-hidden="true" />
         </motion.div>
 
         <Link to="/learn" className="planet-detail-back">

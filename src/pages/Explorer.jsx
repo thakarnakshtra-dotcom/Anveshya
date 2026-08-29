@@ -454,7 +454,7 @@ function InfoPanel({ selectedPlanet, activeTab, setActiveTab, aboutOpen, setAbou
         <div className="info-panel-actions">
           {isRealPlanet ? (
             <Link to={`/learn/${planet.name.toLowerCase()}`} className="know-more-btn">
-              Know more &rarr;
+              More &rarr;
             </Link>
           ) : null}
           <button type="button" className="about-toggle-btn" onClick={() => setAboutOpen(!aboutOpen)}>

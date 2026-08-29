@@ -69,6 +69,26 @@ export default function Home({ introActive = false }) {
             pointerEvents: "none",
           }}
         >
+          {/* Depth-effect addition: a second, larger ring arcing above and
+              behind the main disk — its own separate element, painted
+              first so everything below (glow, disk, horizon, existing
+              arcs) draws on top of it. The existing ring/disk elements
+              further down are completely untouched. */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "30%",
+              transform: "translate(-50%,-50%)",
+              width: "96%",
+              aspectRatio: "3.1",
+              border: "2.4px solid rgba(255,255,255,.46)",
+              borderRadius: "50%",
+              clipPath: "inset(0 0 50% 0)",
+              filter: "blur(1.6px)",
+            }}
+          />
+
           <div
             style={{
               position: "absolute",
@@ -214,25 +234,6 @@ export default function Home({ introActive = false }) {
               borderRadius: "50%",
               clipPath: "inset(68% 0 0 0)",
               filter: "blur(2px)",
-            }}
-          />
-
-          {/* Added depth layer: a wider, softer half-ring arc that wraps
-              over the top, sitting further out than the existing lensed
-              arcs above — additive only, the existing ring/arcs above are
-              untouched. */}
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "80%",
-              aspectRatio: "3.6",
-              border: "1px solid rgba(220,230,248,.32)",
-              borderRadius: "50%",
-              clipPath: "inset(0 0 68% 0)",
-              filter: "blur(2.6px)",
             }}
           />
 
