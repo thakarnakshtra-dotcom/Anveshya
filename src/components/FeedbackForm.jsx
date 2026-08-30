@@ -1,3 +1,4 @@
+import { sendEmail } from '../services/emailService';
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -103,6 +104,16 @@ export default function FeedbackForm() {
   };
 
   const handleSubmit = async (event) => {
+    // Send email to admin
+  await sendEmail(
+  'solarsheildai@gmail.com',
+  'New Feedback: ' + feedbackData.feedbackType,
+  `<h2>New Feedback</h2>
+   <p><strong>Name:</strong> ${feedbackData.name || 'Anonymous'}</p>
+   <p><strong>Email:</strong> ${feedbackData.email || 'Not provided'}</p>
+   <p><strong>Message:</strong> ${feedbackData.message}</p>
+   <p><strong>Rating:</strong> ${feedbackData.rating}/5</p>`
+  );
     event.preventDefault();
     if (!validate()) return;
 
