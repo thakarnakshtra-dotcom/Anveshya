@@ -3431,7 +3431,14 @@ video.sound-media {
   border-top: 1px solid rgba(127, 217, 255, 0.1);
   padding: 60px 34px 30px;
   margin-top: 60px;
-  font-family: "IBM Plex Mono", monospace;
+  /* Was IBM Plex Mono, which didn't actually match anything — the navbar
+     (.site-header, checked via computed style, not just source reading)
+     renders in Archivo, .footer-heading/.footer-subheading below already
+     use Archivo, and Archivo is what the rest of the site uses for real
+     body/link text everywhere (IBM Plex Mono is really just :root's
+     unstyled fallback, consistently overridden). This was the actual
+     source of the mismatch, not the headings, which already matched. */
+  font-family: "Archivo", system-ui, sans-serif;
 }
 
 .footer-container {
