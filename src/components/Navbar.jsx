@@ -65,6 +65,9 @@ export default function Navbar() {
   }, [open]);
 
   const handleToggleHamburger = () => {
+    // TEMP-DEBUG: on-screen proof for testing directly on a phone, no
+    // devtools needed — remove once the real-device report comes back.
+    if (DEBUG_NAV) alert("Hamburger clicked");
     setOpen((o) => {
       if (DEBUG_NAV) console.log("[nav] hamburger toggled ->", !o ? "open" : "closed");
       return !o;
@@ -72,6 +75,8 @@ export default function Navbar() {
   };
 
   const handleMenuItemClick = (path) => {
+    // TEMP-DEBUG: same as above — visible without opening console.
+    if (DEBUG_NAV) alert("Clicked: " + path);
     if (DEBUG_NAV) {
       console.log("=== MENU CLICK DEBUG ===");
       console.log("1. Click fired. Path:", path);
