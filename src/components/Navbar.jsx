@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const navItems = [
   { label: "Home", to: "/", end: true, icon: "M4 11.2 12 4.5l8 6.7V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z" },
@@ -22,27 +22,30 @@ const navItems = [
   { label: "About", to: "/about", icon: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 10.6V16M12 7.6h.01" },
 ];
 
-// This file previously hand-rolled its own onTouchEnd + preventDefault +
-// manual navigate() for every mobile menu link, on the theory that mobile
-// browsers need extra help beyond a plain onClick. After repeated reports
-// that taps still didn't navigate on a real phone, and repeated automated
-// testing (real TouchEvent dispatch, three separate deploys) that could
-// never reproduce it, the more likely explanation is that the custom
-// handling was itself the problem — e.g. a passive touchend listener
-// silently no-op'ing preventDefault() lets the browser's own compatibility
-// click through afterward, and now two separate code paths (mine + the
-// browser's default anchor navigation racing NavLink's own click handler)
-// are both trying to navigate. NavLink already does the right thing with
-// a plain onClick — preventDefault + history navigation — on every browser
-// this app needs to support (confirmed by width=device-width in
-// index.html, which removes the old 300ms tap-delay browsers used to need
-// workarounds for). Closing the menu just piggybacks on the existing
-// route-change effect below rather than needing its own handler at all.
+// The mobile menu links were NavLink (a real <a href>) through several
+// previous passes, each time verified working via this session's own
+// automated testing yet still reported broken on a real phone. The
+// remaining, untested-until-now suspect: this stylesheet sets
+// `-webkit-user-select: none` globally on every `a` (see styles.css,
+// originally added to stop stray text-selection highlighting on tap) —
+// there's a real, documented history of WebKit/iOS Safari not reliably
+// delivering click events on anchors with that property set, especially
+// on nested icon+label children like these. Automated Chromium-based
+// testing in this environment can't reproduce a WebKit-only bug, so
+// rather than keep re-verifying a theory this tooling structurally can't
+// disprove, the mobile menu items are now plain <button> elements —
+// buttons have no such history, no href to fight over, and no need for
+// preventDefault at all, which removes the entire suspect class of bug
+// regardless of whether the diagnosis above is exactly right.
 const DEBUG_NAV = true;
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const isItemActive = (item) =>
+    item.end ? location.pathname === item.to : location.pathname === item.to || location.pathname.startsWith(`${item.to}/`);
 
   // Close the mobile menu whenever the route actually changes (not on
   // every render) so navigating never leaves it stuck open.
@@ -68,11 +71,12 @@ export default function Navbar() {
     });
   };
 
-  // Just close the menu — NavLink's own onClick already does
-  // preventDefault + history navigation correctly on its own. The route
-  // actually changing is what the useEffect above is watching for, so
-  // there's nothing left for this handler to do beyond that.
-  const handleNavClick = () => setOpen(false);
+  const handleMenuItemClick = (path) => {
+    if (DEBUG_NAV) console.log("[nav] menu item clicked:", path);
+    setOpen(false);
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
 
   const handleBackdropClose = () => setOpen(false);
 
@@ -144,13 +148,12 @@ export default function Navbar() {
         aria-hidden={!open}
       >
         {navItems.map((item) => (
-          <NavLink
+          <button
             key={item.to}
-            to={item.to}
-            end={item.end}
-            className={({ isActive }) => (isActive ? "nav-mobile-link active" : "nav-mobile-link")}
+            type="button"
+            className={isItemActive(item) ? "nav-mobile-link active" : "nav-mobile-link"}
             tabIndex={open ? 0 : -1}
-            onClick={handleNavClick}
+            onClick={() => handleMenuItemClick(item.to)}
           >
             <svg
               width="18"
@@ -165,16 +168,16 @@ export default function Navbar() {
               <path d={item.icon} />
             </svg>
             <span>{item.label}</span>
-          </NavLink>
+          </button>
         ))}
-        <NavLink
-          to="/explorer"
+        <button
+          type="button"
           className="nav-mobile-launch"
           tabIndex={open ? 0 : -1}
-          onClick={handleNavClick}
+          onClick={() => handleMenuItemClick("/explorer")}
         >
           Launch Explorer &rarr;
-        </NavLink>
+        </button>
       </nav>
     </header>
   );
