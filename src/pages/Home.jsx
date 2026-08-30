@@ -402,11 +402,6 @@ export default function Home() {
       </section>
 
       <HomeNewsSection />
-
-      <footer className="site-footer">
-        <span>Anveshya &mdash; Explore the Universe</span>
-        <span>Built in India &middot; Open to the world</span>
-      </footer>
     </main>
   );
 }

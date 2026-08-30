@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
 import ShootingStars from "./components/ShootingStars.jsx";
 import BackgroundObjects from "./components/BackgroundObjects.jsx";
 import CustomCursor from "./components/CustomCursor.jsx";
@@ -15,6 +16,8 @@ import PlanetDetail from "./pages/PlanetDetail.jsx";
 import SolarShield from "./pages/SolarShield.jsx";
 import News from "./pages/News.jsx";
 import About from "./pages/About.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import TermsOfService from "./pages/TermsOfService.jsx";
 
 function AppShell() {
   const location = useLocation();
@@ -30,6 +33,10 @@ function AppShell() {
   // distraction rather than a nice touch, matching the same exclusion
   // already applied to the shooting stars and ring badge on that page.
   const showCustomCursor = location.pathname !== "/explorer";
+  // Explorer's 3D scene is a fixed, full-viewport canvas with no page
+  // scroll — a footer below it would either never be reachable or would
+  // force scroll onto a page deliberately built not to have any.
+  const showFooter = location.pathname !== "/explorer";
 
   // Polls localStorage-backed reminders and fires real browser
   // Notifications when due. Mounted once here (not per-page) so it keeps
@@ -54,7 +61,10 @@ function AppShell() {
         <Route path="/solarshield" element={<SolarShield />} />
         <Route path="/news" element={<News />} />
         <Route path="/about" element={<About />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
       </Routes>
+      {showFooter ? <Footer /> : null}
       {showBadge ? <RingBadge /> : null}
       {introPlaying ? <RingIntro onComplete={() => setIntroPlaying(false)} /> : null}
       <FeedbackForm />

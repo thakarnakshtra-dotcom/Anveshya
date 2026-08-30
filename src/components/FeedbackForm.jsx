@@ -77,6 +77,15 @@ export default function FeedbackForm() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Lets the footer's "Feedback" link open this on demand, independent of
+  // the timer — a real trigger rather than a dead link, without the
+  // footer needing to own or duplicate this component's visibility state.
+  useEffect(() => {
+    const open = () => setVisible(true);
+    window.addEventListener("anveshya:open-feedback", open);
+    return () => window.removeEventListener("anveshya:open-feedback", open);
+  }, []);
+
   if (!visible) return null;
 
   const handleClose = () => setVisible(false);
