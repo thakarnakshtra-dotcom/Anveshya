@@ -115,6 +115,29 @@ export default function SolarShield() {
         </div>
       </section>
 
+      <section className="modules-section" style={{ paddingBottom: 0 }}>
+        <div className="section-grid">
+          <div className="section-eyebrow">Live Dashboard</div>
+          <div>
+            <div className="ss-live-link-card">
+              <h3 className="ss-live-link-title">Live SolarShield Dashboard</h3>
+              <p className="ss-live-link-body">Experience real-time space weather intelligence:</p>
+              <a
+                href="https://solarsheildai.netlify.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ss-live-link-button"
+              >
+                Launch SolarShield Live &rarr;
+              </a>
+              <p className="ss-live-link-desc">
+                View current Kp index, satellite risk levels, and geomagnetic alerts in real-time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="modules-section">
         <div className="section-grid">
           <div className="section-eyebrow">Live Status</div>

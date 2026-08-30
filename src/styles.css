@@ -1182,7 +1182,13 @@ a {
 .home-hero {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  /* Was 100vh — on a tall viewport with nothing else pulling the hero
+     taller, that forced .hero-ring-stage's flex:1 to keep growing to fill
+     the leftover space, pushing the headline further down than the ring
+     itself needed. Reduced, not removed — still reserves real vertical
+     room so the ring has somewhere to sit, just not a guaranteed full
+     screen. */
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   padding: 112px 34px 46px;
@@ -1191,14 +1197,30 @@ a {
 /* Ring sits in the flexible middle zone between the fixed navbar (cleared
    by .home-hero's own top padding) and the hero text/cards block below —
    centered by flexbox, not fixed percentages, so it keeps equal breathing
-   room on both sides regardless of viewport height or hero-grid height. */
+   room on both sides regardless of viewport height or hero-grid height.
+   Reducing min-height (was 60vh) tightens that gap on both sides equally
+   — flex centering does the "balanced" work, this just shrinks the box
+   it's balanced within, rather than replacing it with fixed margins that
+   would only be correct at one specific viewport height. */
 .hero-ring-stage {
   flex: 1 1 auto;
-  min-height: 60vh;
+  min-height: 42vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 28px 0;
+  padding: 20px 0;
+}
+
+@media (max-width: 640px) {
+  .home-hero {
+    min-height: auto;
+    padding-top: 96px;
+  }
+
+  .hero-ring-stage {
+    min-height: 34vh;
+    padding: 12px 0;
+  }
 }
 
 .hero-grid {
@@ -3053,6 +3075,63 @@ video.sound-media {
 }
 
 /* ---------- SolarShield live dashboard ---------- */
+
+.ss-live-link-card {
+  padding: 20px;
+  border: 1px solid rgba(127, 217, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(127, 217, 255, 0.05);
+  text-align: center;
+}
+
+.ss-live-link-title {
+  margin: 0 0 6px;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.ss-live-link-body {
+  margin: 0;
+  font-size: 13.5px;
+  color: #93a0b5;
+}
+
+.ss-live-link-button {
+  display: inline-block;
+  margin: 15px 0;
+  padding: 12px 24px;
+  border-radius: 20px;
+  background: #7fd9ff;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+/* .home a (a class+element selector, specificity 0,1,1) beats a bare
+   .ss-live-link-button (0,1,0) regardless of source order — this page's
+   <main> reuses the "home" class, so its global `a { color: #9db9f2 }`
+   was quietly winning over the near-black text this button actually
+   needs against its own light cyan background. Qualifying with the
+   parent card class (0,2,0) beats it cleanly instead of reaching for
+   !important. */
+.ss-live-link-card .ss-live-link-button {
+  color: #05070d;
+}
+
+.ss-live-link-button:hover {
+  background: #ffd281;
+  transform: scale(1.05);
+}
+
+.ss-live-link-desc {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: #cbbf9e;
+}
 
 .ss-status-bar {
   display: flex;

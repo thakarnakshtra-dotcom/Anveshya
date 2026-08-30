@@ -68,8 +68,17 @@ export default function Navbar() {
     e.stopPropagation();
     if (DEBUG_NAV) console.log("[nav] menu item tapped, navigating to:", path);
     setOpen(false);
-    navigate(path);
-    if (DEBUG_NAV) console.log("[nav] navigate() called for:", path);
+    // navigate() after the close-menu state update has had a tick to
+    // apply, rather than in the same synchronous handler. Repeated
+    // automated testing (real TouchEvent dispatch, both localhost and two
+    // separate production deploys) never reproduced a failure here, but
+    // this costs nothing and removes any chance of the route change and
+    // the menu-close re-render fighting over the same tick on a real
+    // device this couldn't reproduce.
+    setTimeout(() => {
+      navigate(path);
+      if (DEBUG_NAV) console.log("[nav] navigate() called for:", path);
+    }, 100);
   };
 
   const handleBackdropClose = (e) => {
