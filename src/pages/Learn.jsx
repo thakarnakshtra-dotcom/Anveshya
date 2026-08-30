@@ -492,8 +492,8 @@ export default function Learn() {
               <h2 className="modules-heading">Ancient Sky, Modern Science</h2>
               <p className="page-lede" style={{ margin: "0 0 30px" }}>
                 Real verses from real texts (Āryabhaṭīya, Sūrya Siddhānta), set next to their modern scientific
-                equivalents &mdash; with the accuracy stated honestly, mixed record included. Three topics are fully
-                researched and sourced for this first pass; the rest are marked Coming Soon rather than guessed at.
+                equivalents &mdash; with the accuracy stated honestly, mixed record included. Six topics are fully
+                researched and sourced for this pass; the rest are marked Coming Soon rather than guessed at.
               </p>
               <AncientAstronomy />
             </div>

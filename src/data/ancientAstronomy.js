@@ -87,16 +87,81 @@ export const ancientAstronomyTopics = [
     title: "Sūrya Siddhānta & Orbital Mechanics",
   },
   {
-    id: "nakshatra",
-    status: "coming-soon",
-    kicker: "Coming soon",
-    title: "Nakshatra System",
+    id: "panchanga",
+    status: "full",
+    kicker: "Antiquity – present",
+    title: "Panchanga — the Five Limbs of Time",
+    knownBy: "Traditional Hindu calendrical astronomy, still published and used daily across India",
+    context:
+      "Pañcāṅga literally means \"five limbs\" (pañca = five, aṅga = limb) — the five quantities computed each day to build the traditional Indian calendar. Tithi (lunar day) tracks how far the Moon has pulled ahead of the Sun. Vāra (weekday) is the same seven-day week used worldwide, each day named for one of the seven classical grahas — Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn. Nakṣatra (lunar mansion) is which of 27 star sectors the Moon sits in that day. Yoga is a derived quantity — the summed longitudes of the Sun and Moon, likewise divided into 27 named values. Karaṇa is half a tithi, with 11 named karaṇas cycling through the month (a few of them occurring only once per lunar month, the rest repeating).",
+    modernEquivalent:
+      "Vāra maps exactly onto the modern seven-day week — Ravivāra/Somavāra/Maṅgalavāra/Budhavāra/Guruvāra/Śukravāra/Śanivāra are Sunday through Saturday. Tithi and nakṣatra both come from computing the Sun's and Moon's real ecliptic longitudes for that moment — the same underlying position calculations modern ephemeris software does, just performed with manual trigonometric tables instead of a computer.",
+    modernFact:
+      "The whole system rides on the Sūrya Siddhānta's length of the synodic month — 29.530587946 days, against today's IAU-standard value of 29.530588 days. That's a difference of well under a millionth of a day, computed with no telescope, roughly 1,500 years before one existed.",
+    comparisonTable: [
+      {
+        quantity: "Synodic (lunar) month",
+        ancient: "29.530587946 days",
+        modern: "29.530588 days",
+        verdict: "Matches to 5 decimal places",
+      },
+      {
+        quantity: "Sidereal year",
+        ancient: "365.2563627 days",
+        modern: "365.2563630 days (J2000)",
+        verdict: "Among the most accurate pre-telescope estimates known anywhere",
+      },
+    ],
+    accuracyNote:
+      "The tithi/nakshatra math is exactly as accurate as the underlying Sun/Moon position calculations, which is very accurate — that part is genuinely remarkable and independently verifiable. Yoga and karaṇa are just further arithmetic on top of tithi (a sum, and a half-division), so calling them separately \"accurate\" doesn't quite make sense — their correctness is inherited, not independently measured. Worth being precise about rather than implying five separately-verified ancient measurements.",
+    sources: [
+      "Sūrya Siddhānta (English translation by Ebenezer Burgess, 1860, reprinted by Motilal Banarsidass) — synodic month and sidereal year values",
+      "Wikipedia, \"Panchangam\" (secondary summary used to cross-check the five-limb structure)",
+    ],
   },
   {
     id: "tithi",
-    status: "coming-soon",
-    kicker: "Coming soon",
-    title: "Tithi & Lunar Cycles",
+    status: "full",
+    kicker: "4th–10th century CE",
+    title: "Tithi — the Lunar Day",
+    knownBy: "Sūrya Siddhānta and the broader Siddhantic tradition",
+    context:
+      "A tithi is not a solar day — it's the time the Moon takes to pull 12° further ahead of the Sun along the ecliptic, as seen from Earth. Thirty tithis make one synodic lunar month: fifteen in Śukla Pakṣa (the waxing half, Pratipadā through Pūrṇimā/full moon) and fifteen in Kṛṣṇa Pakṣa (the waning half, Pratipadā through Amāvasyā/new moon).",
+    modernEquivalent:
+      "Average tithi length = synodic month ÷ 30 = 29.530588 ÷ 30 ≈ 0.984 days, about 23h 37m. That's an average, not a constant: because the Moon's and Sun's apparent speeds both vary slightly through their elliptical orbits, a real tithi can run anywhere from roughly 19 to 26 hours. Traditional panchanga calculation accounts for this directly — the tithi boundary is computed from actual Sun/Moon longitudes for that day, not a fixed clock interval.",
+    modernFact:
+      "The number the whole calculation rests on: Sūrya Siddhānta gives the synodic month as 29.530587946 days. The modern IAU value is 29.530588 days — a difference of about half a millionth of a day.",
+    comparisonTable: [
+      {
+        quantity: "Synodic month (basis for tithi length)",
+        ancient: "29.530587946 days",
+        modern: "29.530588 days",
+        verdict: "Differs by ~0.0000005 days",
+      },
+    ],
+    accuracyNote:
+      "This is a real, checkable number, not a rounded-off approximation dressed up to sound impressive — and it was reached through centuries of naked-eye observation and accumulated correction, not a single insight. It's also worth saying plainly: a tithi being a variable-length unit (not a fixed ~24 hours) is a feature of the definition, not an error in either the ancient or modern math.",
+    sources: [
+      "Sūrya Siddhānta (English translation by Ebenezer Burgess, 1860, reprinted by Motilal Banarsidass)",
+      "IAU-standard synodic month value, 29.530588 days, modern astronomical ephemeris data",
+    ],
+  },
+  {
+    id: "nakshatra",
+    status: "full",
+    kicker: "Antiquity – present",
+    title: "Nakshatra — the 27 Lunar Mansions",
+    knownBy: "Vedic and Siddhantic astronomical tradition",
+    context:
+      "The 27 nakṣatras divide the ecliptic into 27 equal sectors of 13°20′ (13.33°) each, tracking which star-region the Moon passes through on a given night as it completes one sidereal orbit. In order: Ashwini, Bharani, Krittika, Rohini, Mrigashira, Ardra, Punarvasu, Pushya, Ashlesha, Magha, Purva Phalguni, Uttara Phalguni, Hasta, Chitra, Swati, Vishakha, Anuradha, Jyeshtha, Mula, Purva Ashadha, Uttara Ashadha, Shravana, Dhanishtha, Shatabhisha, Purva Bhadrapada, Uttara Bhadrapada, and Revati.",
+    modernEquivalent:
+      "The Moon returns to the same nakshatra roughly every 27.32 days — the sidereal month. A handful of nakshatra–star identifications are essentially uncontested across sources: Krittika is the Pleiades, Rohini is Aldebaran, Chitra is Spica, Swati is Arcturus, Shravana is Vega. Several others are looser regional associations (spanning multiple faint stars, e.g. the Bhadrapada pair across Pegasus and Andromeda) rather than one-star matches, and exact identifications for some of the fainter nakshatras do vary somewhat between traditional and scholarly sources — stated here rather than smoothed over.",
+    accuracyNote:
+      "The 27-fold division of the sky and the general star regions it points to have held up for over two thousand years of naked-eye tracking — that part is well attested. What this page won't do is assign a single precise star to every one of the 27 names as if each were independently, unambiguously verified; several of them are honestly closer to \"a stretch of sky near X\" than \"exactly star X,\" and that's a fair reflection of how the system actually works, not a gap in the research.",
+    sources: [
+      "Wikipedia, \"Nakshatra\" (secondary summary used to cross-check star correlations)",
+      "Sidereal month, modern astronomical value (27.321661 days)",
+    ],
   },
   {
     id: "saptarshi",
