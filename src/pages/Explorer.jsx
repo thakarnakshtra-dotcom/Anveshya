@@ -620,12 +620,14 @@ export default function SolarSystemScene() {
         ) : null}
       </div>
       {selectedPlanet ? (
-        <InfoPanel
-          selectedPlanet={selectedPlanet}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          onExpand={() => setExpanded(true)}
-        />
+        <div className="info-panel-stage">
+          <InfoPanel
+            selectedPlanet={selectedPlanet}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            onExpand={() => setExpanded(true)}
+          />
+        </div>
       ) : null}
       {expanded && selectedPlanet && !selectedPlanet.isMoon ? (
         <ExpandedPlanetView planet={selectedPlanet} onClose={() => setExpanded(false)} />
