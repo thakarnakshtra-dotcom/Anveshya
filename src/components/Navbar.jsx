@@ -72,9 +72,21 @@ export default function Navbar() {
   };
 
   const handleMenuItemClick = (path) => {
-    if (DEBUG_NAV) console.log("[nav] menu item clicked:", path);
+    if (DEBUG_NAV) {
+      console.log("=== MENU CLICK DEBUG ===");
+      console.log("1. Click fired. Path:", path);
+      console.log("2. navigate function exists?", typeof navigate);
+      console.log("   navigate value:", navigate);
+    }
     setOpen(false);
-    navigate(path);
+    if (DEBUG_NAV) console.log("3. Menu closed, setOpen(false) called");
+    try {
+      if (DEBUG_NAV) console.log("4. About to call navigate()...");
+      navigate(path);
+      if (DEBUG_NAV) console.log("5. navigate() called successfully for path:", path);
+    } catch (error) {
+      console.error("6. ERROR in navigate():", error.message);
+    }
     window.scrollTo(0, 0);
   };
 
