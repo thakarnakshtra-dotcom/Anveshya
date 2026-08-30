@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import ShootingStars from "./components/ShootingStars.jsx";
 import CustomCursor from "./components/CustomCursor.jsx";
+import FeedbackForm from "./components/FeedbackForm.jsx";
 import { RingIntro, RingBadge, shouldPlayIntro } from "./components/RingSystem.jsx";
 import { startReminderChecker } from "./utils/reminders.js";
 import Home from "./pages/Home.jsx";
@@ -50,6 +51,7 @@ function AppShell() {
       </Routes>
       {showBadge ? <RingBadge /> : null}
       {introPlaying ? <RingIntro onComplete={() => setIntroPlaying(false)} /> : null}
+      <FeedbackForm />
     </>
   );
 }
