@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // Shared geometry so the intro's settled ring and the persistent corner
@@ -7,6 +7,15 @@ import * as THREE from "three";
 const MAIN_RADIUS = 2.2;
 const MAIN_TUBE = 0.16;
 const MAIN_TILT = 1.34; // rotateX, radians — makes the full ring read as a foreshortened ellipse
+
+// The intro's PerspectiveCamera has a fixed *vertical* FOV, so its visible
+// *width* in world units shrinks on narrow/portrait aspect ratios (a tall
+// phone screen sees much less horizontally than a wide desktop one at the
+// same camera distance) — without this, the ring (a fixed 2*MAIN_RADIUS
+// wide, regardless of screen size) reads as oversized and crops/overlaps
+// the page during the fade-out on mobile. RING_FIT_WIDTH is the world-unit
+// width the ring needs to sit comfortably inside with margin.
+const RING_FIT_WIDTH = MAIN_RADIUS * 2 + 2.2;
 
 function easeOutCubic(t) {
   return 1 - Math.pow(1 - t, 3);
@@ -71,14 +80,26 @@ const HOLD_DURATION = 0.7; // ring visibly rotating before the crossfade
 function ConvergingRing({ onSettled }) {
   const pointsRef = useRef();
   const solidGroupRef = useRef();
+  const fitGroupRef = useRef();
   const elapsedRef = useRef(0);
   const firedSettled = useRef(false);
+  const { viewport } = useThree();
 
   const { positions, starts, targets } = useMemo(() => {
     const s = randomScatter(PARTICLE_COUNT);
     const t = buildTargets(PARTICLE_COUNT);
     return { positions: s.slice(), starts: s, targets: t };
   }, []);
+
+  // Shrink (never enlarge) the whole ring so it always fits the current
+  // viewport width — this is what actually fixes the mobile "too large,
+  // overlaps content" symptom, since it's driven by real aspect ratio,
+  // not a fixed breakpoint guess.
+  useEffect(() => {
+    if (!fitGroupRef.current) return;
+    const scale = Math.min(1, viewport.width / RING_FIT_WIDTH);
+    fitGroupRef.current.scale.setScalar(scale);
+  }, [viewport.width]);
 
   useFrame((_, delta) => {
     elapsedRef.current += delta;
@@ -120,7 +141,7 @@ function ConvergingRing({ onSettled }) {
   });
 
   return (
-    <>
+    <group ref={fitGroupRef}>
       <points ref={pointsRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" count={PARTICLE_COUNT} array={positions} itemSize={3} />
@@ -141,7 +162,7 @@ function ConvergingRing({ onSettled }) {
           <meshBasicMaterial color="#f5f1e8" transparent opacity={0} />
         </mesh>
       </group>
-    </>
+    </group>
   );
 }
 
