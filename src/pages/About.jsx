@@ -26,8 +26,8 @@ export default function About() {
           </div>
           <h1 className="page-heading">I'm Nakshtra Thakar. This Is Anveshya.</h1>
           <p className="page-lede">
-            A BCA student in Surat, Gujarat, building the space platform I always wanted to exist &mdash; accurate,
-            honest, and free to explore.
+            A self-taught developer and learner in Surat, Gujarat, building the space platform I always wanted to
+            exist &mdash; accurate, honest, and free to explore.
           </p>
         </div>
       </section>
@@ -89,7 +89,7 @@ export default function About() {
               </div>
               <div>
                 <div className="metric-label">Status</div>
-                <div className="metric-value">Building</div>
+                <div className="metric-value">Version 1</div>
                 <div className="metric-note">Anveshya + SolarShield, actively shipping</div>
               </div>
             </div>

@@ -105,6 +105,7 @@ export default function SolarShield() {
           <div className="hero-eyebrow">
             <span className="hero-eyebrow-rule" />
             SolarShield
+            <span className="ss-version-badge">Status: Version 1</span>
           </div>
           <h1 className="page-heading">Space Weather Risk Intelligence</h1>
           <p className="page-lede">

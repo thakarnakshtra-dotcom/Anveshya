@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import ShootingStars from "./components/ShootingStars.jsx";
+import CustomCursor from "./components/CustomCursor.jsx";
 import { RingIntro, RingBadge, shouldPlayIntro } from "./components/RingSystem.jsx";
 import { startReminderChecker } from "./utils/reminders.js";
 import Home from "./pages/Home.jsx";
@@ -18,6 +19,11 @@ function AppShell() {
   const [introPlaying, setIntroPlaying] = useState(() => location.pathname === "/" && shouldPlayIntro());
   const showBadge = !introPlaying && location.pathname !== "/explorer";
   const showShootingStars = location.pathname !== "/explorer";
+  // Excluded on Explorer too — that page is driven by OrbitControls
+  // drag-to-orbit interaction, where a trailing cursor effect would be a
+  // distraction rather than a nice touch, matching the same exclusion
+  // already applied to the shooting stars and ring badge on that page.
+  const showCustomCursor = location.pathname !== "/explorer";
 
   // Polls localStorage-backed reminders and fires real browser
   // Notifications when due. Mounted once here (not per-page) so it keeps
@@ -31,6 +37,7 @@ function AppShell() {
     <>
       <Navbar />
       {showShootingStars ? <ShootingStars /> : null}
+      {showCustomCursor ? <CustomCursor /> : null}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/explorer" element={<Explorer />} />

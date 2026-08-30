@@ -1,6 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AmbientBackground from "../components/AmbientBackground.jsx";
+import { fetchAllLatestNews } from "../utils/spaceNews.js";
+
+const NEWS_TAG_CLASS = { NASA: "news-tag-nasa", ISRO: "news-tag-isro", ESA: "news-tag-esa" };
+const NEWS_ICON = {
+  NASA: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15.5 8.5l-2.1 5-5 2.1 2.1-5z",
+  ISRO: "M12 3 5 5.6v5.9c0 4 2.9 7.6 7 9.5 4.1-1.9 7-5.5 7-9.5V5.6zM12 8.6v6.8M8.9 12h6.2",
+  ESA: "M4 4h13a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3zM8 9h8M8 13h8M8 17h4",
+};
+
+function HomeNewsSection() {
+  const [items, setItems] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchAllLatestNews().then(({ items: merged }) => {
+      if (!cancelled) setItems(merged.slice(0, 4));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return (
+    <section className="modules-section" style={{ paddingTop: 0 }}>
+      <div className="section-grid">
+        <div className="section-eyebrow">03 &mdash; Latest Space News &amp; Updates</div>
+        <div>
+          <h2 className="modules-heading">Straight From NASA, ISRO &amp; ESA</h2>
+          {items === null ? (
+            <p className="page-lede">Loading the latest updates&hellip;</p>
+          ) : items.length === 0 ? (
+            <p className="page-lede">No updates could be fetched right now &mdash; check the News page directly.</p>
+          ) : (
+            <div className="home-news-grid">
+              {items.map((item, i) => (
+                <Link key={`${item.source}-${i}`} to="/news" className="home-news-card">
+                  <div className="home-news-top">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9DB9F2"
+                      strokeWidth="1.3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d={NEWS_ICON[item.source] || NEWS_ICON.NASA} />
+                    </svg>
+                    <span className={`news-tag ${NEWS_TAG_CLASS[item.source] || "news-tag-nasa"}`}>{item.source}</span>
+                  </div>
+                  <div className="home-news-date">
+                    {item.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </div>
+                  <div className="home-news-title">{item.title}</div>
+                  {item.excerpt ? <div className="home-news-excerpt">{item.excerpt}</div> : null}
+                </Link>
+              ))}
+            </div>
+          )}
+          <Link to="/news" className="home-news-view-all">
+            View all news &rarr;
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const heroCards = [
   { kicker: "01", title: "Real Orbital Mechanics", body: "Accurate relative speeds, distances, and scale across all eight planets." },
@@ -44,6 +112,7 @@ const metrics = [
   { label: "Moons Rendered", value: "18", note: "Real names, real facts" },
   { label: "Scale Modes", value: "3", note: "Visual, true-to-scale & static" },
   { label: "Data Sources", value: "3", note: "NASA · ISRO · ESA" },
+  { label: "Status", value: "Version 1", note: "Actively shipping" },
 ];
 
 export default function Home() {
@@ -331,6 +400,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <HomeNewsSection />
 
       <footer className="site-footer">
         <span>Anveshya &mdash; Explore the Universe</span>

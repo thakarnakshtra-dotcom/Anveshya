@@ -2,24 +2,11 @@ import React, { useEffect, useState } from "react";
 import AmbientBackground from "../components/AmbientBackground.jsx";
 import ReminderBell from "../components/ReminderBell.jsx";
 import { nextEclipse, meteorShowers, conjunctions } from "../data/astroEvents.js";
+import { fetchAllLatestNews, truncate } from "../utils/spaceNews.js";
 
-const NASA_FEED = "https://www.nasa.gov/news-release/feed/";
-const ISRO_SATELLITES = "https://isro.vercel.app/api/customer_satellites";
-const ESA_FEED = "https://www.esa.int/rssfeed/TopNews";
 const LAUNCH_LIBRARY = "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=20&mode=normal";
 const ISS_POSITION = "https://api.wheretheiss.at/v1/satellites/25544";
 const DAY_MS = 86400000;
-
-function stripHtml(html) {
-  const doc = new DOMParser().parseFromString(html || "", "text/html");
-  return (doc.body.textContent || "").trim();
-}
-
-function truncate(text, max) {
-  if (!text) return "";
-  if (text.length <= max) return text;
-  return `${text.slice(0, max).trim()}…`;
-}
 
 // Parsed at local noon rather than UTC midnight so a date-only string like
 // "2026-10-05" never silently shifts a day backward in timezones behind UTC.
@@ -30,73 +17,6 @@ function parseDateOnly(str) {
 
 function formatDate(date) {
   return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
-}
-
-// NASA: real RSS feed, fetched and parsed client-side (CORS-enabled, verified).
-async function fetchNasa() {
-  const res = await fetch(NASA_FEED);
-  if (!res.ok) throw new Error(`NASA feed responded ${res.status}`);
-  const xml = new DOMParser().parseFromString(await res.text(), "text/xml");
-  if (xml.querySelector("parsererror")) throw new Error("NASA feed failed to parse");
-  return Array.from(xml.querySelectorAll("item"))
-    .slice(0, 8)
-    .map((item) => ({
-      source: "NASA",
-      title: item.querySelector("title")?.textContent || "Untitled",
-      date: new Date(item.querySelector("pubDate")?.textContent || Date.now()),
-      excerpt: truncate(stripHtml(item.querySelector("description")?.textContent), 180),
-      link: item.querySelector("link")?.textContent || "https://www.nasa.gov/news/",
-    }));
-}
-
-// ISRO: isro.vercel.app has no news/launch-log endpoint with dates or
-// descriptions — /api/spacecrafts is just {id, name}. The one endpoint with
-// real, verifiable dates is customer_satellites (launch_date, country,
-// launcher, mass), so recent ISRO activity is built from that real data
-// rather than any fabricated excerpt.
-async function fetchIsro() {
-  const res = await fetch(ISRO_SATELLITES);
-  if (!res.ok) throw new Error(`ISRO API responded ${res.status}`);
-  const json = await res.json();
-  const list = json?.customer_satellites;
-  if (!Array.isArray(list) || list.length === 0) throw new Error("No ISRO data");
-
-  const parsed = list
-    .map((s) => {
-      const [d, m, y] = (s.launch_date || "").split("-").map(Number);
-      const date = d && m && y ? new Date(y, m - 1, d) : null;
-      return { ...s, date };
-    })
-    .filter((s) => s.date && !Number.isNaN(s.date.getTime()));
-
-  parsed.sort((a, b) => b.date - a.date);
-
-  return parsed.slice(0, 6).map((s) => ({
-    source: "ISRO",
-    title: `${s.id} launched for ${s.country}`,
-    date: s.date,
-    excerpt: `${s.mass ? `${s.mass} kg satellite ` : "Satellite "}launched aboard ${s.launcher || "an ISRO vehicle"}.`,
-    link: "https://www.isro.gov.in",
-  }));
-}
-
-// ESA: their public RSS feed does not send CORS headers, so a direct
-// browser fetch is expected to fail — this is attempted for real and
-// skipped gracefully rather than routed through a third-party proxy.
-async function fetchEsa() {
-  const res = await fetch(ESA_FEED);
-  if (!res.ok) throw new Error(`ESA feed responded ${res.status}`);
-  const xml = new DOMParser().parseFromString(await res.text(), "text/xml");
-  if (xml.querySelector("parsererror")) throw new Error("ESA feed failed to parse");
-  return Array.from(xml.querySelectorAll("item"))
-    .slice(0, 8)
-    .map((item) => ({
-      source: "ESA",
-      title: item.querySelector("title")?.textContent || "Untitled",
-      date: new Date(item.querySelector("pubDate")?.textContent || Date.now()),
-      excerpt: truncate(stripHtml(item.querySelector("description")?.textContent), 180),
-      link: item.querySelector("link")?.textContent || "https://www.esa.int",
-    }));
 }
 
 // Upcoming launches: The Space Devs' Launch Library 2 API — free, no key,
@@ -134,7 +54,6 @@ async function fetchIssPosition() {
   return res.json();
 }
 
-const SOURCES = [fetchNasa, fetchIsro, fetchEsa];
 const TAG_CLASS = { NASA: "news-tag-nasa", ISRO: "news-tag-isro", ESA: "news-tag-esa" };
 const DAILY_REFRESH_MS = 24 * 60 * 60 * 1000;
 const EVENT_FILTERS = ["All", "Launches", "Eclipses", "Meteor Showers", "ISS", "Conjunctions"];
@@ -153,15 +72,8 @@ export default function News() {
     let cancelled = false;
 
     const loadLatest = () => {
-      Promise.allSettled(SOURCES.map((fn) => fn())).then((results) => {
+      fetchAllLatestNews().then(({ items: merged, failedCount: failed }) => {
         if (cancelled) return;
-        const merged = [];
-        let failed = 0;
-        results.forEach((r) => {
-          if (r.status === "fulfilled") merged.push(...r.value);
-          else failed += 1;
-        });
-        merged.sort((a, b) => b.date - a.date);
         setItems(merged);
         setFailedCount(failed);
       });
@@ -274,7 +186,7 @@ export default function News() {
                   </div>
                 )}
                 <p className="page-lede" style={{ marginTop: 26, fontSize: 12.5 }}>
-                  {failedCount > 0 ? `${failedCount} of ${SOURCES.length} sources didn't respond and were skipped. ` : ""}
+                  {failedCount > 0 ? `${failedCount} of 3 sources didn't respond and were skipped. ` : ""}
                   CNSA and JAXA don't publish a public press-release feed, so they aren't in this list &mdash; their
                   launches still show up under Upcoming Events. Refreshes automatically once a day.
                 </p>
