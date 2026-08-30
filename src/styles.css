@@ -885,6 +885,13 @@ a {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Immediate visual feedback on the actual tap/press, distinct from the
+   .active (current-route) state above — confirms to a touch user that
+   their tap registered even before navigation completes. */
+.nav-mobile-link:active {
+  background: rgba(127, 217, 255, 0.1);
+}
+
 .nav-mobile-launch {
   display: flex;
   align-items: center;

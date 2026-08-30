@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const navItems = [
   { label: "Home", to: "/", end: true, icon: "M4 11.2 12 4.5l8 6.7V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z" },
@@ -22,9 +22,20 @@ const navItems = [
   { label: "About", to: "/about", icon: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 10.6V16M12 7.6h.01" },
 ];
 
+// Mobile Safari (and some Android browsers) have a real, documented history
+// of unreliable onClick on touch — the safest fix is to explicitly own
+// both input paths through one handler rather than hope the browser's
+// touch-to-click synthesis behaves. Calling preventDefault() inside
+// onTouchEnd suppresses the compatibility click event the browser would
+// otherwise fire ~afterward, so exactly one of {onTouchEnd, onClick} ever
+// actually runs per tap — never both, so this can't double-navigate or
+// (worse, for the hamburger) double-toggle back to where it started.
+const DEBUG_NAV = true;
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Close the mobile menu whenever the route actually changes (not on
   // every render) so navigating never leaves it stuck open.
@@ -42,6 +53,30 @@ export default function Navbar() {
       };
     }
   }, [open]);
+
+  const handleToggleHamburger = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen((o) => {
+      if (DEBUG_NAV) console.log("[nav] hamburger toggled ->", !o ? "open" : "closed");
+      return !o;
+    });
+  };
+
+  const handleNavClick = (e, path) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (DEBUG_NAV) console.log("[nav] menu item tapped, navigating to:", path);
+    setOpen(false);
+    navigate(path);
+    if (DEBUG_NAV) console.log("[nav] navigate() called for:", path);
+  };
+
+  const handleBackdropClose = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(false);
+  };
 
   return (
     <header className="site-header">
@@ -91,7 +126,8 @@ export default function Navbar() {
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           aria-controls="mobile-nav-menu"
-          onClick={() => setOpen((o) => !o)}
+          onClick={handleToggleHamburger}
+          onTouchEnd={handleToggleHamburger}
         >
           <span className={open ? "nav-hamburger-line open" : "nav-hamburger-line"} />
           <span className={open ? "nav-hamburger-line open" : "nav-hamburger-line"} />
@@ -101,7 +137,8 @@ export default function Navbar() {
 
       <div
         className={open ? "nav-mobile-backdrop open" : "nav-mobile-backdrop"}
-        onClick={() => setOpen(false)}
+        onClick={handleBackdropClose}
+        onTouchEnd={handleBackdropClose}
         aria-hidden="true"
       />
 
@@ -117,6 +154,8 @@ export default function Navbar() {
             end={item.end}
             className={({ isActive }) => (isActive ? "nav-mobile-link active" : "nav-mobile-link")}
             tabIndex={open ? 0 : -1}
+            onClick={(e) => handleNavClick(e, item.to)}
+            onTouchEnd={(e) => handleNavClick(e, item.to)}
           >
             <svg
               width="18"
@@ -133,7 +172,13 @@ export default function Navbar() {
             <span>{item.label}</span>
           </NavLink>
         ))}
-        <NavLink to="/explorer" className="nav-mobile-launch" tabIndex={open ? 0 : -1}>
+        <NavLink
+          to="/explorer"
+          className="nav-mobile-launch"
+          tabIndex={open ? 0 : -1}
+          onClick={(e) => handleNavClick(e, "/explorer")}
+          onTouchEnd={(e) => handleNavClick(e, "/explorer")}
+        >
           Launch Explorer &rarr;
         </NavLink>
       </nav>
