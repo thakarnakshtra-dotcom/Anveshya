@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AmbientBackground from "../components/AmbientBackground.jsx";
+import ReminderBell from "../components/ReminderBell.jsx";
 import { nextEclipse, meteorShowers, conjunctions } from "../data/astroEvents.js";
 
 const NASA_FEED = "https://www.nasa.gov/news-release/feed/";
@@ -311,6 +312,13 @@ export default function News() {
                             <div className="news-meta">
                               <span className="astro-badge astro-badge-launch">&#9679; Launch</span>
                               {ev.date ? <span className="news-date">{formatDate(ev.date)}</span> : null}
+                              {ev.date ? (
+                                <ReminderBell
+                                  id={`launch-${ev.name}-${ev.date.toISOString()}`}
+                                  eventName={ev.name}
+                                  eventDateISO={ev.date.toISOString()}
+                                />
+                              ) : null}
                             </div>
                             <div className="news-title">{ev.name}</div>
                             <div className="event-meta-row">
@@ -333,6 +341,11 @@ export default function News() {
                       <div className="news-meta">
                         <span className="astro-badge astro-badge-eclipse">&#9679; Eclipse</span>
                         <span className="news-date">{formatDate(parseDateOnly(nextEclipse.date))}</span>
+                        <ReminderBell
+                          id={`eclipse-${nextEclipse.date}`}
+                          eventName={`${nextEclipse.type} Eclipse`}
+                          eventDateISO={parseDateOnly(nextEclipse.date).toISOString()}
+                        />
                       </div>
                       <div className="news-title">
                         Next: {nextEclipse.type} Eclipse
@@ -358,6 +371,11 @@ export default function News() {
                           <div className="news-meta">
                             <span className="astro-badge astro-badge-meteor">&#9679; Meteor Shower</span>
                             <span className="news-date">{m.peakDateLabel}</span>
+                            <ReminderBell
+                              id={`meteor-${m.name}`}
+                              eventName={`${m.name} meteor shower peak`}
+                              eventDateISO={parseDateOnly(m.peakDate).toISOString()}
+                            />
                           </div>
                           <div className="news-title">{m.name}</div>
                           <div className="event-meta-row">
@@ -411,6 +429,11 @@ export default function News() {
                           <div className="news-meta">
                             <span className="astro-badge astro-badge-conjunction">&#9679; Conjunction</span>
                             <span className="news-date">{formatDate(parseDateOnly(c.date))}</span>
+                            <ReminderBell
+                              id={`conjunction-${c.objects}`}
+                              eventName={c.objects}
+                              eventDateISO={parseDateOnly(c.date).toISOString()}
+                            />
                           </div>
                           <div className="news-title">{c.objects}</div>
                           <div className="event-meta-row">

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import ShootingStars from "./components/ShootingStars.jsx";
 import { RingIntro, RingBadge, shouldPlayIntro } from "./components/RingSystem.jsx";
+import { startReminderChecker } from "./utils/reminders.js";
 import Home from "./pages/Home.jsx";
 import Explorer from "./pages/Explorer.jsx";
 import Learn from "./pages/Learn.jsx";
@@ -17,6 +18,14 @@ function AppShell() {
   const [introPlaying, setIntroPlaying] = useState(() => location.pathname === "/" && shouldPlayIntro());
   const showBadge = !introPlaying && location.pathname !== "/explorer";
   const showShootingStars = location.pathname !== "/explorer";
+
+  // Polls localStorage-backed reminders and fires real browser
+  // Notifications when due. Mounted once here (not per-page) so it keeps
+  // working across SPA navigation for as long as this tab stays open —
+  // there's no push backend, so it can't do more than that.
+  useEffect(() => {
+    return startReminderChecker();
+  }, []);
 
   return (
     <>
