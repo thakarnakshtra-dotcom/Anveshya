@@ -39,8 +39,28 @@ const navItems = [
 // regardless of whether the diagnosis above is exactly right.
 const DEBUG_NAV = true;
 
+// Matches .nav-mobile-menu's `transition: right 280ms ease` in styles.css
+// — see menuReady below for why this needs to be known in JS too.
+const MENU_OPEN_TRANSITION_MS = 280;
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  // Root cause, finally confirmed on a real device: .nav-mobile-backdrop
+  // gets pointer-events: auto the INSTANT `open` becomes true, while
+  // .nav-mobile-menu is still sliding in from off-screen over the next
+  // 280ms. A tap that lands during that window — very normal human tap
+  // rhythm, especially tapping hamburger then immediately tapping a menu
+  // item — can hit the backdrop (which silently closes the menu, no
+  // error, nothing to see) instead of a button that hasn't visually
+  // arrived at that screen position yet. Every previous round of testing
+  // in this project used el.dispatchEvent() aimed directly at a DOM
+  // reference, which bypasses real screen-coordinate hit-testing and
+  // animation timing entirely — structurally blind to exactly this bug.
+  // menuReady only flips true once the slide-in has actually finished,
+  // and the backdrop's close handler ignores taps until then, so a tap
+  // that lands too early is simply ignored (ready to tap again) instead
+  // of silently closing the menu.
+  const [menuReady, setMenuReady] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -64,10 +84,16 @@ export default function Navbar() {
     }
   }, [open]);
 
+  useEffect(() => {
+    if (!open) {
+      setMenuReady(false);
+      return;
+    }
+    const timer = setTimeout(() => setMenuReady(true), MENU_OPEN_TRANSITION_MS);
+    return () => clearTimeout(timer);
+  }, [open]);
+
   const handleToggleHamburger = () => {
-    // TEMP-DEBUG: on-screen proof for testing directly on a phone, no
-    // devtools needed — remove once the real-device report comes back.
-    if (DEBUG_NAV) alert("Hamburger clicked");
     setOpen((o) => {
       if (DEBUG_NAV) console.log("[nav] hamburger toggled ->", !o ? "open" : "closed");
       return !o;
@@ -75,27 +101,16 @@ export default function Navbar() {
   };
 
   const handleMenuItemClick = (path) => {
-    // TEMP-DEBUG: same as above — visible without opening console.
-    if (DEBUG_NAV) alert("Clicked: " + path);
-    if (DEBUG_NAV) {
-      console.log("=== MENU CLICK DEBUG ===");
-      console.log("1. Click fired. Path:", path);
-      console.log("2. navigate function exists?", typeof navigate);
-      console.log("   navigate value:", navigate);
-    }
+    if (DEBUG_NAV) console.log("[nav] menu item clicked:", path);
     setOpen(false);
-    if (DEBUG_NAV) console.log("3. Menu closed, setOpen(false) called");
-    try {
-      if (DEBUG_NAV) console.log("4. About to call navigate()...");
-      navigate(path);
-      if (DEBUG_NAV) console.log("5. navigate() called successfully for path:", path);
-    } catch (error) {
-      console.error("6. ERROR in navigate():", error.message);
-    }
+    navigate(path);
     window.scrollTo(0, 0);
   };
 
-  const handleBackdropClose = () => setOpen(false);
+  const handleBackdropClose = () => {
+    if (!menuReady) return;
+    setOpen(false);
+  };
 
   return (
     <header className="site-header">
