@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import ShootingStars from "./components/ShootingStars.jsx";
+import BackgroundObjects from "./components/BackgroundObjects.jsx";
 import CustomCursor from "./components/CustomCursor.jsx";
 import FeedbackForm from "./components/FeedbackForm.jsx";
 import { RingIntro, RingBadge, shouldPlayIntro } from "./components/RingSystem.jsx";
@@ -20,6 +21,10 @@ function AppShell() {
   const [introPlaying, setIntroPlaying] = useState(() => location.pathname === "/" && shouldPlayIntro());
   const showBadge = !introPlaying && location.pathname !== "/explorer";
   const showShootingStars = location.pathname !== "/explorer";
+  // Same Explorer exclusion as shooting stars — that page already has its
+  // own 3D starfield/scene, another decorative layer behind it would just
+  // be wasted paint the user never sees under the WebGL canvas.
+  const showBackgroundObjects = location.pathname !== "/explorer";
   // Excluded on Explorer too — that page is driven by OrbitControls
   // drag-to-orbit interaction, where a trailing cursor effect would be a
   // distraction rather than a nice touch, matching the same exclusion
@@ -37,6 +42,7 @@ function AppShell() {
   return (
     <>
       <Navbar />
+      {showBackgroundObjects ? <BackgroundObjects /> : null}
       {showShootingStars ? <ShootingStars /> : null}
       {showCustomCursor ? <CustomCursor /> : null}
       <Routes>

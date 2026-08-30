@@ -1039,6 +1039,112 @@ a {
   }
 }
 
+/* ---------- Background objects: floating glow orbs ---------- */
+
+.background-objects {
+  position: fixed;
+  inset: 0;
+  /* Page sections commonly set `position: relative; z-index: 1` (e.g.
+     .page-hero) to sit above the shooting-star layer, which is also
+     z-index: 1 and relies on DOM order (it's mounted earlier, so it loses
+     ties) to stay behind real content. z-index: 0 seemed like the more
+     "behind everything" choice but actually loses outright to any z-index
+     1 section regardless of DOM order — this was invisible on every page
+     that had content until matched to the same tier. */
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.space-object {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  animation: float 20s infinite ease-in-out;
+  will-change: transform;
+}
+
+.object-1 {
+  top: 20%;
+  left: 10%;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, #7fd9ff, transparent 70%);
+  animation-delay: 0s;
+}
+
+.object-2 {
+  top: 50%;
+  right: 5%;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, #ffd281, transparent 70%);
+  animation-delay: 5s;
+  animation-duration: 24s;
+}
+
+.object-3 {
+  bottom: 20%;
+  left: 20%;
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle, #cbbf9e, transparent 70%);
+  animation-delay: 10s;
+  animation-duration: 18s;
+}
+
+.object-4 {
+  top: 60%;
+  right: 15%;
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle, #7fd9ff, transparent 70%);
+  animation-delay: 15s;
+  animation-duration: 22s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(20px, -30px);
+  }
+}
+
+@media (max-width: 768px) {
+  .space-object {
+    opacity: 0.1;
+  }
+
+  .object-1 {
+    width: 24px;
+    height: 24px;
+  }
+
+  .object-2 {
+    width: 34px;
+    height: 34px;
+  }
+
+  .object-3 {
+    width: 20px;
+    height: 20px;
+  }
+
+  .object-4 {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .space-object {
+    animation: none;
+  }
+}
+
 /* ---------- Shared design-system keyframes ---------- */
 
 @keyframes an-spin { to { transform: rotate(360deg); } }
