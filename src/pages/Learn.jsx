@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import AmbientBackground from "../components/AmbientBackground.jsx";
 import MissionCard from "../components/MissionCard.jsx";
 import SoundCard from "../components/SoundCard.jsx";
@@ -338,8 +339,9 @@ function AncientAstronomyTopicView({ topic }) {
   );
 }
 
-function AncientAstronomy() {
-  const [activeId, setActiveId] = useState(ancientAstronomyTopics[0].id);
+function AncientAstronomy({ initialTopicId }) {
+  const validInitialId = ancientAstronomyTopics.some((t) => t.id === initialTopicId) ? initialTopicId : null;
+  const [activeId, setActiveId] = useState(validInitialId || ancientAstronomyTopics[0].id);
   const activeTopic = ancientAstronomyTopics.find((t) => t.id === activeId);
 
   return (
@@ -365,7 +367,14 @@ function AncientAstronomy() {
 }
 
 export default function Learn() {
-  const [tab, setTab] = useState("Images & Videos");
+  const [searchParams] = useSearchParams();
+  // Lets other pages deep-link straight into a specific Ancient Astronomy
+  // topic (e.g. the Explorer nakshatra wheel's "More" button) via
+  // /learn?tab=ancient&topic=nakshatra, rather than just landing on the
+  // generic Learn page and making the visitor find it themselves.
+  const [tab, setTab] = useState(() =>
+    searchParams.get("tab") === "ancient" ? "Ancient Indian Astronomy" : "Images & Videos"
+  );
 
   return (
     <main className="home">
@@ -495,7 +504,7 @@ export default function Learn() {
                 equivalents &mdash; with the accuracy stated honestly, mixed record included. Six topics are fully
                 researched and sourced for this pass; the rest are marked Coming Soon rather than guessed at.
               </p>
-              <AncientAstronomy />
+              <AncientAstronomy initialTopicId={searchParams.get("topic")} />
             </div>
           ) : null}
           </div>

@@ -1,4 +1,3 @@
-import { TestEmailButton } from '../TestEmailButton';
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AmbientBackground from "../components/AmbientBackground.jsx";
@@ -402,9 +401,7 @@ export default function Home() {
         </div>
       </section>
 
-                       
-        <HomeNewsSection />
-      <TestEmailButton />
+      <HomeNewsSection />
     </main>
   );
 }

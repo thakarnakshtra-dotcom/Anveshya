@@ -2,8 +2,10 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Stars, useTexture, Line, Html } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import * as THREE from "three";
 import { planets, scaleModes, tabs } from "../data/planets.js";
+import NakshatraWheel from "../components/NakshatraWheel.jsx";
 
 const detailSections = ["Physical Data", "Atmosphere", "Exploration", "Discovery", "Moons"];
 
@@ -567,6 +569,8 @@ function findMoonInfo(selectedName) {
 }
 
 export default function SolarSystemScene() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const showNakshatras = searchParams.get("section") === "nakshatras";
   const [mode, setMode] = useState("visual");
   const [selectedName, setSelectedName] = useState(null);
   const [activeTab, setActiveTab] = useState("Overview");
@@ -592,6 +596,14 @@ export default function SolarSystemScene() {
     setExpanded(false);
   };
 
+  if (showNakshatras) {
+    return (
+      <main className="solar-system">
+        <NakshatraWheel onClose={() => setSearchParams({}, { replace: true })} />
+      </main>
+    );
+  }
+
   return (
     <main className="solar-system">
       <Canvas camera={{ position: START_CAMERA.toArray(), fov: 50, near: 0.02, far: 1200 }} dpr={[1, 1.75]}>
@@ -606,12 +618,22 @@ export default function SolarSystemScene() {
         </Suspense>
       </Canvas>
       <div className="topbar">
-        <div className="scale-toggle" role="group" aria-label="Scale mode">
-          {Object.entries(scaleModes).map(([key, config]) => (
-            <button key={key} className={mode === key ? "active" : ""} type="button" onClick={() => changeMode(key)}>
-              {config.label}
-            </button>
-          ))}
+        <div className="topbar-controls">
+          <div className="scale-toggle" role="group" aria-label="Scale mode">
+            {Object.entries(scaleModes).map(([key, config]) => (
+              <button key={key} className={mode === key ? "active" : ""} type="button" onClick={() => changeMode(key)}>
+                {config.label}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="nak-entry-button"
+            onClick={() => setSearchParams({ section: "nakshatras" })}
+            title="27 Nakshatras — an interactive Vedic sky wheel"
+          >
+            Nakshatras
+          </button>
         </div>
         {selectedName ? (
           <button className="return-button" type="button" onClick={returnToSystem}>

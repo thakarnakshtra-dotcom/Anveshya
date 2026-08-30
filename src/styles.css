@@ -3649,3 +3649,292 @@ video.sound-media {
   }
 }
 
+/* ---------- Explorer: Nakshatra wheel ---------- */
+
+/* Wraps .scale-toggle + .nak-entry-button so .topbar itself always has
+   at most 2 direct children (this + the conditional .return-button) —
+   its own mobile breakpoint below 520px switches to a fixed 2-column
+   grid that assumes exactly that, so a 3rd top-level topbar child would
+   have broken it. */
+.topbar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.nak-entry-button {
+  min-height: 36px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 210, 129, 0.3);
+  border-radius: 999px;
+  color: #ffd281;
+  background: rgba(255, 210, 129, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.nak-entry-button:hover {
+  color: #fff;
+  background: rgba(255, 210, 129, 0.16);
+  border-color: rgba(255, 210, 129, 0.5);
+}
+
+.nak-wheel-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.nak-wheel-stage canvas {
+  touch-action: none;
+}
+
+.nak-wheel-topbar {
+  position: absolute;
+  top: 96px;
+  left: 22px;
+  right: 22px;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.nak-wheel-topbar > * {
+  pointer-events: auto;
+}
+
+.nak-wheel-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nak-wheel-eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffd281;
+}
+
+.nak-wheel-hint {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 12px;
+  color: rgba(245, 241, 232, 0.55);
+}
+
+.nak-om {
+  font-size: 34px;
+  line-height: 1;
+  color: #7fd9ff;
+  text-shadow: 0 0 18px rgba(127, 217, 255, 0.7), 0 0 36px rgba(127, 217, 255, 0.35);
+  user-select: none;
+}
+
+.nak-label {
+  max-width: 92px;
+  padding: 3px 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(5, 7, 13, 0.55);
+  color: #cbbf9e;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.nak-label-active {
+  color: #05070d;
+  background: #ffd281;
+  font-weight: 600;
+}
+
+.nak-detail-panel {
+  position: absolute;
+  top: 150px;
+  right: 22px;
+  bottom: 60px;
+  z-index: 10;
+  width: min(360px, calc(100vw - 44px));
+  max-height: min(70vh, calc(100vh - 210px));
+  overflow-y: auto;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: #e7ecf5;
+  background: linear-gradient(180deg, rgba(10, 14, 24, 0.9), rgba(6, 9, 16, 0.94));
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.46);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  font-family: "Archivo", system-ui, sans-serif;
+  animation: panelIn 0.28s ease-out;
+}
+
+.nak-detail-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e7ecf5;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.nak-detail-kicker {
+  margin-bottom: 6px;
+  padding-right: 30px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6f7d94;
+}
+
+.nak-detail-name {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.nak-detail-theme {
+  margin: 0 0 18px;
+  font-size: 13px;
+  font-style: italic;
+  color: #ffd281;
+}
+
+.nak-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.nak-detail-row:first-of-type {
+  border-top: 0;
+}
+
+.nak-detail-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6f7d94;
+}
+
+.nak-detail-value {
+  font-size: 13.5px;
+  color: #cbbf9e;
+}
+
+.nak-detail-more {
+  display: block;
+  margin: 18px 0 6px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: #06090f;
+  text-align: center;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  transition: background 160ms ease;
+}
+
+.nak-detail-more:hover {
+  background: #d9e4fa;
+}
+
+.nak-detail-more-note {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #6f7d94;
+}
+
+.nak-wheel-source {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: min(420px, calc(100vw - 420px));
+  color: rgba(245, 241, 232, 0.45);
+  font-size: 10.5px;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+@media (max-width: 860px) {
+  .nak-wheel-topbar {
+    top: 82px;
+  }
+
+  .nak-detail-panel {
+    top: 132px;
+    right: 12px;
+    bottom: 40px;
+    width: calc(100vw - 24px);
+  }
+
+  .nak-wheel-source {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .nak-wheel-topbar {
+    flex-direction: column;
+  }
+
+  .nak-detail-panel {
+    top: auto;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: 46vh;
+  }
+
+  /* The wheel itself shrinks to fit on a narrow screen (FitScale in
+     NakshatraWheel.jsx), but these are plain HTML labels, not 3D
+     geometry — their font-size doesn't shrink along with it, so at 27
+     labels around a smaller-radius circle several adjacent ones started
+     overlapping (worst around the longer names — Purva/Uttara
+     Bhadrapada, Purva/Uttara Ashadha). Shrinking the label footprint
+     directly is what actually fixes crowding driven by circumference,
+     not viewport width, which is why this is its own breakpoint rather
+     than reusing an existing one. */
+  .nak-label {
+    max-width: 62px;
+    padding: 2px 5px;
+    font-size: 8.5px;
+  }
+
+  .nak-om {
+    font-size: 26px;
+  }
+}
+
