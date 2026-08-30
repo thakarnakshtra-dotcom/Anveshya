@@ -2204,6 +2204,33 @@ video.sound-media {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Learn's 5 tabs (including "Ancient Indian Astronomy") and News's 2 tabs
+   both use this shared pill toggle, sized to its content as inline-flex —
+   with no wrap or scroll handling, that content width can exceed a phone
+   viewport and drag the whole page into horizontal scroll. Scrollable
+   tabs (not stacking, not a dropdown) keeps every tab visible and equally
+   reachable, matching the same toggle style used everywhere else. */
+@media (max-width: 768px) {
+  .section-toggle {
+    display: flex;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .section-toggle::-webkit-scrollbar {
+    display: none;
+  }
+
+  .section-toggle button {
+    flex-shrink: 0;
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
 .event-item {
   padding: 18px 20px;
   border-radius: 6px;
