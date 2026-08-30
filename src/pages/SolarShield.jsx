@@ -115,29 +115,6 @@ export default function SolarShield() {
         </div>
       </section>
 
-      <section className="modules-section" style={{ paddingBottom: 0 }}>
-        <div className="section-grid">
-          <div className="section-eyebrow">Live Dashboard</div>
-          <div>
-            <div className="ss-live-link-card">
-              <h3 className="ss-live-link-title">Live SolarShield Dashboard</h3>
-              <p className="ss-live-link-body">Experience real-time space weather intelligence:</p>
-              <a
-                href="https://solarsheildai.netlify.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ss-live-link-button"
-              >
-                Launch SolarShield Live &rarr;
-              </a>
-              <p className="ss-live-link-desc">
-                View current Kp index, satellite risk levels, and geomagnetic alerts in real-time.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="modules-section">
         <div className="section-grid">
           <div className="section-eyebrow">Live Status</div>
@@ -288,7 +265,7 @@ export default function SolarShield() {
             </div>
           </section>
 
-          <section className="modules-section" style={{ paddingTop: 0, paddingBottom: 100 }}>
+          <section className="modules-section" style={{ paddingTop: 0 }}>
             <div className="section-grid">
               <div className="section-eyebrow">Active Alerts</div>
               <div>
@@ -312,6 +289,32 @@ export default function SolarShield() {
           </section>
         </>
       ) : null}
+
+      {/* Kept outside the `data` conditional deliberately — this is an
+          outbound link to a companion site, not NOAA data, so it has no
+          reason to wait on (or disappear because of) that fetch. */}
+      <section className="modules-section" style={{ paddingTop: 0, paddingBottom: 100 }}>
+        <div className="section-grid">
+          <div className="section-eyebrow">Live Dashboard</div>
+          <div>
+            <div className="ss-live-link-card">
+              <h3 className="ss-live-link-title">Live SolarShield Dashboard</h3>
+              <p className="ss-live-link-body">Experience real-time space weather intelligence:</p>
+              <a
+                href="https://solarsheildai.netlify.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ss-live-link-button"
+              >
+                Launch SolarShield Live &rarr;
+              </a>
+              <p className="ss-live-link-desc">
+                View current Kp index, satellite risk levels, and geomagnetic alerts in real-time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
