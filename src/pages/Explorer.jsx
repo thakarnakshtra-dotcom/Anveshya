@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import * as THREE from "three";
 import { planets, scaleModes, tabs } from "../data/planets.js";
 import NakshatraWheel from "../components/NakshatraWheel.jsx";
+import AndromedaGalaxy from "../components/AndromedaGalaxy.jsx";
 
 const detailSections = ["Physical Data", "Atmosphere", "Exploration", "Discovery", "Moons"];
 
@@ -571,6 +572,7 @@ function findMoonInfo(selectedName) {
 export default function SolarSystemScene() {
   const [searchParams, setSearchParams] = useSearchParams();
   const showNakshatras = searchParams.get("section") === "nakshatras";
+  const showAndromeda = searchParams.get("section") === "andromeda";
   const [mode, setMode] = useState("visual");
   const [selectedName, setSelectedName] = useState(null);
   const [activeTab, setActiveTab] = useState("Overview");
@@ -604,6 +606,14 @@ export default function SolarSystemScene() {
     );
   }
 
+  if (showAndromeda) {
+    return (
+      <main className="solar-system">
+        <AndromedaGalaxy onClose={() => setSearchParams({}, { replace: true })} />
+      </main>
+    );
+  }
+
   return (
     <main className="solar-system">
       <Canvas camera={{ position: START_CAMERA.toArray(), fov: 50, near: 0.02, far: 1200 }} dpr={[1, 1.75]}>
@@ -633,6 +643,14 @@ export default function SolarSystemScene() {
             title="27 Nakshatras — an interactive Vedic sky wheel"
           >
             Nakshatras
+          </button>
+          <button
+            type="button"
+            className="nak-entry-button"
+            onClick={() => setSearchParams({ section: "andromeda" })}
+            title="Andromeda Galaxy — our nearest large galactic neighbor"
+          >
+            Andromeda
           </button>
         </div>
         {selectedName ? (
