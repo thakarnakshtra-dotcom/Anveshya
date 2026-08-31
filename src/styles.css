@@ -3651,47 +3651,18 @@ video.sound-media {
 
 /* ---------- Explorer: Nakshatra wheel ---------- */
 
-/* Wraps .scale-toggle + .nak-entry-button so .topbar itself always has
-   at most 2 direct children (this + the conditional .return-button) —
-   its own mobile breakpoint below 520px switches to a fixed 2-column
-   grid that assumes exactly that, so a 3rd top-level topbar child would
-   have broken it. */
+/* Wraps the Solar System topbar's controls (Menu button + scale toggle)
+   so .topbar itself always has at most 2 direct children (this + the
+   conditional .return-button) — its own mobile breakpoint below 520px
+   switches to a fixed 2-column grid that assumes exactly that. The
+   Panchanga/Andromeda shortcut buttons that used to live in here moved
+   out once Explorer got its own landing menu (ExplorerMenu.jsx) —
+   redundant to offer them again inside the Solar System view too. */
 .topbar-controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-}
-
-.topbar-divider {
-  width: 1px;
-  height: 22px;
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.explore-links {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.explore-links-label {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(245, 241, 232, 0.4);
-}
-
-/* Once .topbar-controls wraps onto multiple lines, a lone vertical
-   divider bar reads as a stray mark rather than a separator between two
-   things sitting side by side — the "Explore" label above each button
-   group already carries that distinction once things stack. */
-@media (max-width: 620px) {
-  .topbar-divider {
-    display: none;
-  }
 }
 
 .explorer-menu-back {
@@ -3759,6 +3730,15 @@ video.sound-media {
 .explorer-menu-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(220px, 300px));
+  /* `justify-content: center` centers the grid's *tracks* within its own
+     box — needed because the box itself (width: 100%, capped by
+     max-width) is usually wider than the tracks actually add up to.
+     On the single-column mobile layout below this was the whole bug:
+     one 340px track sitting inside a much wider box defaults to the
+     left edge (grid's initial justify-content is "start", not
+     "center"), so the card rendered hard against the left side with a
+     large dead gap on the right instead of centered. */
+  justify-content: center;
   gap: 20px;
   width: 100%;
   max-width: 1000px;
@@ -3842,29 +3822,6 @@ video.sound-media {
   .explorer-menu-grid {
     grid-template-columns: minmax(220px, 340px);
   }
-}
-
-.nak-entry-button {
-  min-height: 36px;
-  padding: 0 18px;
-  border: 1px solid rgba(255, 210, 129, 0.3);
-  border-radius: 999px;
-  color: #ffd281;
-  background: rgba(255, 210, 129, 0.08);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  font-family: "Archivo", system-ui, sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
-}
-
-.nak-entry-button:hover {
-  color: #fff;
-  background: rgba(255, 210, 129, 0.16);
-  border-color: rgba(255, 210, 129, 0.5);
 }
 
 .panch-stage {
