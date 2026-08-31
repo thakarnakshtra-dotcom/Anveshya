@@ -5002,6 +5002,71 @@ video.sound-media {
   position: relative;
 }
 
+.stf-mode-badge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.stf-mode-badge {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(127, 217, 255, 0.35);
+  background: rgba(127, 217, 255, 0.1);
+  color: #7fd9ff;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stf-mode-badge.stf-mode-real {
+  border-color: rgba(255, 210, 129, 0.4);
+  background: rgba(255, 210, 129, 0.12);
+  color: #ffd281;
+}
+
+.stf-real-world {
+  padding-top: 8px;
+  margin-top: 8px !important;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  color: #93a0b5 !important;
+}
+
+.stf-learn-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.stf-level-badge {
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stf-level-beginner {
+  background: rgba(127, 217, 255, 0.18);
+  color: #7fd9ff;
+}
+
+.stf-level-intermediate {
+  background: rgba(255, 210, 129, 0.18);
+  color: #ffd281;
+}
+
+.stf-level-expert {
+  background: rgba(255, 120, 120, 0.18);
+  color: #ff9d9d;
+}
+
 @media (max-width: 860px) {
   .stf-topbar {
     top: 82px;

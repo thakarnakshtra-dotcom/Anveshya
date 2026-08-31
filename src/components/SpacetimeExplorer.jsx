@@ -2,7 +2,15 @@ import React, { useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars, Line } from "@react-three/drei";
 import * as THREE from "three";
-import { MASS_OBJECTS, PRESETS, PHENOMENA, KEY_FACTS, SPACETIME_SOURCES } from "../data/spacetime.js";
+import {
+  MASS_OBJECTS,
+  PRESETS,
+  PHENOMENA,
+  EXPLAINABLE_SECTIONS,
+  KEY_FACTS,
+  SPACETIME_SOURCES,
+  KM_PER_SCENE_UNIT,
+} from "../data/spacetime.js";
 import PanelCollapseToggle from "./PanelCollapseToggle.jsx";
 
 // ---------- The "rubber sheet" grid ----------
@@ -25,10 +33,22 @@ const CURVE_SCALE = 3.4e-6;
 const MAX_DEPTH = 6.5;
 const MAX_OBJECTS = 5;
 
+// Educational mode: stylized mass/distance² well (as before). Real
+// Physics mode: Flamm's paraboloid, z(r) = 2*sqrt(r_s*(r - r_s)) for
+// r > r_s — the actual, standard textbook embedding diagram for the
+// Schwarzschild geometry's equatorial slice, not a relabeled version of
+// the stylized formula. r_s (uRadii) comes from each object's real
+// Schwarzschild radius (data/spacetime.js), converted to scene units by
+// the same disclosed KM_PER_SCENE_UNIT used throughout this component.
+// Summing per-object paraboloids for a multi-object scene is a standard
+// simplification (there's no closed-form exact multi-body solution in
+// GR either way) — not claimed as more than that.
 const vertexShader = `
   uniform vec2 uPositions[${MAX_OBJECTS}];
   uniform float uMasses[${MAX_OBJECTS}];
+  uniform float uRadii[${MAX_OBJECTS}];
   uniform int uCount;
+  uniform bool uRealMode;
   varying float vDepth;
 
   void main() {
@@ -37,8 +57,15 @@ const vertexShader = `
     for (int i = 0; i < ${MAX_OBJECTS}; i++) {
       if (i >= uCount) continue;
       vec2 d = pos.xy - uPositions[i];
-      float dist2 = dot(d, d) + 1.0;
-      total += uMasses[i] / dist2;
+      float dist = length(d);
+      if (uRealMode) {
+        float rs = uRadii[i];
+        float r = max(dist, rs * 1.01);
+        total += 2.0 * sqrt(rs * (r - rs));
+      } else {
+        float dist2 = dist * dist + 1.0;
+        total += uMasses[i] / dist2;
+      }
     }
     float depth = min(total, ${MAX_DEPTH.toFixed(1)});
     pos.z -= depth;
@@ -58,14 +85,16 @@ const fragmentShader = `
   }
 `;
 
-function SpacetimeGrid({ activeObjects }) {
+function SpacetimeGrid({ activeObjects, realMode }) {
   const materialRef = useRef();
   const geometry = useMemo(() => new THREE.PlaneGeometry(GRID_SIZE, GRID_SIZE, GRID_SEGMENTS, GRID_SEGMENTS), []);
   const uniforms = useMemo(
     () => ({
       uPositions: { value: Array.from({ length: MAX_OBJECTS }, () => new THREE.Vector2()) },
       uMasses: { value: new Array(MAX_OBJECTS).fill(0) },
+      uRadii: { value: new Array(MAX_OBJECTS).fill(0) },
       uCount: { value: 0 },
+      uRealMode: { value: false },
     }),
     []
   );
@@ -77,8 +106,10 @@ function SpacetimeGrid({ activeObjects }) {
       if (i >= MAX_OBJECTS) return;
       u.uPositions.value[i].set(obj.x, obj.z);
       u.uMasses.value[i] = obj.massEarth * CURVE_SCALE;
+      u.uRadii.value[i] = obj.schwarzschildRadiusKm / KM_PER_SCENE_UNIT;
     });
     u.uCount.value = Math.min(activeObjects.length, MAX_OBJECTS);
+    u.uRealMode.value = realMode;
   });
 
   return (
@@ -160,14 +191,14 @@ function LightRays({ activeObjects }) {
   );
 }
 
-function Scene({ activeObjects, showLightRays, selectedId, onSelect }) {
+function Scene({ activeObjects, showLightRays, selectedId, onSelect, realMode }) {
   return (
     <>
       <ambientLight intensity={0.45} />
       <pointLight position={[14, 16, 10]} intensity={40} color="#fff6c8" />
       <pointLight position={[-14, -8, -10]} intensity={22} color="#7fd9ff" />
       <Stars radius={80} depth={40} count={2600} factor={2.2} saturation={0} fade speed={0.25} />
-      <SpacetimeGrid activeObjects={activeObjects} />
+      <SpacetimeGrid activeObjects={activeObjects} realMode={realMode} />
       {activeObjects.map((obj) => (
         <MassObjectMesh key={obj.instanceId} obj={obj} onSelect={onSelect} selected={selectedId === obj.instanceId} />
       ))}
@@ -201,8 +232,10 @@ function applyPreset(preset) {
 export default function SpacetimeExplorer({ onClose }) {
   const [activeObjects, setActiveObjects] = useState(() => applyPreset(PRESETS[0]));
   const [showLightRays, setShowLightRays] = useState(false);
+  const [realMode, setRealMode] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [openPhenomenon, setOpenPhenomenon] = useState(null);
+  const [openLearn, setOpenLearn] = useState(null);
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [cameraZ] = useState(initialCameraDistance);
 
@@ -228,7 +261,13 @@ export default function SpacetimeExplorer({ onClose }) {
   return (
     <div className="stf-stage">
       <Canvas camera={{ position: [0, 12, cameraZ], fov: 50 }} dpr={[1, 1.75]}>
-        <Scene activeObjects={activeObjects} showLightRays={showLightRays} selectedId={selectedId} onSelect={setSelectedId} />
+        <Scene
+          activeObjects={activeObjects}
+          showLightRays={showLightRays}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+          realMode={realMode}
+        />
       </Canvas>
 
       <div className="stf-topbar">
@@ -236,7 +275,12 @@ export default function SpacetimeExplorer({ onClose }) {
           <span className="stf-eyebrow">Spacetime Fabric &middot; General Relativity</span>
           <span className="stf-hint">Drag to rotate &middot; scroll to zoom &middot; tap an object</span>
         </div>
-        <button type="button" className="return-button" onClick={onClose}>Return</button>
+        <div className="stf-mode-badge-wrap">
+          <span className={`stf-mode-badge${realMode ? " stf-mode-real" : ""}`}>
+            {realMode ? "Real Physics" : "Educational"}
+          </span>
+          <button type="button" className="return-button" onClick={onClose}>Return</button>
+        </div>
       </div>
 
       <div className={`stf-panel${panelCollapsed ? " panel-collapsed" : ""}`}>
@@ -248,10 +292,31 @@ export default function SpacetimeExplorer({ onClose }) {
             <div className="sapt-detail-kicker">Massive object</div>
             <h3 className="sapt-detail-name">{selected.name}</h3>
             <p className="sapt-detail-theme">{selected.massLabel}</p>
+            <div className="sapt-detail-row">
+              <span>Real Schwarzschild radius</span>
+              <span>
+                {selected.schwarzschildRadiusKm < 1
+                  ? `${(selected.schwarzschildRadiusKm * 1000).toFixed(selected.schwarzschildRadiusKm < 0.001 ? 2 : 1)} m`
+                  : `${selected.schwarzschildRadiusKm.toFixed(2)} km`}
+              </span>
+            </div>
             <p className="sapt-detail-fact">{selected.description}</p>
           </div>
         ) : (
           <>
+            <div className="stf-panel-section">
+              <h3>Physics mode</h3>
+              <label className="panch-toggle">
+                <input type="checkbox" checked={realMode} onChange={() => setRealMode((m) => !m)} />
+                <span>Real Physics mode (actual Schwarzschild radii)</span>
+              </label>
+              <p className="sapt-now-note">
+                {realMode
+                  ? `Using each object's real mass-derived Schwarzschild radius (1 scene unit ≈ ${KM_PER_SCENE_UNIT} km). Earth and Jupiter will look essentially flat — that's the real, honest scale of their curvature next to the Sun or a black hole, not a rendering error.`
+                  : "Showing exaggerated curvature so every object is visible — good for the principle, not to real scale. Toggle on for the real numbers."}
+              </p>
+            </div>
+
             <div className="stf-panel-section">
               <h3>Presets</h3>
               <div className="stf-preset-row">
@@ -311,6 +376,31 @@ export default function SpacetimeExplorer({ onClose }) {
                       <p className="sapt-now-note">{phen.description}</p>
                       <p className="stf-formula">{phen.formula}</p>
                       <p className="sapt-now-note">{phen.example}</p>
+                      {phen.realWorld ? <p className="sapt-now-note stf-real-world">{phen.realWorld}</p> : null}
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+
+            <div className="stf-panel-section">
+              <h3>Learn — beginner to expert</h3>
+              {EXPLAINABLE_SECTIONS.map((section) => (
+                <div key={section.id} className="stf-phenomenon">
+                  <button
+                    type="button"
+                    className="stf-phenomenon-head stf-learn-head"
+                    onClick={() => setOpenLearn((s) => (s === section.id ? null : section.id))}
+                    aria-expanded={openLearn === section.id}
+                  >
+                    <span>{section.title}</span>
+                    <span className={`stf-level-badge stf-level-${section.level.toLowerCase()}`}>{section.level}</span>
+                  </button>
+                  {openLearn === section.id ? (
+                    <div className="stf-phenomenon-body">
+                      {section.paragraphs.map((p, i) => (
+                        <p key={i} className="sapt-now-note">{p}</p>
+                      ))}
                     </div>
                   ) : null}
                 </div>
