@@ -1,4 +1,7 @@
 import React from "react";
+import AmbientBackground from "./AmbientBackground.jsx";
+import ShootingStars from "./ShootingStars.jsx";
+import BackgroundObjects from "./BackgroundObjects.jsx";
 
 // Explorer's landing screen — a menu of three peer experiences, rather
 // than dropping straight into the Solar System with Panchanga/Andromeda
@@ -62,6 +65,18 @@ const CARDS = [
 export default function ExplorerMenu({ onSelect }) {
   return (
     <div className="explorer-menu">
+      {/* This is the one part of Explorer that's a flat page like Learn/
+          About/News, not a 3D scene — App.jsx blanket-excludes these
+          decorations (and the custom cursor, footer) from every
+          /explorer route because the other three views already have
+          their own 3D starfield/canvas, where a second decorative
+          layer underneath would be wasted paint. That exclusion doesn't
+          apply here, so this menu renders its own copies directly
+          rather than complicating App.jsx's route-level flags with
+          this one sub-state. */}
+      <AmbientBackground variant="page" />
+      <BackgroundObjects />
+      <ShootingStars />
       <div className="explorer-menu-header">
         <span className="explorer-menu-eyebrow">Explore</span>
         <h1>Where do you want to go?</h1>

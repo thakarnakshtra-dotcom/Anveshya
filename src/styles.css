@@ -3682,34 +3682,26 @@ video.sound-media {
   gap: 48px;
   padding: 96px 24px 48px;
   overflow-y: auto;
-  /* Same drifting-starfield trick as AmbientBackground's page variant
-     (used behind Learn/SolarShield/News/About), reused directly by
-     class rather than importing that component — AmbientBackground is
-     built for scrollable marketing pages layered under real page
-     content; this is a fixed-viewport stage like the rest of Explorer,
-     so it only needs the backdrop, not that component's own
-     positioning assumptions. Values below are copied from that
-     component's own recipe, not reinvented — an earlier pass here used
-     a cyan-tinted vignette on a #05070d base instead of the real
-     white-tinted vignette on pure #000000, which read as visibly
-     bluer/lighter than every other page's background side by side. */
-  background:
-    radial-gradient(1500px 900px at 50% 42%, rgba(255, 255, 255, 0.05), transparent 68%),
-    radial-gradient(1.5px 1.5px at 20px 30px, rgba(255, 255, 255, 0.95), transparent 60%),
-    radial-gradient(1.1px 1.1px at 130px 90px, rgba(226, 236, 255, 0.75), transparent 60%),
-    radial-gradient(1.9px 1.9px at 300px 220px, rgba(255, 255, 255, 0.6), transparent 60%),
-    radial-gradient(1px 1px at 420px 60px, rgba(255, 255, 255, 0.55), transparent 60%),
-    radial-gradient(1.2px 1.2px at 90px 400px, rgba(255, 255, 255, 0.5), transparent 60%),
-    radial-gradient(1px 1px at 520px 330px, rgba(214, 228, 255, 0.45), transparent 60%),
-    #000000;
-  background-size:
-    auto,
-    340px 300px, 250px 230px, 520px 460px, 470px 380px, 300px 520px, 610px 480px,
-    auto;
-  animation: an-drift 140s linear infinite alternate;
+  /* Plain fallback base — the actual vignette/starfield backdrop is the
+     real <AmbientBackground variant="page" /> now, rendered as this
+     component's own first child (same convention Learn/SolarShield use)
+     rather than a hand-copied CSS clone. An earlier pass here reimplemented
+     that recipe by hand and got the tint wrong (cyan instead of white),
+     which is exactly the kind of drift copying-by-hand invites — importing
+     the real component can't drift out of sync with itself. */
+  background: #000000;
 }
 
 .explorer-menu-header {
+  /* AmbientBackground/BackgroundObjects/ShootingStars, rendered just
+     before this in the DOM, are all `position: fixed`. Without its own
+     position + z-index, this plain block would still paint *behind*
+     them regardless of DOM order — CSS stacks all non-positioned
+     in-flow content as one layer below any positioned descendant, even
+     one earlier in the tree. Same pattern .page-hero already uses for
+     exactly this reason. */
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3734,6 +3726,8 @@ video.sound-media {
 }
 
 .explorer-menu-grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(220px, 300px));
   /* `justify-content: center` centers the grid's *tracks* within its own
