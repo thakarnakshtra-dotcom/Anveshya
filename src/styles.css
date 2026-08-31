@@ -4126,8 +4126,34 @@ video.sound-media {
   color: #93a0b5;
 }
 
-.andro-facts {
+.andro-reference {
   margin-bottom: 18px;
+}
+
+.andro-reference-image {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.andro-reference-caption {
+  margin: 6px 0 0;
+  font-size: 10.5px;
+  line-height: 1.5;
+  font-style: italic;
+  color: #6f7d94;
+}
+
+.andro-facts {
+  margin-bottom: 6px;
+}
+
+.andro-fact-note {
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #93a0b5;
 }
 
 .andro-fact-row {
