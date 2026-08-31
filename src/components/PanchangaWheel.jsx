@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { nakshatras, NAKSHATRA_SEGMENT_DEGREES, NAKSHATRA_SOURCES } from "../data/nakshatras.js";
 import { TITHIS, TITHI_SEGMENT_DEGREES, RASHIS, RASHI_SEGMENT_DEGREES, PANCHANGA_SOURCES } from "../data/panchanga.js";
 import { getPanchangaNow } from "../utils/panchangaCalc.js";
+import PanelCollapseToggle from "./PanelCollapseToggle.jsx";
 
 // ---------- Radii (world units) — concentric, innermost to outermost ----------
 const MOON_ORBIT_RADIUS = 1.55;
@@ -454,6 +455,7 @@ export default function PanchangaWheel({ onClose }) {
   const [panchangaNow, setPanchangaNow] = useState(() => getPanchangaNow());
   const [hoveredId, setHoveredId] = useState(null);
   const [hoveredData, setHoveredData] = useState(null);
+  const [panelCollapsed, setPanelCollapsed] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => setPanchangaNow(getPanchangaNow()), 60000);
@@ -501,7 +503,8 @@ export default function PanchangaWheel({ onClose }) {
         <button type="button" className="return-button" onClick={onClose}>Return</button>
       </div>
 
-      <div className="panch-panel">
+      <div className={`panch-panel${panelCollapsed ? " panel-collapsed" : ""}`}>
+        <PanelCollapseToggle collapsed={panelCollapsed} onToggle={() => setPanelCollapsed((c) => !c)} />
         {selected ? (
           <DetailPanel selected={selected} onClear={() => setSelected(null)} />
         ) : (

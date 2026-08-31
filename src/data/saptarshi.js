@@ -165,9 +165,36 @@ export const ARUNDHATI_STAR = {
 // Stars (Dubhe/Merak) are traditionally used to find.
 export const POLARIS = {
   englishName: "Polaris (the North Star)",
+  sanskritName: "Dhruva Tārā",
   designation: "Alpha (α) Ursae Minoris",
   distanceLightYearsLabel: "~430–450 light-years (estimates vary by method)",
   fact: "A Cepheid variable star — the nearest one to Earth of its kind. Currently the North Star only because Earth's rotational axis happens to point near it right now.",
+  // A genuinely interesting wrinkle, not a footnote to smooth over:
+  // "Dhruva" (from Sanskrit for "fixed, immovable") is the traditional
+  // name for *whichever* star holds the pole position — it wasn't
+  // always Polaris. Scholarship on the Puranic descriptions of Dhruva
+  // places the star they describe closer to Thuban (Alpha Draconis),
+  // the pole star of roughly 3200-2400 BCE, before precession moved the
+  // celestial pole on to its current position near Polaris.
+  dhruvaNote:
+    "\"Dhruva\" means \"fixed, unshakeable\" in Sanskrit, and names whichever star sits at the pole — not permanently Polaris. Historical analysis of the pole star described in the Puranas places it closer to Thuban (Alpha Draconis), the actual pole star around 3200-2400 BCE, before Earth's axial precession moved the celestial pole to its current position near Polaris.",
+};
+
+// The Swastika-in-the-sky idea: real, and genuinely discussed by
+// serious writers on Indian culture and astronomy (not a fringe
+// internet-only claim) — but it's a *modern interpretive observation*
+// about the shape the Dipper's rotation traces, not a claim with direct
+// textual evidence that ancient Vedic astronomers documented it as the
+// symbol's origin. Presented here as exactly that: an interpretation,
+// not settled history, matching how the sources themselves describe it
+// ("an approximate swastika").
+export const SAPTARSHI_SWASTIKA = {
+  claim:
+    "Over the course of a night — or across the four seasons, viewed at the same local time — the Big Dipper's orientation around Dhruva Tāra rotates through four positions: up, right, down, left. Some writers on Indian astronomy and culture (including the mythologist Devdutt Pattanaik) have observed that tracing those four orientations sketches an approximate swastika — each of the Dipper's own bent handle-and-bowl shapes standing in for one bent arm of the symbol.",
+  caveat:
+    "This is a popularized modern interpretation of the sky's geometry, not a documented claim from the Vedic texts themselves about the swastika's origin — presented here as an interesting observation, not settled history.",
+  meaning:
+    "The swastika itself long predates any of this: an auspicious symbol across Hindu, Buddhist, and Jain tradition (and many other cultures worldwide, independently), representing well-being and cosmic order — unrelated to, and vastly older than, its 20th-century appropriation by Nazi Germany, which used a rotated, reversed version of the same ancient shape.",
 };
 
 export const SAPTARSHI_NOTES = {
@@ -191,4 +218,6 @@ export const SAPTARSHI_SOURCES = [
   "Long-term shape change from proper motion — phys.org, \"The Big Dipper in the year 92,000\" (a software-modeled illustration, not a precise prediction)",
   "Megrez's disputed historical dimming — British Astronomical Association forum thread, \"Whatever happened to Megrez?\"",
   "Polaris distance & Cepheid status — star-facts.com and universeguide.com Polaris pages (distance estimates range ~432–447 ly across sources)",
+  "Dhruva/Thuban precession history — academia.edu & ResearchGate summaries of \"Dhruva, the Ancient Vedic Hindu Pole Star\" and related Indian Journal of History of Science scholarship",
+  "Swastika-in-the-sky interpretation — Devdutt Pattanaik, \"Swastika in the Stars\" (devdutt.com), cross-checked against independent descriptions of the same seasonal-rotation pattern",
 ];

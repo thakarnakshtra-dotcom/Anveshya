@@ -9,6 +9,7 @@ import {
   COLLISION_TIMELINE,
   MILKY_WAY_DIAMETER_LIGHT_YEARS,
 } from "../data/andromeda.js";
+import PanelCollapseToggle from "./PanelCollapseToggle.jsx";
 
 // ---------- Procedural spiral-galaxy point cloud ----------
 // The previous version mapped a real photograph onto a flat plane —
@@ -377,6 +378,7 @@ export default function AndromedaGalaxy({ onClose }) {
   const rafRef = useRef(null);
   const [cameraZ] = useState(initialCameraDistance);
   const [targetY] = useState(targetYOffset);
+  const [panelCollapsed, setPanelCollapsed] = useState(false);
 
   const handlePlay = () => {
     setPlaying(true);
@@ -414,7 +416,8 @@ export default function AndromedaGalaxy({ onClose }) {
         </button>
       </div>
 
-      <div className="andro-panel">
+      <div className={`andro-panel${panelCollapsed ? " panel-collapsed" : ""}`}>
+        <PanelCollapseToggle collapsed={panelCollapsed} onToggle={() => setPanelCollapsed((c) => !c)} />
         <h3 className="andro-panel-name">{ANDROMEDA_DATA.name}</h3>
         <p className="andro-panel-sub">{ANDROMEDA_DATA.designation} &mdash; our nearest large galactic neighbor</p>
 

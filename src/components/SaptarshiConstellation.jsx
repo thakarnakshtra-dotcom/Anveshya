@@ -8,8 +8,30 @@ import {
   ARUNDHATI_STAR,
   POLARIS,
   SAPTARSHI_NOTES,
+  SAPTARSHI_SWASTIKA,
   SAPTARSHI_SOURCES,
 } from "../data/saptarshi.js";
+import PanelCollapseToggle from "./PanelCollapseToggle.jsx";
+
+// Traditional (clockwise-armed) Hindu swastika, drawn upright rather
+// than rotated 45° — the auspicious orientation, distinct from both the
+// mirrored "sauwastika" and the tilted, recolored version associated
+// with Nazi Germany. Built as 4 stroked L-shaped arms from a shared
+// center rather than an imported glyph/icon font, so it renders
+// identically everywhere with no font-availability risk.
+function SwastikaIcon({ size = 40 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
+      <path
+        d="M50,50 L50,15 L75,15 M50,50 L85,50 L85,75 M50,50 L50,85 L25,85 M50,50 L15,50 L15,25"
+        fill="none"
+        stroke="#ffd281"
+        strokeWidth="13"
+        strokeLinecap="square"
+      />
+    </svg>
+  );
+}
 
 // A stylized schematic laid out to trace the Dipper's real, recognized
 // outline (bowl closed Dubhe-Merak-Phecda-Megrez, handle bent off
@@ -239,17 +261,20 @@ function DetailPanel({ selectedId, onClear }) {
       <button type="button" className="sapt-detail-close" onClick={onClear} aria-label="Close">&times;</button>
       <div className="sapt-detail-kicker">Navigation reference, not part of Ursa Major</div>
       <h3 className="sapt-detail-name">{data.englishName}</h3>
-      <p className="sapt-detail-theme">{data.designation}</p>
+      <p className="sapt-detail-theme">{data.sanskritName} &mdash; {data.designation}</p>
       <div className="sapt-detail-row"><span>Distance</span><span>{data.distanceLightYearsLabel}</span></div>
       <p className="sapt-detail-fact">{data.fact}</p>
+      <p className="sapt-detail-fact sapt-detail-myth">{data.dhruvaNote}</p>
     </div>
   );
 }
 
 export default function SaptarshiConstellation({ onClose }) {
   const [selectedId, setSelectedId] = useState(null);
+  const [showSwastika, setShowSwastika] = useState(false);
   const [cameraZ] = useState(initialCameraDistance);
   const [targetY] = useState(targetYOffset);
+  const [panelCollapsed, setPanelCollapsed] = useState(false);
 
   return (
     <div className="sapt-stage">
@@ -265,7 +290,8 @@ export default function SaptarshiConstellation({ onClose }) {
         <button type="button" className="return-button" onClick={onClose}>Return</button>
       </div>
 
-      <div className="sapt-panel">
+      <div className={`sapt-panel${panelCollapsed ? " panel-collapsed" : ""}`}>
+        <PanelCollapseToggle collapsed={panelCollapsed} onToggle={() => setPanelCollapsed((c) => !c)} />
         {selectedId ? (
           <DetailPanel selectedId={selectedId} onClear={() => setSelectedId(null)} />
         ) : (
@@ -283,6 +309,24 @@ export default function SaptarshiConstellation({ onClose }) {
               <h3>A temporary shape</h3>
               <p className="sapt-now-note">{SAPTARSHI_NOTES.shapeIsTemporary}</p>
               <p className="sapt-now-note">{SAPTARSHI_NOTES.precession}</p>
+            </div>
+            <div className="sapt-panel-section">
+              <button
+                type="button"
+                className="sapt-toggle"
+                onClick={() => setShowSwastika((s) => !s)}
+                aria-expanded={showSwastika}
+              >
+                {showSwastika ? "Hide" : "Show"} the Swastika interpretation
+              </button>
+              {showSwastika ? (
+                <div className="sapt-swastika">
+                  <SwastikaIcon />
+                  <p className="sapt-now-note">{SAPTARSHI_SWASTIKA.claim}</p>
+                  <p className="sapt-now-note sapt-swastika-caveat">{SAPTARSHI_SWASTIKA.caveat}</p>
+                  <p className="sapt-now-note">{SAPTARSHI_SWASTIKA.meaning}</p>
+                </div>
+              ) : null}
             </div>
           </>
         )}

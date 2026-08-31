@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import BrandLogo from "./BrandLogo.jsx";
 
 const navItems = [
   { label: "Home", to: "/", end: true, icon: "M4 11.2 12 4.5l8 6.7V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z" },
@@ -73,8 +74,28 @@ export default function Navbar() {
     setOpen(false);
   }, [location.pathname]);
 
-  // Lock page scroll behind the slide-out menu while it's open.
+  // Lock page scroll behind the slide-out menu while it's open, and (on
+  // /explorer specifically) explicitly cut off pointer events to the
+  // WebGL canvas underneath. That canvas is otherwise reachable through
+  // this fixed, full-viewport overlay: the backdrop and menu panel do
+  // paint on top of it (confirmed — z-index 59/65 vs the canvas
+  // wrapper's own z-index:auto), but a real user report ("panel opens,
+  // links inside it don't respond to taps, only on /explorer") pointed
+  // at something more specific than stacking order — most likely
+  // leftover pointer capture from an earlier drag-to-rotate gesture on
+  // OrbitControls, a known category of mobile WebGL touch quirk where a
+  // canvas can keep routing touch input to itself regardless of what's
+  // visually on top. Rather than chase the exact mechanism further
+  // without a reproducible case in this environment, this removes the
+  // canvas as a possible target entirely while the menu is up — belt
+  // and suspenders alongside the backdrop, safe either way since the
+  // canvas has nothing for the user to interact with while a full-
+  // screen menu is open over it regardless.
   useEffect(() => {
+    // toggle's boolean form sets the class to match `open` on every run
+    // (mount, update, and the pre-unmount run before cleanup), so no
+    // separate removal is needed in the cleanup below.
+    document.body.classList.toggle("nav-menu-open", open);
     if (open) {
       const prev = document.body.style.overflow;
       document.body.style.overflow = "hidden";
@@ -115,11 +136,7 @@ export default function Navbar() {
   return (
     <header className="site-header">
       <NavLink to="/" end className="site-logo" aria-label="Anveshya home">
-        <span className="site-logo-badge">
-          <span className="badge-ring" />
-          <span className="badge-shine" />
-          <span className="badge-arc" />
-        </span>
+        <BrandLogo size={28} />
         <span className="site-logo-text">Anveshya</span>
       </NavLink>
 
