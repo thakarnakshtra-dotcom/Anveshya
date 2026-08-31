@@ -166,7 +166,7 @@ function CollisionTimeline({ progress, playing, onPlay }) {
 // Computed once from real window dimensions (not R3F's `viewport` helper,
 // which is zoom-relative — OrbitControls zoom here changes camera
 // distance, which changes `viewport.width` live, so continuously
-// rescaling against it the way NakshatraWheel's FitScale does would
+// rescaling against it the way PanchangaWheel's FitScale does would
 // have fought the user's own zoom instead of just fixing initial
 // framing). A fixed-vertical-FOV camera doesn't lose vertical extent on
 // a narrow/tall screen, only horizontal — so on portrait mobile the

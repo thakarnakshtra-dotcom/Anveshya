@@ -5,7 +5,7 @@ import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import * as THREE from "three";
 import { planets, scaleModes, tabs } from "../data/planets.js";
-import NakshatraWheel from "../components/NakshatraWheel.jsx";
+import PanchangaWheel from "../components/PanchangaWheel.jsx";
 import AndromedaGalaxy from "../components/AndromedaGalaxy.jsx";
 
 const detailSections = ["Physical Data", "Atmosphere", "Exploration", "Discovery", "Moons"];
@@ -601,7 +601,7 @@ export default function SolarSystemScene() {
   if (showNakshatras) {
     return (
       <main className="solar-system">
-        <NakshatraWheel onClose={() => setSearchParams({}, { replace: true })} />
+        <PanchangaWheel onClose={() => setSearchParams({}, { replace: true })} />
       </main>
     );
   }
@@ -640,9 +640,9 @@ export default function SolarSystemScene() {
             type="button"
             className="nak-entry-button"
             onClick={() => setSearchParams({ section: "nakshatras" })}
-            title="27 Nakshatras — an interactive Vedic sky wheel"
+            title="Panchanga Wheel — Earth, Moon, Tithis, Nakshatras and the sidereal zodiac"
           >
-            Nakshatras
+            Panchanga
           </button>
           <button
             type="button"
