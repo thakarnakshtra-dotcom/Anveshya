@@ -833,6 +833,23 @@ body.nav-menu-open .solar-system {
   box-shadow: -30px 0 70px rgba(0, 0, 0, 0.5);
   transition: right 280ms ease;
   overflow-y: auto;
+  /* THE actual root cause of "menu opens, nothing inside responds to
+     taps" (found by inspecting the real computed pointer-events chain,
+     not by guessing): .site-header sets pointer-events: none on itself
+     so its transparent bar doesn't block clicks on page content behind
+     it, and each of its interactive children re-enables `auto`
+     individually — .site-logo, .site-nav, .site-header-actions, and
+     .nav-mobile-backdrop.open all already do this. This panel never
+     did, so it — and every button inside it — has always computed to
+     pointer-events: none, completely independent of z-index (which was
+     already correct) or anything touch/canvas-related. Real clicks
+     respect pointer-events via hit-testing and were silently passing
+     through to whatever sits behind this panel; every earlier
+     automated check in this project's history used
+     element.dispatchEvent(), which invokes the React handler directly
+     and never does that hit-test — structurally blind to exactly this,
+     same as a past bug in this same file. */
+  pointer-events: auto;
 }
 
 .nav-mobile-menu.open {
