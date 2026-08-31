@@ -3663,6 +3663,37 @@ video.sound-media {
   gap: 10px;
 }
 
+.topbar-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.explore-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.explore-links-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 232, 0.4);
+}
+
+/* Once .topbar-controls wraps onto multiple lines, a lone vertical
+   divider bar reads as a stray mark rather than a separator between two
+   things sitting side by side — the "Explore" label above each button
+   group already carries that distinction once things stack. */
+@media (max-width: 620px) {
+  .topbar-divider {
+    display: none;
+  }
+}
+
 .nak-entry-button {
   min-height: 36px;
   padding: 0 18px;

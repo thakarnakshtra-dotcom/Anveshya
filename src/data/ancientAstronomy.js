@@ -126,7 +126,7 @@ export const ancientAstronomyTopics = [
     title: "Tithi — the Lunar Day",
     knownBy: "Sūrya Siddhānta and the broader Siddhantic tradition",
     context:
-      "A tithi is not a solar day — it's the time the Moon takes to pull 12° further ahead of the Sun along the ecliptic, as seen from Earth. Thirty tithis make one synodic lunar month: fifteen in Śukla Pakṣa (the waxing half, Pratipadā through Pūrṇimā/full moon) and fifteen in Kṛṣṇa Pakṣa (the waning half, Pratipadā through Amāvasyā/new moon).",
+      "A tithi is not a solar day — it's the time the Moon takes to pull 12° further ahead of the Sun along the ecliptic, as seen from Earth. Thirty tithis make one synodic lunar month: fifteen in Śukla Pakṣa (the waxing half, Pratipadā through Pūrṇimā/full moon) and fifteen in Kṛṣṇa Pakṣa (the waning half, Pratipadā through Amāvasyā/new moon). This is exactly why there are 30 tithis but only 27 nakshatras, even though both are Moon-based: nakshatras track the Moon's sidereal month (27.32 days, one lap relative to the fixed stars); tithis track the synodic month (29.53 days, one lap relative to the Sun) — two days longer, because Earth's own motion around the Sun means the Moon has to catch up a bit further each cycle to line up with the Sun again.",
     modernEquivalent:
       "Average tithi length = synodic month ÷ 30 = 29.530588 ÷ 30 ≈ 0.984 days, about 23h 37m. That's an average, not a constant: because the Moon's and Sun's apparent speeds both vary slightly through their elliptical orbits, a real tithi can run anywhere from roughly 19 to 26 hours. Traditional panchanga calculation accounts for this directly — the tithi boundary is computed from actual Sun/Moon longitudes for that day, not a fixed clock interval.",
     modernFact:
@@ -153,7 +153,9 @@ export const ancientAstronomyTopics = [
     title: "Nakshatra — the 27 Lunar Mansions",
     knownBy: "Vedic and Siddhantic astronomical tradition",
     context:
-      "The 27 nakṣatras divide the ecliptic into 27 equal sectors of 13°20′ (13.33°) each, tracking which star-region the Moon passes through on a given night as it completes one sidereal orbit. In order: Ashwini, Bharani, Krittika, Rohini, Mrigashira, Ardra, Punarvasu, Pushya, Ashlesha, Magha, Purva Phalguni, Uttara Phalguni, Hasta, Chitra, Swati, Vishakha, Anuradha, Jyeshtha, Mula, Purva Ashadha, Uttara Ashadha, Shravana, Dhanishtha, Shatabhisha, Purva Bhadrapada, Uttara Bhadrapada, and Revati.",
+      "The 27 nakṣatras divide the ecliptic into 27 equal sectors of 13°20′ (13.33°) each, tracking which star-region the Moon passes through on a given night as it completes one sidereal orbit. In order: Ashwini, Bharani, Krittika, Rohini, Mrigashira, Ardra, Punarvasu, Pushya, Ashlesha, Magha, Purva Phalguni, Uttara Phalguni, Hasta, Chitra, Swati, Vishakha, Anuradha, Jyeshtha, Mula, Purva Ashadha, Uttara Ashadha, Shravana, Dhanishtha, Shatabhisha, Purva Bhadrapada, Uttara Bhadrapada, and Revati. Each nakṣatra is further divided into 4 equal padas (quarters) of 3°20′ each — 27 × 4 = 108 padas in total, the finer grid used for more detailed calculations like navamsa charts.",
+    mythology:
+      "The Brahma Vaivarta Purana personifies the 27 nakshatras as the daughters of the sage-king Daksha, all married to Chandra, the Moon god. Chandra favored Rohini so openly over his other 26 wives that they complained to their father. Daksha cursed Chandra to waste away — and Shiva later softened the curse into a cycle rather than an ending, giving the Moon a fixed rhythm of waning and then waxing again each month. It's a myth, not an astronomical claim, and it isn't a perfect allegory for the real sky: the Moon doesn't actually linger longer in Rohini than in any other nakshatra as it orbits.",
     modernEquivalent:
       "The Moon returns to the same nakshatra roughly every 27.32 days — the sidereal month. A handful of nakshatra–star identifications are essentially uncontested across sources: Krittika is the Pleiades, Rohini is Aldebaran, Chitra is Spica, Swati is Arcturus, Shravana is Vega. Several others are looser regional associations (spanning multiple faint stars, e.g. the Bhadrapada pair across Pegasus and Andromeda) rather than one-star matches, and exact identifications for some of the fainter nakshatras do vary somewhat between traditional and scholarly sources — stated here rather than smoothed over.",
     accuracyNote:
@@ -161,6 +163,8 @@ export const ancientAstronomyTopics = [
     sources: [
       "Wikipedia, \"Nakshatra\" (secondary summary used to cross-check star correlations)",
       "Sidereal month, modern astronomical value (27.321661 days)",
+      "Myth of Chandra and his 27 wives: Brahma Vaivarta Purana, as summarized in Wikipedia's \"Rohini (nakshatra)\" article",
+      "Pada (quarter-nakshatra) subdivision: standard structural definition, cross-checked across Vedic astrology reference sources",
     ],
   },
   {

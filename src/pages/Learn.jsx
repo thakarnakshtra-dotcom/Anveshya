@@ -284,6 +284,13 @@ function AncientAstronomyTopicView({ topic }) {
       <div className="ancient-subhead">What It Meant</div>
       <p className="ancient-body">{topic.context}</p>
 
+      {topic.mythology ? (
+        <>
+          <div className="ancient-subhead">The Myth Behind It</div>
+          <p className="ancient-body">{topic.mythology}</p>
+        </>
+      ) : null}
+
       {topic.modernEquivalent ? (
         <>
           <div className="ancient-subhead">Modern Equivalent</div>

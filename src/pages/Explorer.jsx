@@ -636,22 +636,31 @@ export default function SolarSystemScene() {
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            className="nak-entry-button"
-            onClick={() => setSearchParams({ section: "nakshatras" })}
-            title="Panchanga Wheel — Earth, Moon, Tithis, Nakshatras and the sidereal zodiac"
-          >
-            Panchanga
-          </button>
-          <button
-            type="button"
-            className="nak-entry-button"
-            onClick={() => setSearchParams({ section: "andromeda" })}
-            title="Andromeda Galaxy — our nearest large galactic neighbor"
-          >
-            Andromeda
-          </button>
+          {/* A visual divider + its own labelled group, rather than just two
+              more pills after the scale toggle — without it, "Real / Scaled /
+              Panchanga / Andromeda" reads as one undifferentiated row of four
+              buttons, blurring the line between "how this view is scaled" and
+              "which view you're in." */}
+          <span className="topbar-divider" aria-hidden="true" />
+          <div className="explore-links" role="group" aria-label="Explore">
+            <span className="explore-links-label">Explore</span>
+            <button
+              type="button"
+              className="nak-entry-button"
+              onClick={() => setSearchParams({ section: "nakshatras" })}
+              title="Panchanga Wheel — Earth, Moon, Tithis, Nakshatras and the sidereal zodiac"
+            >
+              Panchanga
+            </button>
+            <button
+              type="button"
+              className="nak-entry-button"
+              onClick={() => setSearchParams({ section: "andromeda" })}
+              title="Andromeda Galaxy — our nearest large galactic neighbor"
+            >
+              Andromeda
+            </button>
+          </div>
         </div>
         {selectedName ? (
           <button className="return-button" type="button" onClick={returnToSystem}>
