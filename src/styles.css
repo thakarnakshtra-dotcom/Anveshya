@@ -3729,7 +3729,13 @@ video.sound-media {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 300px));
+  /* auto-fit rather than a fixed repeat(3, …): with a 4th card
+     (Saptarshi) added, a fixed 3-column grid would strand it alone on
+     its own row, off-center under the first column. auto-fit packs as
+     many 220-300px columns as actually fit the available width — 4 per
+     row on a wide desktop, fewer as it narrows — and still collapses to
+     the single-column override below on mobile. */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 300px));
   /* `justify-content: center` centers the grid's *tracks* within its own
      box — needed because the box itself (width: 100%, capped by
      max-width) is usually wider than the tracks actually add up to.
@@ -4503,6 +4509,236 @@ video.sound-media {
 
   .andro-bar-row {
     grid-template-columns: 62px 1fr;
+  }
+}
+
+/* ---------- Explorer: Saptarshi (Big Dipper) ---------- */
+
+.sapt-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.sapt-stage canvas {
+  touch-action: none;
+}
+
+.sapt-topbar {
+  position: absolute;
+  top: 96px;
+  left: 22px;
+  right: 22px;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.sapt-topbar > * {
+  pointer-events: auto;
+}
+
+.sapt-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sapt-eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffd281;
+}
+
+.sapt-hint {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 12px;
+  color: rgba(245, 241, 232, 0.55);
+}
+
+.sapt-label {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(5, 7, 13, 0.55);
+  color: #cbbf9e;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 10px;
+  white-space: nowrap;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.sapt-label-active {
+  color: #05070d;
+  background: #ffd281;
+  font-weight: 600;
+}
+
+.sapt-label-polaris {
+  color: #fff6d8;
+  background: rgba(255, 246, 216, 0.12);
+}
+
+.sapt-panel {
+  position: absolute;
+  top: 150px;
+  right: 22px;
+  bottom: 30px;
+  z-index: 10;
+  width: min(360px, calc(100vw - 44px));
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: #e7ecf5;
+  background: linear-gradient(180deg, rgba(10, 14, 24, 0.92), rgba(6, 9, 16, 0.96));
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.46);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  font-family: "Archivo", system-ui, sans-serif;
+  animation: panelIn 0.28s ease-out;
+}
+
+.sapt-panel-section {
+  margin: 0 0 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.sapt-panel-section:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.sapt-panel-section h3 {
+  margin: 0 0 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6f7d94;
+}
+
+.sapt-now-note {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #cbbf9e;
+}
+
+.sapt-detail {
+  position: relative;
+}
+
+.sapt-detail-close {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e7ecf5;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.sapt-detail-kicker {
+  margin-bottom: 6px;
+  padding-right: 30px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6f7d94;
+}
+
+.sapt-detail-name {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.sapt-detail-theme {
+  margin: 0 0 16px;
+  font-size: 13px;
+  font-style: italic;
+  color: #ffd281;
+}
+
+.sapt-detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 12.5px;
+}
+
+.sapt-detail-row:first-of-type {
+  border-top: 0;
+}
+
+.sapt-detail-row span:first-child {
+  flex: none;
+  color: #7fd9ff;
+  font-weight: 600;
+}
+
+.sapt-detail-row span:last-child {
+  text-align: right;
+  color: #cbbf9e;
+}
+
+.sapt-detail-fact {
+  margin: 14px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #cbbf9e;
+}
+
+.sapt-detail-myth {
+  color: #93a0b5;
+  font-style: italic;
+}
+
+.sapt-sources {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 9.5px;
+  line-height: 1.5;
+  color: #6f7d94;
+}
+
+@media (max-width: 860px) {
+  .sapt-topbar {
+    top: 82px;
+  }
+
+  .sapt-panel {
+    top: auto;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: 48vh;
+  }
+}
+
+@media (max-width: 520px) {
+  .sapt-topbar {
+    flex-direction: column;
   }
 }
 

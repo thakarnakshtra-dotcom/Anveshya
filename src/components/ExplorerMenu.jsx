@@ -60,6 +60,23 @@ const CARDS = [
       </svg>
     ),
   },
+  {
+    section: "saptarshi",
+    title: "Saptarshi",
+    tagline: "The Big Dipper · 7 sages",
+    description: "The seven brightest stars of Ursa Major, connected and identified — with the real Pointer Stars to Polaris.",
+    icon: (
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round">
+        <path d="M4 15.5 8 12l3 2 3.5-3.5L18 12l2-5.5" />
+        <circle cx="4" cy="15.5" r="0.9" fill="currentColor" stroke="none" />
+        <circle cx="8" cy="12" r="0.9" fill="currentColor" stroke="none" />
+        <circle cx="11" cy="14" r="0.9" fill="currentColor" stroke="none" />
+        <circle cx="14.5" cy="10.5" r="0.9" fill="currentColor" stroke="none" />
+        <circle cx="18" cy="12" r="0.9" fill="currentColor" stroke="none" />
+        <circle cx="20" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
 ];
 
 export default function ExplorerMenu({ onSelect }) {

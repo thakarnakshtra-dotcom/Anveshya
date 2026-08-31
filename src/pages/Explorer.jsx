@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { planets, scaleModes, tabs } from "../data/planets.js";
 import PanchangaWheel from "../components/PanchangaWheel.jsx";
 import AndromedaGalaxy from "../components/AndromedaGalaxy.jsx";
+import SaptarshiConstellation from "../components/SaptarshiConstellation.jsx";
 import ExplorerMenu from "../components/ExplorerMenu.jsx";
 
 const detailSections = ["Physical Data", "Atmosphere", "Exploration", "Discovery", "Moons"];
@@ -575,6 +576,7 @@ export default function SolarSystemScene() {
   const section = searchParams.get("section");
   const showNakshatras = section === "nakshatras";
   const showAndromeda = section === "andromeda";
+  const showSaptarshi = section === "saptarshi";
   const showSolarSystem = section === "solar-system";
   const [mode, setMode] = useState("visual");
   const [selectedName, setSelectedName] = useState(null);
@@ -613,6 +615,14 @@ export default function SolarSystemScene() {
     return (
       <main className="solar-system">
         <AndromedaGalaxy onClose={() => setSearchParams({}, { replace: true })} />
+      </main>
+    );
+  }
+
+  if (showSaptarshi) {
+    return (
+      <main className="solar-system">
+        <SaptarshiConstellation onClose={() => setSearchParams({}, { replace: true })} />
       </main>
     );
   }
