@@ -61,6 +61,20 @@ const CARDS = [
     ),
   },
   {
+    section: "spacetime",
+    title: "Spacetime Fabric",
+    tagline: "General relativity · gravity",
+    description: "How mass curves spacetime, bends light, and slows time — interactive, with the real formulas behind it.",
+    icon: (
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round">
+        <path d="M2 8c3 0 4 1.5 6 1.5S11 8 12 8s3 1.5 5 1.5S20 8 22 8" />
+        <path d="M2 12.5c3 0 4 1.5 6 1.5s3-1.5 4-1.5 3 1.5 5 1.5 3-1.5 5-1.5" />
+        <path d="M2 17c3 0 4 1.5 6 1.5s3-1.5 4-1.5 3 1.5 5 1.5 3-1.5 5-1.5" />
+        <circle cx="12" cy="12.5" r="3.4" fill="currentColor" stroke="none" opacity="0.85" />
+      </svg>
+    ),
+  },
+  {
     section: "saptarshi",
     title: "Saptarshi",
     tagline: "The Big Dipper · 7 sages",
