@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { planets, scaleModes, tabs } from "../data/planets.js";
 import PanchangaWheel from "../components/PanchangaWheel.jsx";
 import AndromedaGalaxy from "../components/AndromedaGalaxy.jsx";
+import ExplorerMenu from "../components/ExplorerMenu.jsx";
 
 const detailSections = ["Physical Data", "Atmosphere", "Exploration", "Discovery", "Moons"];
 
@@ -571,8 +572,10 @@ function findMoonInfo(selectedName) {
 
 export default function SolarSystemScene() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const showNakshatras = searchParams.get("section") === "nakshatras";
-  const showAndromeda = searchParams.get("section") === "andromeda";
+  const section = searchParams.get("section");
+  const showNakshatras = section === "nakshatras";
+  const showAndromeda = section === "andromeda";
+  const showSolarSystem = section === "solar-system";
   const [mode, setMode] = useState("visual");
   const [selectedName, setSelectedName] = useState(null);
   const [activeTab, setActiveTab] = useState("Overview");
@@ -614,6 +617,14 @@ export default function SolarSystemScene() {
     );
   }
 
+  if (!showSolarSystem) {
+    return (
+      <main className="solar-system">
+        <ExplorerMenu onSelect={(nextSection) => setSearchParams({ section: nextSection })} />
+      </main>
+    );
+  }
+
   return (
     <main className="solar-system">
       <Canvas camera={{ position: START_CAMERA.toArray(), fov: 50, near: 0.02, far: 1200 }} dpr={[1, 1.75]}>
@@ -629,6 +640,14 @@ export default function SolarSystemScene() {
       </Canvas>
       <div className="topbar">
         <div className="topbar-controls">
+          <button
+            type="button"
+            className="return-button explorer-menu-back"
+            onClick={() => setSearchParams({}, { replace: true })}
+            title="Back to the Explore menu"
+          >
+            &larr; Menu
+          </button>
           <div className="scale-toggle" role="group" aria-label="Scale mode">
             {Object.entries(scaleModes).map(([key, config]) => (
               <button key={key} className={mode === key ? "active" : ""} type="button" onClick={() => changeMode(key)}>
