@@ -5088,3 +5088,77 @@ video.sound-media {
   }
 }
 
+/* ---------- Newsletter signup (Home) ---------- */
+
+.newsletter-lede {
+  margin-top: 10px;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 10px;
+  max-width: 440px;
+  margin-top: 22px;
+}
+
+.newsletter-input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #e7ecf5;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 13.5px;
+}
+
+.newsletter-input:focus {
+  outline: none;
+  border-color: rgba(157, 185, 242, 0.5);
+}
+
+.newsletter-submit {
+  flex-shrink: 0;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #06090f;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 160ms ease;
+}
+
+.newsletter-submit:hover {
+  background: #d9e4fa;
+}
+
+.newsletter-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.newsletter-success {
+  margin: 22px 0 0;
+  font-size: 14px;
+  color: #a8e6b0;
+}
+
+.newsletter-error {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #ff9d9d;
+}
+
+@media (max-width: 520px) {
+  .newsletter-form {
+    flex-direction: column;
+    max-width: none;
+  }
+}
+

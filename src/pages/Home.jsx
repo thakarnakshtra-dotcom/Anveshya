@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AmbientBackground from "../components/AmbientBackground.jsx";
+import NewsletterSignup from "../components/NewsletterSignup.jsx";
 import { fetchAllLatestNews } from "../utils/spaceNews.js";
 
 const NEWS_TAG_CLASS = { NASA: "news-tag-nasa", ISRO: "news-tag-isro", ESA: "news-tag-esa" };
@@ -402,6 +403,7 @@ export default function Home() {
       </section>
 
       <HomeNewsSection />
+      <NewsletterSignup />
     </main>
   );
 }

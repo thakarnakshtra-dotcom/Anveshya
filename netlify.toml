@@ -8,3 +8,8 @@
 
 [functions]
   node_bundler = "esbuild"
+
+# Weekly newsletter-signup digest — Mondays at 09:00 UTC. See
+# netlify/functions/newsletter-digest.js and NEWSLETTER_SETUP.md.
+[functions."newsletter-digest"]
+  schedule = "0 9 * * 1"
