@@ -1258,6 +1258,61 @@ body.nav-menu-open .solar-system {
   color: #7c8da8;
 }
 
+/* Poetic line under the headline. Sized as a secondary line, not a
+   second headline — the draft that requested this spec'd it as the
+   hero's single largest element (64px desktop), but this hero already
+   has one: .hero-headline ("Explore the Universe"). Two same-weight
+   giant lines stacked would fight each other for attention, so this
+   reads as an evocative aside between the headline and the descriptive
+   .hero-sub paragraph below it (kept — it's the only line that actually
+   tells a new visitor what the site does, worth keeping days before
+   launch). Color/glow/shadow follow the draft's spec as given, since
+   #cbbf9e is already this site's established warm accent (see the
+   footer/detail-panel headings using the same value) rather than a new
+   one being introduced here. */
+.hero-poetic {
+  margin: 14px 0 0;
+  max-width: 46ch;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(17px, 1.7vw, 23px);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: #cbbf9e;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  animation: hero-poetic-in 1.8s ease-out 0.5s forwards;
+}
+
+@media (min-width: 861px) {
+  /* Glow only above the tablet breakpoint, as spec'd — on small screens
+     a 20px blur under 17px text reads as mud, not glow. */
+  .hero-poetic {
+    text-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(127, 217, 255, 0.3);
+  }
+}
+
+@keyframes hero-poetic-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-poetic {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .hero-sub {
   margin: 22px 0 0;
   max-width: 46ch;

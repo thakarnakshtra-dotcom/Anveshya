@@ -329,6 +329,7 @@ export default function Home() {
               <br />
               <span className="hero-headline-muted">one orbit at a time</span>
             </h1>
+            <p className="hero-poetic">Looking at real space through a window.</p>
             <p className="hero-sub">
               Anveshya turns real orbital mechanics and NASA imagery into an interactive solar system you can fly
               through.
