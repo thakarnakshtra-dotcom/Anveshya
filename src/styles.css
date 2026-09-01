@@ -1177,33 +1177,38 @@ body.nav-menu-open .solar-system {
 .home-hero {
   position: relative;
   z-index: 1;
-  /* Was 100vh — on a tall viewport with nothing else pulling the hero
-     taller, that forced .hero-ring-stage's flex:1 to keep growing to fill
-     the leftover space, pushing the headline further down than the ring
-     itself needed. Reduced, not removed — still reserves real vertical
-     room so the ring has somewhere to sit, just not a guaranteed full
-     screen. */
-  min-height: 90vh;
+  /* Was 100vh, then 90vh — measured against a real browser window rather
+     than a monitor's raw resolution: a "1920x1080 screen" only gives the
+     page ~900-950px of actual viewport once the browser's own chrome
+     (tab bar, address bar) and OS taskbar are subtracted, not the full
+     1080. At 90vh, .hero-cards' measured bottom edge landed at 1017px in
+     a 1080px-tall test viewport — comfortably past that real ~900-950px
+     line, which is what "the poetic line and cards are hidden below the
+     fold" actually traced back to (not any single element being too
+     tall). Reduced again, verified the same way: re-measured
+     getBoundingClientRect() after each change rather than guessing at
+     numbers. */
+  min-height: 78vh;
   display: flex;
   flex-direction: column;
-  padding: 112px 34px 46px;
+  padding: 104px 34px 30px;
 }
 
 /* Ring sits in the flexible middle zone between the fixed navbar (cleared
    by .home-hero's own top padding) and the hero text/cards block below —
    centered by flexbox, not fixed percentages, so it keeps equal breathing
    room on both sides regardless of viewport height or hero-grid height.
-   Reducing min-height (was 60vh) tightens that gap on both sides equally
-   — flex centering does the "balanced" work, this just shrinks the box
-   it's balanced within, rather than replacing it with fixed margins that
+   Reducing min-height tightens that gap on both sides equally — flex
+   centering does the "balanced" work, this just shrinks the box it's
+   balanced within, rather than replacing it with fixed margins that
    would only be correct at one specific viewport height. */
 .hero-ring-stage {
   flex: 1 1 auto;
-  min-height: 42vh;
+  min-height: 26vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 0;
+  padding: 12px 0;
 }
 
 @media (max-width: 640px) {
@@ -1271,7 +1276,7 @@ body.nav-menu-open .solar-system {
    footer/detail-panel headings using the same value) rather than a new
    one being introduced here. */
 .hero-poetic {
-  margin: 14px 0 0;
+  margin: 8px 0 0;
   max-width: 46ch;
   font-family: "Archivo", system-ui, sans-serif;
   font-weight: 300;
@@ -1314,7 +1319,7 @@ body.nav-menu-open .solar-system {
 }
 
 .hero-sub {
-  margin: 22px 0 0;
+  margin: 14px 0 0;
   max-width: 46ch;
   font-size: 14.5px;
   line-height: 1.7;

@@ -127,7 +127,15 @@ export default function Home() {
         <div
           style={{
             position: "relative",
-            width: "min(1180px,92vw,116vh)",
+            // Was min(1180px, 92vw, 116vh) — 1180px wide / 590px tall (2:1)
+            // was the single biggest thing keeping the hero cards and the
+            // "Looking at real space..." line below the fold on a real
+            // browser window (verified with getBoundingClientRect, not
+            // guessed — see the .home-hero comment in styles.css). Capped
+            // lower; the vw/116vh terms below this still do the real work
+            // on narrower viewports; the 880px cap only changes anything
+            // once a viewport is wide enough to have hit 1180px before.
+            width: "min(880px,92vw,116vh)",
             aspectRatio: "2/1",
             pointerEvents: "none",
           }}
