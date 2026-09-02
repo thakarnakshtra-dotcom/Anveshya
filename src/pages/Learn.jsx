@@ -10,20 +10,10 @@ import { videos } from "../data/videos.js";
 import { agencies } from "../data/agencies.js";
 import { mediaGallery } from "../data/mediaGallery.js";
 import { ancientAstronomyTopics } from "../data/ancientAstronomy.js";
-import { spaceWeatherTopics, KP_LEVELS } from "../data/spaceWeather.js";
+import { spaceWeatherTopics } from "../data/spaceWeather.js";
+import KpScale from "../components/KpScale.jsx";
 
 const TABS = ["Images & Videos", "Audio", "Missions", "Organizations", "Ancient Indian Astronomy", "Space Weather"];
-
-// Same band colors SolarShield's live dashboard uses (kpColor() in
-// pages/SolarShield.jsx) — kept in sync deliberately, so a Kp badge means
-// the same color whether you're reading about it here or watching it
-// live there.
-function kpColor(kp) {
-  if (kp <= 2) return "#4ade80";
-  if (kp <= 4) return "#facc15";
-  if (kp <= 6) return "#fb923c";
-  return "#f87171";
-}
 
 const NASA_FEED = "https://www.nasa.gov/news-release/feed/";
 const ISRO_SATELLITES = "https://isro.vercel.app/api/customer_satellites";
@@ -381,43 +371,6 @@ function AncientAstronomy({ initialTopicId }) {
         ))}
       </div>
       <AncientAstronomyTopicView key={activeTopic.id} topic={activeTopic} />
-    </div>
-  );
-}
-
-function KpScale({ activeKp, onSelect }) {
-  const active = KP_LEVELS[activeKp];
-  return (
-    <div className="sw-kp-block">
-      <div className="sw-kp-scale" role="tablist" aria-label="Kp index level">
-        {KP_LEVELS.map((level) => (
-          <button
-            key={level.kp}
-            type="button"
-            role="tab"
-            aria-selected={level.kp === activeKp}
-            className={`sw-kp-chip${level.kp === activeKp ? " active" : ""}`}
-            style={{ "--sw-kp-color": kpColor(level.kp) }}
-            onClick={() => onSelect(level.kp)}
-          >
-            {level.kp}
-          </button>
-        ))}
-      </div>
-      <div className="sw-kp-detail" style={{ borderColor: kpColor(active.kp) }}>
-        <div className="sw-kp-detail-top">
-          <span className="sw-kp-detail-value" style={{ color: kpColor(active.kp) }}>
-            Kp {active.kp}
-          </span>
-          <span className="sw-kp-detail-band">{active.band}</span>
-          {active.gScale ? (
-            <span className="sw-kp-detail-gscale" style={{ borderColor: kpColor(active.kp), color: kpColor(active.kp) }}>
-              {active.gScale}
-            </span>
-          ) : null}
-        </div>
-        <p className="ancient-body">{active.note}</p>
-      </div>
     </div>
   );
 }

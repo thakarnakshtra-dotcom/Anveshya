@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import AmbientBackground from "../components/AmbientBackground.jsx";
+import KpScale, { kpColor as kpScaleColor } from "../components/KpScale.jsx";
+import { FLARE_CLASSES } from "../data/spaceWeather.js";
 
 const FUNCTION_URL = "/.netlify/functions/solarshield";
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
@@ -30,12 +32,10 @@ const COLOR_HEX = {
   red: "#f87171",
 };
 
-function kpColor(kp) {
-  if (kp <= 2) return COLOR_HEX.green;
-  if (kp <= 4) return COLOR_HEX.yellow;
-  if (kp <= 6) return COLOR_HEX.orange;
-  return COLOR_HEX.red;
-}
+// Numeric Kp -> color now lives in components/KpScale.jsx (kpScaleColor,
+// imported above) — it's the same four thresholds this file always used,
+// just no longer duplicated now that the Kp explainer below needs the
+// identical mapping.
 
 function timeAgo(iso) {
   if (!iso) return "unknown";
@@ -59,6 +59,221 @@ function magAnomalies({ bz, bt }, { speed, density }) {
 
 function Spinner() {
   return <div className="ss-spinner" aria-label="Loading" />;
+}
+
+// Real NOAA G-scale meanings, matched to what riskLevel() in
+// netlify/functions/solarshield.js actually returns for data.risk_level
+// (QUIET / UNSETTLED / ACTIVE / STORM) — not a separate, differently-
+// worded scale invented for this explainer that would disagree with the
+// live badge sitting right above it.
+const RISK_MEANINGS = [
+  {
+    level: "QUIET",
+    kpRange: "Kp 0–2",
+    repKp: 1,
+    meaning: "Normal background conditions. No action needed for any use case on this page.",
+  },
+  {
+    level: "UNSETTLED",
+    kpRange: "Kp 3",
+    repKp: 3,
+    meaning: "Slightly disturbed field. Still no real-world impact expected; HF radio may show brief, minor effects at high latitudes.",
+  },
+  {
+    level: "ACTIVE",
+    kpRange: "Kp 4",
+    repKp: 4,
+    meaning: "Elevated activity. Satellite operators may want to note it; aurora can become visible from the northern-tier US on a clear night.",
+  },
+  {
+    level: "STORM",
+    kpRange: "Kp 5–9 (NOAA G1–G5)",
+    repKp: 7,
+    meaning: "An actual geomagnetic storm is underway — severity scales with the Kp value itself (see the Kp explainer below). LEO/MEO/GEO risk cards above reflect this.",
+  },
+];
+
+const CME_DISTANCE_KM = 150_000_000; // 1 AU, Earth's average distance from the Sun
+
+function CmeCalculator() {
+  const [speed, setSpeed] = useState(500);
+  const clamped = Math.min(Math.max(Number(speed) || 0, 50), 4000);
+  const hours = clamped > 0 ? CME_DISTANCE_KM / clamped / 3600 : 0;
+
+  return (
+    <div className="sw-cme-calc">
+      <label className="sw-cme-label" htmlFor="cme-speed">
+        CME speed (km/s)
+      </label>
+      <input
+        id="cme-speed"
+        type="range"
+        min={50}
+        max={4000}
+        step={10}
+        value={clamped}
+        onChange={(e) => setSpeed(e.target.value)}
+        className="sw-cme-slider"
+      />
+      <div className="sw-cme-readout">
+        <span className="sw-cme-speed">{clamped.toLocaleString()} km/s</span>
+        <span className="sw-cme-arrow">&rarr;</span>
+        <span className="sw-cme-time">
+          {hours >= 24 ? `${(hours / 24).toFixed(1)} days` : `${hours.toFixed(1)} hours`}
+        </span>
+      </div>
+      <p className="ancient-body sw-cme-formula">
+        time = distance ÷ speed = 150,000,000 km ÷ {clamped.toLocaleString()} km/s &asymp;{" "}
+        {Math.round(hours).toLocaleString()} hours
+      </p>
+      <p className="ancient-body">
+        A simplified estimate — real CMEs decelerate somewhat from drag against the ambient solar wind en route, so
+        NOAA's actual forecasts (and this calculator) should be read as an estimate, not an exact prediction.
+      </p>
+    </div>
+  );
+}
+
+const SW_FAQ = [
+  {
+    q: "Why should I care about the Kp index?",
+    a: "If you operate or rely on satellites, HF radio, precision GPS, or power infrastructure, Kp is the single fastest way to gauge current geomagnetic risk. For most people day-to-day, the main reason to check it is simpler: a high Kp is your best predictor of whether aurora might be visible from your latitude tonight.",
+  },
+  {
+    q: "How often do storms happen?",
+    a: "NOAA's published per-solar-cycle averages (roughly 11 years) give a real sense of scale: about 1,700 G1 (minor) storm events per cycle, 600 G2, 200 G3, 100 G4 — and only about 4 G5 (extreme) events per cycle. Frequency isn't constant through the cycle either — activity clusters heavily around solar maximum.",
+  },
+  {
+    q: "Will this affect my phone?",
+    a: "Not directly — a geomagnetic storm doesn't damage or disrupt a handset. What it can affect are the systems your phone quietly depends on: GPS positioning accuracy can degrade during strong storms, and satellite-relayed services can see brief interference. Power-grid and HF-radio effects (the real risks at G3+) are infrastructure-level, not device-level.",
+  },
+  {
+    q: "How accurate are the predictions?",
+    a: "Kp itself isn't a prediction — it's measured from real magnetometer data. What is genuinely uncertain is CME arrival timing: published forecast-verification studies put typical arrival-time error around plus-or-minus several hours to about ten hours, even for a CME already being tracked by coronagraphs. That's exactly why the calculator above is labeled an estimate rather than an exact answer.",
+  },
+];
+
+function SpaceWeatherExplainer({ liveKp }) {
+  const [activeKp, setActiveKp] = useState(5);
+  const [openFaq, setOpenFaq] = useState(null);
+  const syncedRef = useRef(false);
+
+  // Sync the interactive scale to the live Kp reading once, the first
+  // time real data arrives — not on every 5-minute refresh, which would
+  // yank the selection out from under someone mid-click.
+  useEffect(() => {
+    if (!syncedRef.current && liveKp != null) {
+      setActiveKp(Math.min(9, Math.max(0, Math.round(liveKp))));
+      syncedRef.current = true;
+    }
+  }, [liveKp]);
+
+  return (
+    <section className="modules-section" style={{ paddingTop: 0 }}>
+      <div className="section-grid">
+        <div className="section-eyebrow">Understanding Space Weather</div>
+        <div>
+          <h2 className="modules-heading">What You're Looking At, Explained</h2>
+          <p className="page-lede" style={{ margin: "0 0 30px" }}>
+            Space weather starts at the Sun &mdash; flares and coronal mass ejections (CMEs) throw radiation and
+            magnetized plasma outward, some of it toward Earth. When it arrives, it disturbs Earth's magnetic field;
+            the Kp index above is how that disturbance is measured, every 3 hours, from real ground magnetometers.
+            {liveKp != null ? (
+              <>
+                {" "}
+                Right now that reading is <strong style={{ color: kpScaleColor(liveKp) }}>Kp {liveKp.toFixed(1)}</strong>.
+              </>
+            ) : null}
+          </p>
+
+          <div className="ancient-subhead">The Kp Scale — Click A Level</div>
+          <KpScale activeKp={activeKp} onSelect={setActiveKp} />
+
+          <div className="ancient-subhead" style={{ marginTop: 30 }}>
+            Solar Flare Scale
+          </div>
+          <p className="ancient-body" style={{ marginBottom: 14 }}>
+            Flares are classified by peak X-ray brightness, measured by NOAA's GOES satellites. Their effects (radio
+            blackouts) arrive in about 8 minutes — much faster than a CME's plasma, which typically takes 1&ndash;3
+            days.
+          </p>
+          <div className="ancient-table-wrap">
+            <table className="ancient-table">
+              <thead>
+                <tr>
+                  <th>Class</th>
+                  <th>Peak X-ray flux</th>
+                  <th>Typical effect</th>
+                </tr>
+              </thead>
+              <tbody>
+                {FLARE_CLASSES.map((f) => (
+                  <tr key={f.cls}>
+                    <td>{f.cls}</td>
+                    <td>{f.fluxRange}</td>
+                    <td>{f.effect}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="ancient-subhead" style={{ marginTop: 30 }}>
+            CME Arrival-Time Estimator
+          </div>
+          <p className="ancient-body" style={{ marginBottom: 14 }}>
+            Earth sits about 150 million km (1 AU) from the Sun. Given a CME's speed, distance &divide; speed gives a
+            rough travel time &mdash; drag the slider:
+          </p>
+          <CmeCalculator />
+
+          <div className="ancient-subhead" style={{ marginTop: 30 }}>
+            What "Risk Level" Means
+          </div>
+          <div className="sw-scales-grid">
+            {RISK_MEANINGS.map((r) => (
+              <div key={r.level} className="sw-scale-card">
+                <div className="sw-scale-id" style={{ color: kpScaleColor(r.repKp) }}>
+                  {r.level}
+                </div>
+                <div className="sw-scale-name">{r.kpRange}</div>
+                <p className="ancient-body">{r.meaning}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="ancient-subhead" style={{ marginTop: 30 }}>
+            FAQ
+          </div>
+          <div className="sw-faq-list">
+            {SW_FAQ.map((item, i) => (
+              <div key={item.q} className="sw-faq-item">
+                <button
+                  type="button"
+                  className="sw-faq-question"
+                  aria-expanded={openFaq === i}
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                >
+                  <span>{item.q}</span>
+                  <span className="sw-faq-toggle">{openFaq === i ? "−" : "+"}</span>
+                </button>
+                {openFaq === i ? <p className="ancient-body sw-faq-answer">{item.a}</p> : null}
+              </div>
+            ))}
+          </div>
+
+          <Link to="/learn?tab=space-weather" className="ss-learn-link" style={{ marginTop: 20, display: "inline-block" }}>
+            Full solar-cycle, flare &amp; CME breakdown on the Learn page &rarr;
+          </Link>
+
+          <p className="ancient-sources" style={{ marginTop: 24 }}>
+            Sources: NOAA Space Weather Prediction Center (Kp index, G-scale, flare classification, per-cycle storm
+            frequency); CME arrival-time forecast uncertainty from published NOAA/CCMC verification studies.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function SolarShield() {
@@ -151,7 +366,7 @@ export default function SolarShield() {
                 <div className="ss-header-grid">
                   <div className="ss-stat-block">
                     <div className="ss-stat-label">Planetary Kp Index</div>
-                    <div className="ss-kp-value" style={{ color: kpColor(data.kp_index) }}>
+                    <div className="ss-kp-value" style={{ color: kpScaleColor(data.kp_index) }}>
                       {data.kp_index.toFixed(1)}
                     </div>
                     <Link to="/learn?tab=space-weather&topic=kp-index" className="ss-learn-link" target="_blank" rel="noopener noreferrer">
@@ -163,9 +378,9 @@ export default function SolarShield() {
                     <div
                       className="ss-risk-badge"
                       style={{
-                        color: kpColor(data.kp_index),
-                        borderColor: kpColor(data.kp_index),
-                        background: `${kpColor(data.kp_index)}1f`,
+                        color: kpScaleColor(data.kp_index),
+                        borderColor: kpScaleColor(data.kp_index),
+                        background: `${kpScaleColor(data.kp_index)}1f`,
                       }}
                     >
                       {data.risk_level}
@@ -296,6 +511,13 @@ export default function SolarShield() {
           </section>
         </>
       ) : null}
+
+      {/* Outside the `data` conditional deliberately, same reasoning as
+          the Live Dashboard card below it — this is educational content,
+          not a NOAA reading, so it has no reason to wait on (or vanish
+          because of) that fetch. Still syncs to the live Kp value when
+          it's available (via liveKp), just doesn't require it. */}
+      <SpaceWeatherExplainer liveKp={data ? data.kp_index : null} />
 
       {/* Kept outside the `data` conditional deliberately — this is an
           outbound link to a companion site, not NOAA data, so it has no
