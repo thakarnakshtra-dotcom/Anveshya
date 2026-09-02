@@ -173,4 +173,25 @@ export const ancientAstronomyTopics = [
     kicker: "Coming soon",
     title: "Saptarshi & the Big Dipper",
   },
+  {
+    id: "rashi",
+    status: "full",
+    kicker: "~1st–3rd century CE (this 12-fold form)",
+    title: "Rashi — the 12 Zodiac Signs",
+    knownBy: "Vedic/Siddhantic astronomy, this specific 12-sign form absorbed via the Yavanajātaka (269/270 CE)",
+    context:
+      "A rāśi is one of 12 equal 30° slices of the same sidereal ecliptic the nakshatras divide into 27 parts — 12 × 30° = 27 × 13°20′ = 360°, the same circle, cut two different ways. In order from sidereal 0°: Meṣa (Aries, Ram), Vṛṣabha (Taurus, Bull), Mithuna (Gemini, Twins), Karka (Cancer, Crab), Siṃha (Leo, Lion), Kanyā (Virgo, Maiden), Tulā (Libra, Scales), Vṛścika (Scorpio, Scorpion), Dhanu (Sagittarius, Archer/Centaur), Makara (Capricorn, Sea-goat), Kumbha (Aquarius, Water-bearer), Mīna (Pisces, Fish). Each is traditionally assigned one of four elements — fire (Aries, Leo, Sagittarius), earth (Taurus, Virgo, Capricorn), air (Gemini, Libra, Aquarius), water (Cancer, Scorpio, Pisces) — and one ruling graha (Mars, Venus, Mercury, Moon, Sun, Mercury, Venus, Mars, Jupiter, Saturn, Saturn, Jupiter, in that order). The live Panchang wheel on this site plots the Moon's real sidereal position against these same 12 divisions.",
+    modernEquivalent:
+      "The 12 names and symbols map one-to-one onto the same figures as the Babylonian/Greek zodiac (Ram, Bull, Twins, Crab, Lion, Virgin, Scales, Scorpion, Archer, Sea-goat, Water-bearer, Fish) — not a coincidence historians consider open. Sidereal rāśi boundaries are anchored to the fixed stars, so they drift slowly away from the tropical (season-anchored) Western zodiac's identically-named signs by the ayanamsa — about 24° today (see the live Panchang wheel's rashi panel for the current running value) and growing by roughly 50.24 arcseconds a year, the same precession rate this site's Panchang data already cites.",
+    modernFact:
+      "The Yavanajātaka (\"Sayings of the Greeks\"), versified in Sanskrit by Sphujidhvaja in 269/270 CE from an earlier Greek horoscopic text, is the earliest datable Indian source that sets out the full 12-sign horoscopic zodiac essentially as used today. Its title says outright what it is: a translation of Greek material, not a claim of independent invention.",
+    accuracyNote:
+      "Worth being direct about, since it cuts against a common popular claim: the 27 nakshatras are genuinely ancient and indigenous, attested in Vedic texts (the Atharvaveda, and later Vedāṅga Jyotiṣa) centuries before this 12-sign zodiac shows up in India at all. The specific 12-rāśi horoscopic system, though, is dated by historians of science (most notably David Pingree, whose critical edition of the Yavanajātaka is the standard scholarly source) to Hellenistic transmission in the early centuries CE — adapted into Sanskrit, then developed further within Indian astronomy on its own terms for the roughly 1,800 years since. Both things are true at once: the sidereal coordinate math applied to it (ayanamsa, precession) is real, checkable astronomy, and the 12-fold zodiac itself is a later layer on top of the older, indigenous nakshatra system, not a separate independent invention of the same age.",
+    sources: [
+      "David Pingree, The Yavanajātaka of Sphujidhvaja (critical edition & translation), Harvard Oriental Series, 1978",
+      "David Pingree, \"History of Mathematical Astronomy in India\", Dictionary of Scientific Biography — on Hellenistic transmission of horoscopy into India",
+      "Wikipedia, \"Yavanajataka\" and \"Hindu astrology\" (secondary summaries used to cross-check dating and structure)",
+      "Ayanamsa value & precession rate — this site's own data/panchanga.js, cross-checked against jagannathhora.com and Newcomb's precession constant (see PANCHANGA_SOURCES)",
+    ],
+  },
 ];

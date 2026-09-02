@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import AmbientBackground from "../components/AmbientBackground.jsx";
 
 const FUNCTION_URL = "/.netlify/functions/solarshield";
@@ -153,6 +154,9 @@ export default function SolarShield() {
                     <div className="ss-kp-value" style={{ color: kpColor(data.kp_index) }}>
                       {data.kp_index.toFixed(1)}
                     </div>
+                    <Link to="/learn?tab=space-weather&topic=kp-index" className="ss-learn-link" target="_blank" rel="noopener noreferrer">
+                      What is the Kp index? &rarr;
+                    </Link>
                   </div>
                   <div className="ss-stat-block">
                     <div className="ss-stat-label">Risk Level</div>
@@ -284,6 +288,9 @@ export default function SolarShield() {
                   Source: NOAA Space Weather Prediction Center &mdash; real-time solar wind, magnetometer, planetary
                   K-index, and alerts feeds. Refreshes automatically every 5 minutes.
                 </p>
+                <Link to="/learn?tab=space-weather" className="ss-learn-link" target="_blank" rel="noopener noreferrer">
+                  New to space weather? Solar cycles, flares, and CMEs explained &rarr;
+                </Link>
               </div>
             </div>
           </section>

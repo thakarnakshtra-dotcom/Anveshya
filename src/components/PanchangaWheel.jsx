@@ -440,6 +440,9 @@ function DetailPanel({ selected, onClear }) {
           This is the sidereal (Vedic) zodiac, anchored to the fixed stars &mdash; it differs from the tropical
           (Western pop-astrology) zodiac by the ayanamsa, currently about 24&deg;.
         </p>
+        <Link to="/learn?tab=ancient&topic=rashi" className="panch-detail-more" target="_blank" rel="noopener noreferrer">
+          Explore in detail &rarr;
+        </Link>
       </div>
     );
   }

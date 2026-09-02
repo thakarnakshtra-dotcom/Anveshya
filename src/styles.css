@@ -5222,3 +5222,140 @@ video.sound-media {
   }
 }
 
+/* ---------- Space Weather (Learn) ---------- */
+
+.sw-kp-block {
+  margin: 14px 0 4px;
+}
+
+.sw-kp-scale {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.sw-kp-chip {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #93a0b5;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.sw-kp-chip:hover {
+  color: #fff;
+}
+
+.sw-kp-chip.active {
+  color: var(--sw-kp-color, #fff);
+  border-color: var(--sw-kp-color, rgba(255, 255, 255, 0.4));
+  background: color-mix(in srgb, var(--sw-kp-color, #fff) 16%, transparent);
+}
+
+.sw-kp-detail {
+  padding: 16px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-left-width: 3px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sw-kp-detail-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.sw-kp-detail-value {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sw-kp-detail-band {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6f7d94;
+}
+
+.sw-kp-detail-gscale {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+}
+
+.sw-scales-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.sw-scale-card {
+  padding: 16px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sw-scale-id {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7fd9ff;
+  margin-bottom: 4px;
+}
+
+.sw-scale-name {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.sw-scale-card .ancient-body {
+  margin-bottom: 8px;
+  font-size: 12.5px;
+}
+
+.sw-cta {
+  margin-top: 22px;
+}
+
+@media (max-width: 520px) {
+  .sw-kp-scale {
+    flex-wrap: wrap;
+  }
+
+  .sw-kp-chip {
+    flex: 1 1 18%;
+  }
+}
+
+/* SolarShield → Learn cross-links */
+.ss-learn-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: #7fd9ff;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.ss-learn-link:hover {
+  color: #ffd281;
+  text-decoration: underline;
+}
+
