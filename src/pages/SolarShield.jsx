@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import AmbientBackground from "../components/AmbientBackground.jsx";
 import KpScale, { kpColor as kpScaleColor } from "../components/KpScale.jsx";
 import { FLARE_CLASSES } from "../data/spaceWeather.js";
@@ -169,7 +168,7 @@ function SpaceWeatherExplainer({ liveKp }) {
   }, [liveKp]);
 
   return (
-    <section className="modules-section" style={{ paddingTop: 0 }}>
+    <section id="understanding-space-weather" className="modules-section" style={{ paddingTop: 0 }}>
       <div className="section-grid">
         <div className="section-eyebrow">Understanding Space Weather</div>
         <div>
@@ -261,10 +260,6 @@ function SpaceWeatherExplainer({ liveKp }) {
               </div>
             ))}
           </div>
-
-          <Link to="/learn?tab=space-weather" className="ss-learn-link" style={{ marginTop: 20, display: "inline-block" }}>
-            Full solar-cycle, flare &amp; CME breakdown on the Learn page &rarr;
-          </Link>
 
           <p className="ancient-sources" style={{ marginTop: 24 }}>
             Sources: NOAA Space Weather Prediction Center (Kp index, G-scale, flare classification, per-cycle storm
@@ -369,9 +364,9 @@ export default function SolarShield() {
                     <div className="ss-kp-value" style={{ color: kpScaleColor(data.kp_index) }}>
                       {data.kp_index.toFixed(1)}
                     </div>
-                    <Link to="/learn?tab=space-weather&topic=kp-index" className="ss-learn-link" target="_blank" rel="noopener noreferrer">
+                    <a href="#understanding-space-weather" className="ss-learn-link">
                       What is the Kp index? &rarr;
-                    </Link>
+                    </a>
                   </div>
                   <div className="ss-stat-block">
                     <div className="ss-stat-label">Risk Level</div>
@@ -503,9 +498,9 @@ export default function SolarShield() {
                   Source: NOAA Space Weather Prediction Center &mdash; real-time solar wind, magnetometer, planetary
                   K-index, and alerts feeds. Refreshes automatically every 5 minutes.
                 </p>
-                <Link to="/learn?tab=space-weather" className="ss-learn-link" target="_blank" rel="noopener noreferrer">
+                <a href="#understanding-space-weather" className="ss-learn-link">
                   New to space weather? Solar cycles, flares, and CMEs explained &rarr;
-                </Link>
+                </a>
               </div>
             </div>
           </section>

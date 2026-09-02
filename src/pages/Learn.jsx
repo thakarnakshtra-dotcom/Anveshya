@@ -10,10 +10,8 @@ import { videos } from "../data/videos.js";
 import { agencies } from "../data/agencies.js";
 import { mediaGallery } from "../data/mediaGallery.js";
 import { ancientAstronomyTopics } from "../data/ancientAstronomy.js";
-import { spaceWeatherTopics } from "../data/spaceWeather.js";
-import KpScale from "../components/KpScale.jsx";
 
-const TABS = ["Images & Videos", "Audio", "Missions", "Organizations", "Ancient Indian Astronomy", "Space Weather"];
+const TABS = ["Images & Videos", "Audio", "Missions", "Organizations", "Ancient Indian Astronomy"];
 
 const NASA_FEED = "https://www.nasa.gov/news-release/feed/";
 const ISRO_SATELLITES = "https://isro.vercel.app/api/customer_satellites";
@@ -375,116 +373,19 @@ function AncientAstronomy({ initialTopicId }) {
   );
 }
 
-function SpaceWeatherTopicView({ topic }) {
-  const [activeKp, setActiveKp] = useState(5);
-  return (
-    <div className="ancient-panel">
-      <div className="ancient-kicker">{topic.kicker}</div>
-      <h3>{topic.title}</h3>
-
-      {topic.body.map((p, i) => (
-        <p key={i} className="ancient-body" style={{ marginBottom: 14 }}>
-          {p}
-        </p>
-      ))}
-
-      {topic.interactive === "kp" ? (
-        <>
-          <div className="ancient-subhead">Try It — Click A Kp Level</div>
-          <KpScale activeKp={activeKp} onSelect={setActiveKp} />
-
-          <div className="ancient-subhead">NOAA's Three Scales</div>
-          <div className="sw-scales-grid">
-            {topic.scales.map((s) => (
-              <div key={s.id} className="sw-scale-card">
-                <div className="sw-scale-id">{s.id}-scale</div>
-                <div className="sw-scale-name">{s.name}</div>
-                <p className="ancient-body">{s.driver}</p>
-                <p className="ancient-body">{s.summary}</p>
-              </div>
-            ))}
-          </div>
-        </>
-      ) : null}
-
-      {topic.table ? (
-        <>
-          <div className="ancient-subhead">Full Scale</div>
-          <div className="ancient-table-wrap">
-            <table className="ancient-table">
-              <thead>
-                <tr>
-                  {topic.tableColumns.map((c) => (
-                    <th key={c.key}>{c.label}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {topic.table.map((row, i) => (
-                  <tr key={i}>
-                    {topic.tableColumns.map((c) => (
-                      <td key={c.key}>{row[c.key]}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      ) : null}
-
-      <div className="ancient-subhead">Sources</div>
-      <ul className="ancient-sources">
-        {topic.sources.map((s) => (
-          <li key={s}>{s}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function SpaceWeather({ initialTopicId }) {
-  const validInitialId = spaceWeatherTopics.some((t) => t.id === initialTopicId) ? initialTopicId : null;
-  const [activeId, setActiveId] = useState(validInitialId || spaceWeatherTopics[0].id);
-  const activeTopic = spaceWeatherTopics.find((t) => t.id === activeId);
-
-  return (
-    <div>
-      <div className="org-picker" role="tablist" aria-label="Space weather topic">
-        {spaceWeatherTopics.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            role="tab"
-            aria-selected={t.id === activeId}
-            className={t.id === activeId ? "active" : ""}
-            onClick={() => setActiveId(t.id)}
-          >
-            {t.title}
-          </button>
-        ))}
-      </div>
-      <SpaceWeatherTopicView key={activeTopic.id} topic={activeTopic} />
-      <div className="sw-cta">
-        <a href="/solarshield" className="ss-live-link-button">
-          See it live on SolarShield &rarr;
-        </a>
-      </div>
-    </div>
-  );
-}
-
 export default function Learn() {
   const [searchParams] = useSearchParams();
-  // Lets other pages deep-link straight into a specific tab — and, for
-  // Ancient Astronomy / Space Weather, a specific topic within it — via
-  // /learn?tab=ancient&topic=nakshatra or /learn?tab=space-weather&topic=kp-index,
-  // rather than just landing on the generic Learn page and making the
-  // visitor find it themselves.
+  // Lets other pages deep-link straight into a specific Ancient Astronomy
+  // topic (e.g. the Explorer nakshatra/rashi wheel's "More" button) via
+  // /learn?tab=ancient&topic=nakshatra, rather than just landing on the
+  // generic Learn page and making the visitor find it themselves.
+  //
+  // Space Weather deliberately has no tab/topic here — that content lives
+  // only on SolarShield now (its own "Understanding Space Weather"
+  // section), not duplicated on a second page.
   const [tab, setTab] = useState(() => {
     const tabParam = searchParams.get("tab");
     if (tabParam === "ancient") return "Ancient Indian Astronomy";
-    if (tabParam === "space-weather") return "Space Weather";
     return "Images & Videos";
   });
 
@@ -617,17 +518,6 @@ export default function Learn() {
                 researched and sourced for this pass; the rest are marked Coming Soon rather than guessed at.
               </p>
               <AncientAstronomy initialTopicId={searchParams.get("topic")} />
-            </div>
-          ) : null}
-
-          {tab === "Space Weather" ? (
-            <div>
-              <h2 className="modules-heading">How The Sun Reaches Earth</h2>
-              <p className="page-lede" style={{ margin: "0 0 30px" }}>
-                Solar cycles, flares, CMEs, and the Kp index that drives SolarShield's live risk score &mdash; the
-                real NOAA classifications and scales, not a simplified retelling of them.
-              </p>
-              <SpaceWeather initialTopicId={searchParams.get("topic")} />
             </div>
           ) : null}
           </div>
