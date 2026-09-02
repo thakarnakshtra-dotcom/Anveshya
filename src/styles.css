@@ -5462,3 +5462,77 @@ video.sound-media {
   }
 }
 
+/* ---------- Learn: top-level section toggle ---------- */
+
+.learn-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 560px;
+  margin-bottom: 40px;
+}
+
+.learn-toggle button {
+  min-height: 52px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #93a0b5;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.learn-toggle button:hover {
+  color: #fff;
+}
+
+.learn-toggle button.active {
+  color: #fff;
+  border-color: rgba(157, 185, 242, 0.45);
+  background: rgba(157, 185, 242, 0.14);
+}
+
+@media (max-width: 520px) {
+  .learn-toggle {
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+}
+
+/* ---------- Modern Space Science (Learn) ---------- */
+
+.ms-formula-box {
+  padding: 18px 20px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 210, 129, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ms-formula {
+  margin-bottom: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 17px;
+  color: #ffd281;
+  word-break: break-word;
+}
+
+.ms-facts-list {
+  margin: 0 0 6px;
+  padding-left: 18px;
+  max-width: 70ch;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #c3cbd9;
+}
+
+.ms-facts-list li {
+  margin-bottom: 8px;
+}
+

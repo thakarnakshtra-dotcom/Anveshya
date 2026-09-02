@@ -10,8 +10,12 @@ import { videos } from "../data/videos.js";
 import { agencies } from "../data/agencies.js";
 import { mediaGallery } from "../data/mediaGallery.js";
 import { ancientAstronomyTopics } from "../data/ancientAstronomy.js";
+import { modernScienceTopics } from "../data/modernScience.js";
 
-const TABS = ["Images & Videos", "Audio", "Missions", "Organizations", "Ancient Indian Astronomy"];
+// "Missions & Media" sub-tabs — Ancient Indian Astronomy and Modern Space
+// Science live in the "Science & Astronomy" section instead (see the
+// top-level section toggle in Learn() below), so they're not in this list.
+const MEDIA_TABS = ["Images & Videos", "Audio", "Missions", "Organizations"];
 
 const NASA_FEED = "https://www.nasa.gov/news-release/feed/";
 const ISRO_SATELLITES = "https://isro.vercel.app/api/customer_satellites";
@@ -373,21 +377,113 @@ function AncientAstronomy({ initialTopicId }) {
   );
 }
 
+function ModernScienceTopicView({ topic }) {
+  if (topic.status !== "full") {
+    return (
+      <div className="ancient-panel ancient-coming-soon">
+        <div className="ancient-kicker">Coming Soon</div>
+        <h3>{topic.title}</h3>
+        <p className="astro-empty-note">
+          This theory isn't written up to the standard the rest of this page holds itself to yet &mdash; real
+          formulas, real sources, real historical confirmations &mdash; rather than a rushed simplification. Check
+          back in a later pass.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="ancient-panel">
+      <div className="ancient-kicker">{topic.kicker}</div>
+      <h3>{topic.title}</h3>
+      <div className="ancient-known-by">Known by: {topic.knownBy}</div>
+
+      <div className="ancient-subhead">What Is It?</div>
+      <p className="ancient-body">{topic.whatIsIt}</p>
+
+      <div className="ancient-subhead">Why It Matters</div>
+      <p className="ancient-body">{topic.whyItMatters}</p>
+
+      <div className="ancient-subhead">The Key Formula</div>
+      <div className="ms-formula-box">
+        <div className="ms-formula">{topic.formula}</div>
+        <p className="ancient-body">{topic.formulaNote}</p>
+      </div>
+
+      <div className="ancient-subhead">Key Facts</div>
+      <ul className="ms-facts-list">
+        {topic.keyFacts.map((f, i) => (
+          <li key={i}>{f}</li>
+        ))}
+      </ul>
+
+      <div className="ancient-subhead">How We Know It's True</div>
+      {topic.provenPredictions.map((p, i) => (
+        <p key={i} className="ancient-body" style={{ marginBottom: 12 }}>
+          {p}
+        </p>
+      ))}
+
+      {topic.seeMore ? (
+        <a href={topic.seeMore.to} className="ss-learn-link" style={{ display: "inline-block", margin: "6px 0 20px" }}>
+          {topic.seeMore.label} &rarr;
+        </a>
+      ) : null}
+
+      <div className="ancient-subhead">Sources</div>
+      <ul className="ancient-sources">
+        {topic.sources.map((s) => (
+          <li key={s}>{s}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ModernScience() {
+  const [activeId, setActiveId] = useState(modernScienceTopics[0].id);
+  const activeTopic = modernScienceTopics.find((t) => t.id === activeId);
+
+  return (
+    <div>
+      <div className="org-picker" role="tablist" aria-label="Modern space science theory">
+        {modernScienceTopics.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={t.id === activeId}
+            className={t.id === activeId ? "active" : ""}
+            onClick={() => setActiveId(t.id)}
+          >
+            {t.title}
+            {t.status !== "full" ? <span className="ancient-picker-flag">soon</span> : null}
+          </button>
+        ))}
+      </div>
+      <ModernScienceTopicView key={activeTopic.id} topic={activeTopic} />
+    </div>
+  );
+}
+
 export default function Learn() {
   const [searchParams] = useSearchParams();
+  // "Science & Astronomy" is always the section that opens by default —
+  // there's no deep link anywhere in this app that expects "Missions &
+  // Media" to be the resting state, so it doesn't need to depend on
+  // searchParams the way the section's own initial topic does below.
+  const [topSection, setTopSection] = useState("science");
+  const [mediaTab, setMediaTab] = useState(MEDIA_TABS[0]);
+
   // Lets other pages deep-link straight into a specific Ancient Astronomy
   // topic (e.g. the Explorer nakshatra/rashi wheel's "More" button) via
-  // /learn?tab=ancient&topic=nakshatra, rather than just landing on the
-  // generic Learn page and making the visitor find it themselves.
+  // /learn?tab=ancient&topic=nakshatra — Ancient Astronomy already lives
+  // inside "Science & Astronomy", so no section-toggle handling is needed
+  // beyond that default.
   //
   // Space Weather deliberately has no tab/topic here — that content lives
   // only on SolarShield now (its own "Understanding Space Weather"
   // section), not duplicated on a second page.
-  const [tab, setTab] = useState(() => {
-    const tabParam = searchParams.get("tab");
-    if (tabParam === "ancient") return "Ancient Indian Astronomy";
-    return "Images & Videos";
-  });
 
   return (
     <main className="home">
@@ -398,10 +494,26 @@ export default function Learn() {
             <span className="hero-eyebrow-rule" />
             Learn
           </div>
-          <h1 className="page-heading">Real Space, From Real Sources</h1>
+          <h1 className="page-heading">Explore Ancient Wisdom &amp; Modern Space Science</h1>
           <p className="page-lede">
-            Verified NASA, ISRO, ESA, CNSA, and JAXA imagery, video, audio, and mission data &mdash; nothing
-            fabricated, nothing stored as a fake copy.
+            Verified NASA, ISRO, ESA, CNSA, and JAXA imagery, video, and mission data; real verses from real Sanskrit
+            texts; real formulas from modern physics &mdash; nothing fabricated, nothing stored as a fake copy.
+          </p>
+        </div>
+      </section>
+
+      <section className="modules-section" style={{ paddingTop: 0 }}>
+        <div className="section-grid">
+          <div className="section-eyebrow">Why This Page Works This Way</div>
+          <p className="page-lede" style={{ maxWidth: "70ch" }}>
+            Ancient Indian astronomy and modern physics sit together below on purpose &mdash; both are the same
+            underlying activity, centuries apart: careful observation and real math, used to describe the same sky.
+            Neither gets simplified past the point of being true, and neither gets padded with a topic that isn't
+            actually researched yet; unfinished theories are marked Coming Soon rather than guessed at.
+          </p>
+          <p className="page-lede" style={{ maxWidth: "70ch", marginTop: 14 }}>
+            Missions, agencies, and the wider imagery/audio library live in their own section below &mdash; still
+            real, still sourced, just kept separate so this page doesn't turn into one endless scroll on a phone.
           </p>
         </div>
       </section>
@@ -410,116 +522,150 @@ export default function Learn() {
         <div className="section-grid">
           <div className="section-eyebrow">Browse</div>
           <div>
-          <div className="section-toggle" role="tablist" aria-label="Learn section">
-            {TABS.map((t) => (
+            <div className="learn-toggle" role="tablist" aria-label="Learn top-level section">
               <button
-                key={t}
                 type="button"
                 role="tab"
-                aria-selected={tab === t}
-                className={tab === t ? "active" : ""}
-                onClick={() => setTab(t)}
+                aria-selected={topSection === "science"}
+                className={topSection === "science" ? "active" : ""}
+                onClick={() => setTopSection("science")}
               >
-                {t}
+                Science &amp; Astronomy
               </button>
-            ))}
-          </div>
-
-          {tab === "Images & Videos" ? (
-            <div>
-              <h2 className="modules-heading">Live Feeds &amp; Real Footage</h2>
-              <p className="page-lede" style={{ margin: "0 0 30px" }}>
-                Every video below is an official upload from NASA, NASA/JPL, or ISRO's own YouTube channels &mdash;
-                confirmed live and embeddable before being added here.
-              </p>
-              <div className="videos-grid">
-                {videos.map((v) => (
-                  <VideoCard key={v.videoId} {...v} />
-                ))}
-              </div>
-
-              <div className="section-eyebrow" style={{ margin: "34px 0 14px" }}>Mission Imagery Gallery</div>
-              <p className="page-lede" style={{ margin: "0 0 22px", fontSize: 13 }}>
-                Fetched live from NASA's public Image and Video Library, which indexes real imagery from partner
-                agencies too &mdash; not just NASA's own missions. Some agency-specific searches (Aditya-L1, Hera,
-                Zhurong by name, Gaia) return no results in NASA's library and are left out rather than padded with
-                irrelevant matches.
-              </p>
-              <div className="missions-grid">
-                {mediaGallery.map((m) => (
-                  <MissionCard key={m.name} name={m.name} query={m.query} agency={m.agency} />
-                ))}
-              </div>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={topSection === "missions"}
+                className={topSection === "missions" ? "active" : ""}
+                onClick={() => setTopSection("missions")}
+              >
+                Missions &amp; Media
+              </button>
             </div>
-          ) : null}
 
-          {tab === "Audio" ? (
-            <div>
-              <h2 className="modules-heading">Sounds and Voices of Space</h2>
-              <p className="page-lede" style={{ margin: "0 0 30px" }}>
-                Rover microphones, telescope data turned into music, and the actual recordings of historic space
-                moments &mdash; fourteen tracks, every one linking back to NASA or the Chandra X-ray Center.
-              </p>
-              <div className="section-eyebrow" style={{ marginBottom: 14 }}>Sounds From Beyond</div>
-              <div className="sounds-grid" style={{ marginBottom: 34 }}>
-                {roverAndLanderSounds.map((s) => (
-                  <SoundCard key={s.title} {...s} />
-                ))}
-              </div>
-              <div className="section-eyebrow" style={{ marginBottom: 14 }}>Sonifications</div>
-              <div className="sounds-grid" style={{ marginBottom: 34 }}>
-                {sonifications.map((s) => (
-                  <SoundCard key={s.title} {...s} />
-                ))}
-              </div>
-              <div className="section-eyebrow" style={{ marginBottom: 14 }}>Historic Mission Audio</div>
-              <div className="sounds-grid">
-                {historicalSounds.map((s) => (
-                  <SoundCard key={s.title} {...s} />
-                ))}
-              </div>
-            </div>
-          ) : null}
+            {topSection === "science" ? (
+              <div>
+                <div className="section-eyebrow" style={{ marginBottom: 10 }}>Ancient Indian Astronomy</div>
+                <h2 className="modules-heading">Ancient Sky, Modern Science</h2>
+                <p className="page-lede" style={{ margin: "0 0 30px" }}>
+                  Real verses from real texts (Āryabhaṭīya, Sūrya Siddhānta), set next to their modern scientific
+                  equivalents &mdash; with the accuracy stated honestly, mixed record included. Seven topics are
+                  fully researched and sourced for this pass; the rest are marked Coming Soon rather than guessed at.
+                </p>
+                <AncientAstronomy initialTopicId={searchParams.get("topic")} />
 
-          {tab === "Missions" ? (
-            <div>
-              <h2 className="modules-heading">Real Imagery, From Five Space Agencies</h2>
-              <p className="page-lede" style={{ margin: "0 0 34px" }}>
-                Fetched live from NASA's public Image and Video Library &mdash; no stored copies, no fabricated
-                credits. Each card's badge shows which agency owns the mission; the credit line shows who actually
-                took the photo, which isn't always the same agency.
-              </p>
-              <div className="missions-grid">
-                {missions.map((m) => (
-                  <MissionCard key={m.name} name={m.name} query={m.query} agency={m.agency} />
-                ))}
+                <div className="section-eyebrow" style={{ margin: "50px 0 10px" }}>Modern Space Science</div>
+                <h2 className="modules-heading">Theories That Changed Everything</h2>
+                <p className="page-lede" style={{ margin: "0 0 30px" }}>
+                  General Relativity is fully written up here &mdash; real formula, real historical confirmations,
+                  real sources. The other four theories are marked Coming Soon rather than rushed out two days
+                  before launch.
+                </p>
+                <ModernScience />
               </div>
-            </div>
-          ) : null}
+            ) : (
+              <div>
+                <div className="section-toggle" role="tablist" aria-label="Missions & media section">
+                  {MEDIA_TABS.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      role="tab"
+                      aria-selected={mediaTab === t}
+                      className={mediaTab === t ? "active" : ""}
+                      onClick={() => setMediaTab(t)}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
 
-          {tab === "Organizations" ? (
-            <div>
-              <h2 className="modules-heading">Five Agencies, One Effort</h2>
-              <p className="page-lede" style={{ margin: "0 0 30px" }}>
-                Founding facts and history are static, verified public record. Mission lists and live updates are
-                pulled from real sources per agency &mdash; where an agency has no public API, that's shown
-                honestly instead of invented.
-              </p>
-              <Organizations />
-            </div>
-          ) : null}
+                {mediaTab === "Images & Videos" ? (
+                  <div>
+                    <h2 className="modules-heading">Live Feeds &amp; Real Footage</h2>
+                    <p className="page-lede" style={{ margin: "0 0 30px" }}>
+                      Every video below is an official upload from NASA, NASA/JPL, or ISRO's own YouTube channels
+                      &mdash; confirmed live and embeddable before being added here.
+                    </p>
+                    <div className="videos-grid">
+                      {videos.map((v) => (
+                        <VideoCard key={v.videoId} {...v} />
+                      ))}
+                    </div>
 
-          {tab === "Ancient Indian Astronomy" ? (
-            <div>
-              <h2 className="modules-heading">Ancient Sky, Modern Science</h2>
-              <p className="page-lede" style={{ margin: "0 0 30px" }}>
-                Real verses from real texts (Āryabhaṭīya, Sūrya Siddhānta), set next to their modern scientific
-                equivalents &mdash; with the accuracy stated honestly, mixed record included. Seven topics are fully
-                researched and sourced for this pass; the rest are marked Coming Soon rather than guessed at.
-              </p>
-              <AncientAstronomy initialTopicId={searchParams.get("topic")} />
-            </div>
-          ) : null}
+                    <div className="section-eyebrow" style={{ margin: "34px 0 14px" }}>Mission Imagery Gallery</div>
+                    <p className="page-lede" style={{ margin: "0 0 22px", fontSize: 13 }}>
+                      Fetched live from NASA's public Image and Video Library, which indexes real imagery from
+                      partner agencies too &mdash; not just NASA's own missions. Some agency-specific searches
+                      (Aditya-L1, Hera, Zhurong by name, Gaia) return no results in NASA's library and are left out
+                      rather than padded with irrelevant matches.
+                    </p>
+                    <div className="missions-grid">
+                      {mediaGallery.map((m) => (
+                        <MissionCard key={m.name} name={m.name} query={m.query} agency={m.agency} />
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {mediaTab === "Audio" ? (
+                  <div>
+                    <h2 className="modules-heading">Sounds and Voices of Space</h2>
+                    <p className="page-lede" style={{ margin: "0 0 30px" }}>
+                      Rover microphones, telescope data turned into music, and the actual recordings of historic
+                      space moments &mdash; fourteen tracks, every one linking back to NASA or the Chandra X-ray
+                      Center.
+                    </p>
+                    <div className="section-eyebrow" style={{ marginBottom: 14 }}>Sounds From Beyond</div>
+                    <div className="sounds-grid" style={{ marginBottom: 34 }}>
+                      {roverAndLanderSounds.map((s) => (
+                        <SoundCard key={s.title} {...s} />
+                      ))}
+                    </div>
+                    <div className="section-eyebrow" style={{ marginBottom: 14 }}>Sonifications</div>
+                    <div className="sounds-grid" style={{ marginBottom: 34 }}>
+                      {sonifications.map((s) => (
+                        <SoundCard key={s.title} {...s} />
+                      ))}
+                    </div>
+                    <div className="section-eyebrow" style={{ marginBottom: 14 }}>Historic Mission Audio</div>
+                    <div className="sounds-grid">
+                      {historicalSounds.map((s) => (
+                        <SoundCard key={s.title} {...s} />
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {mediaTab === "Missions" ? (
+                  <div>
+                    <h2 className="modules-heading">Real Imagery, From Five Space Agencies</h2>
+                    <p className="page-lede" style={{ margin: "0 0 34px" }}>
+                      Fetched live from NASA's public Image and Video Library &mdash; no stored copies, no
+                      fabricated credits. Each card's badge shows which agency owns the mission; the credit line
+                      shows who actually took the photo, which isn't always the same agency.
+                    </p>
+                    <div className="missions-grid">
+                      {missions.map((m) => (
+                        <MissionCard key={m.name} name={m.name} query={m.query} agency={m.agency} />
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {mediaTab === "Organizations" ? (
+                  <div>
+                    <h2 className="modules-heading">Five Agencies, One Effort</h2>
+                    <p className="page-lede" style={{ margin: "0 0 30px" }}>
+                      Founding facts and history are static, verified public record. Mission lists and live updates
+                      are pulled from real sources per agency &mdash; where an agency has no public API, that's
+                      shown honestly instead of invented.
+                    </p>
+                    <Organizations />
+                  </div>
+                ) : null}
+              </div>
+            )}
           </div>
         </div>
       </section>
