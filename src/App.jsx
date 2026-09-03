@@ -18,9 +18,17 @@ import News from "./pages/News.jsx";
 import About from "./pages/About.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsOfService from "./pages/TermsOfService.jsx";
+import CaptureBackground from "./pages/CaptureBackground.jsx";
 
 function AppShell() {
   const location = useLocation();
+
+  // Bare recording rig for the ambient backdrop — no navbar/footer/cursor,
+  // just the background layers full-bleed. See CaptureBackground.jsx.
+  if (location.pathname === "/capture-bg") {
+    return <CaptureBackground />;
+  }
+
   const [introPlaying, setIntroPlaying] = useState(() => location.pathname === "/" && shouldPlayIntro());
   const showBadge = !introPlaying && location.pathname !== "/explorer";
   const showShootingStars = location.pathname !== "/explorer";
