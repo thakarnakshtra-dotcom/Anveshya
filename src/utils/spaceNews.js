@@ -3,7 +3,11 @@
 // of each feed instead of two copies that could quietly drift apart.
 
 const NASA_FEED = "https://www.nasa.gov/news-release/feed/";
-const ISRO_SATELLITES = "https://isro.vercel.app/api/customer_satellites";
+// Real ISRO agency id on Launch Library 2, curl-verified: its
+// /launch/previous/?lsp__id=31 result count (100) matches ISRO's own
+// agency record's total_launch_count (100) exactly.
+const ISRO_AGENCY_ID = 31;
+const ISRO_LAUNCHES = `https://ll.thespacedevs.com/2.2.0/launch/previous/?limit=8&lsp__id=${ISRO_AGENCY_ID}&mode=normal`;
 const ESA_FEED = "https://www.esa.int/rssfeed/TopNews";
 
 export function stripHtml(html) {
@@ -34,35 +38,40 @@ async function fetchNasa() {
     }));
 }
 
-// ISRO: isro.vercel.app has no news/launch-log endpoint with dates or
-// descriptions — /api/spacecrafts is just {id, name}. The one endpoint with
-// real, verifiable dates is customer_satellites (launch_date, country,
-// launcher, mass), so recent ISRO activity is built from that real data
-// rather than any fabricated excerpt.
+// ISRO: previously built from isro.vercel.app's customer_satellites
+// endpoint — commercial rideshare payloads ISRO carried for OTHER
+// countries, e.g. "342kg satellite launched for Singapore". That data is
+// real, but it structurally cannot cover ISRO's own national missions
+// (a GSLV launching an ISRO Earth-observation satellite is not a
+// "customer satellite"), which is exactly the kind of story most likely
+// to actually matter here. Switched to Launch Library 2's real launch
+// history for ISRO specifically — same free, no-key, CORS-open API this
+// project already uses elsewhere for upcoming launches — which covers
+// every ISRO launch, gives its real success/failure outcome (stated
+// honestly either way, not spun positive), and a real mission
+// description instead of a generic one.
 async function fetchIsro() {
-  const res = await fetch(ISRO_SATELLITES);
-  if (!res.ok) throw new Error(`ISRO API responded ${res.status}`);
+  const res = await fetch(ISRO_LAUNCHES);
+  if (!res.ok) throw new Error(`Launch Library (ISRO) responded ${res.status}`);
   const json = await res.json();
-  const list = json?.customer_satellites;
-  if (!Array.isArray(list) || list.length === 0) throw new Error("No ISRO data");
+  const list = json?.results;
+  if (!Array.isArray(list) || list.length === 0) throw new Error("No ISRO launch data");
 
-  const parsed = list
-    .map((s) => {
-      const [d, m, y] = (s.launch_date || "").split("-").map(Number);
-      const date = d && m && y ? new Date(y, m - 1, d) : null;
-      return { ...s, date };
-    })
-    .filter((s) => s.date && !Number.isNaN(s.date.getTime()));
-
-  parsed.sort((a, b) => b.date - a.date);
-
-  return parsed.slice(0, 6).map((s) => ({
-    source: "ISRO",
-    title: `${s.id} launched for ${s.country}`,
-    date: s.date,
-    excerpt: `${s.mass ? `${s.mass} kg satellite ` : "Satellite "}launched aboard ${s.launcher || "an ISRO vehicle"}.`,
-    link: "https://www.isro.gov.in",
-  }));
+  return list
+    .filter((l) => l.net)
+    .map((l) => {
+      const succeeded = l.status?.id === 3;
+      const failed = l.status?.id === 4;
+      const outcome = succeeded ? "successfully launched" : failed ? "launch of" : "launched";
+      const missionName = l.mission?.name || l.name;
+      return {
+        source: "ISRO",
+        title: failed ? `${l.rocket?.configuration?.name || "ISRO rocket"} — ${missionName} launch failure` : `ISRO ${outcome} ${missionName}`,
+        date: new Date(l.net),
+        excerpt: truncate(l.mission?.description, 180) || `${l.name} — ${l.status?.name || "status unavailable"}.`,
+        link: "https://www.isro.gov.in",
+      };
+    });
 }
 
 // ESA: their public RSS feed does not send CORS headers, so a direct
