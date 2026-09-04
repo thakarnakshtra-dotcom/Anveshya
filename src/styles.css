@@ -5148,35 +5148,12 @@ video.sound-media {
   }
 }
 
-/* ---------- Newsletter signup (Home) ---------- */
-
-.newsletter-lede {
-  margin-top: 10px;
-}
-
-.newsletter-form {
-  display: flex;
-  gap: 10px;
-  max-width: 440px;
-  margin-top: 22px;
-}
-
-.newsletter-input {
-  flex: 1;
-  min-width: 0;
-  padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  color: #e7ecf5;
-  font-family: "Archivo", system-ui, sans-serif;
-  font-size: 13.5px;
-}
-
-.newsletter-input:focus {
-  outline: none;
-  border-color: rgba(157, 185, 242, 0.5);
-}
+/* ---------- Newsletter submit/status states ----------
+   Shared by EventReminder.jsx (News page) — the home-page premium-launch
+   signup that originally owned this block (NewsletterSignup.jsx, plus its
+   .newsletter-lede/.newsletter-form/.newsletter-input layout) was removed
+   outright, not just hidden; these three classes survive because they're
+   still real, in-use styling for a different, non-premium form. */
 
 .newsletter-submit {
   flex-shrink: 0;
@@ -5213,13 +5190,6 @@ video.sound-media {
   margin: 10px 0 0;
   font-size: 12px;
   color: #ff9d9d;
-}
-
-@media (max-width: 520px) {
-  .newsletter-form {
-    flex-direction: column;
-    max-width: none;
-  }
 }
 
 /* ---------- Space Weather (Learn) ---------- */
@@ -5548,14 +5518,14 @@ video.sound-media {
   margin-bottom: 4px;
 }
 
-.alert-checkbox-group {
+.alert-radio-group {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px 16px;
   margin-top: 10px;
 }
 
-.alert-checkbox {
+.alert-radio {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -5570,7 +5540,7 @@ video.sound-media {
   touch-action: manipulation;
 }
 
-.alert-checkbox input {
+.alert-radio input {
   width: 18px;
   height: 18px;
   accent-color: #9db9f2;
@@ -5583,7 +5553,7 @@ video.sound-media {
     gap: 0;
   }
 
-  .alert-checkbox-group {
+  .alert-radio-group {
     grid-template-columns: 1fr;
   }
 }

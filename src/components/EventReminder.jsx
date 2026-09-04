@@ -20,17 +20,24 @@ const INTERESTS = [
 export default function EventReminder() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [interests, setInterests] = useState([]);
+  // Single-select now (radio, not checkboxes) — a real behavior change,
+  // not just a visual one: this form used to let someone pick multiple
+  // interests, now it only allows one. Sent to the backend as a
+  // one-element array (or none) so /.netlify/functions/newsletter and its
+  // `interests text[]` column need no changes either way.
+  const [interest, setInterest] = useState(null);
   const [status, setStatus] = useState("idle"); // idle | submitting | success | error
   const [errorDetail, setErrorDetail] = useState("");
 
-  const toggleInterest = (id) => {
-    setInterests((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const trimmedName = name.trim();
     const trimmedEmail = email.trim();
+    if (!trimmedName) {
+      setStatus("error");
+      setErrorDetail("Please enter your name.");
+      return;
+    }
     if (!EMAIL_RE.test(trimmedEmail)) {
       setStatus("error");
       setErrorDetail("That doesn't look like a valid email address.");
@@ -43,7 +50,11 @@ export default function EventReminder() {
       const res = await fetch("/.netlify/functions/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmedEmail, name: name.trim(), interests }),
+        body: JSON.stringify({
+          email: trimmedEmail,
+          name: trimmedName,
+          interests: interest ? [interest] : [],
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
@@ -71,8 +82,8 @@ export default function EventReminder() {
             <form className="alert-form" onSubmit={handleSubmit} noValidate>
               <div className="alert-form-row">
                 <label className="feedback-field" style={{ flex: 1 }}>
-                  Name <span className="feedback-optional">(optional)</span>
-                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" maxLength={255} />
+                  Name
+                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" maxLength={255} required />
                 </label>
                 <label className="feedback-field" style={{ flex: 1 }}>
                   Email
@@ -82,19 +93,21 @@ export default function EventReminder() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     maxLength={255}
+                    required
                   />
                 </label>
               </div>
 
               <div className="feedback-field">
                 What would you like alerts about? <span className="feedback-optional">(optional)</span>
-                <div className="alert-checkbox-group">
+                <div className="alert-radio-group">
                   {INTERESTS.map((opt) => (
-                    <label key={opt.id} className="alert-checkbox">
+                    <label key={opt.id} className="alert-radio">
                       <input
-                        type="checkbox"
-                        checked={interests.includes(opt.id)}
-                        onChange={() => toggleInterest(opt.id)}
+                        type="radio"
+                        name="interest"
+                        checked={interest === opt.id}
+                        onChange={() => setInterest(opt.id)}
                       />
                       {opt.label}
                     </label>

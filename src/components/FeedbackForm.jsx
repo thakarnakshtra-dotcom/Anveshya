@@ -92,32 +92,49 @@ export default function FeedbackForm() {
 
   const validate = () => {
     const next = {};
+    if (!name.trim()) {
+      next.name = "Please enter your name.";
+    }
+    if (!email.trim()) {
+      next.email = "Please enter your email address.";
+    } else if (!EMAIL_RE.test(email.trim())) {
+      next.email = "That doesn't look like a valid email address.";
+    }
     if (message.trim().length < 10) {
       next.message = "Please write at least 10 characters.";
-    }
-    if (email.trim() && !EMAIL_RE.test(email.trim())) {
-      next.email = "That doesn't look like a valid email address.";
     }
     setErrors(next);
     return Object.keys(next).length === 0;
   };
 
+  // Saves to Supabase (netlify/functions/send-feedback.js) rather than
+  // the Google Sheets webhook this originally posted to
+  // (netlify/functions/feedback.js, still in place but no longer called
+  // here) — see send-feedback.js's own header comment and
+  // FEEDBACK_SETUP.md for why, and how to switch back if ever needed.
   const handleSubmit = async (event) => {
+    // This was missing before this pass — without it, a real submit
+    // click (or Enter in a field) triggers the browser's own native form
+    // submission (a full-page reload/navigation to the current URL)
+    // racing against the fetch below, since nothing had ever told the
+    // browser not to. Caught by actually driving a full valid submission
+    // end-to-end while testing this change, not just checking the modal
+    // opens.
+    event.preventDefault();
     if (!validate()) return;
 
     setStatus("submitting");
     setErrorDetail("");
     try {
-      const res = await fetch("/.netlify/functions/feedback", {
+      const res = await fetch("/.netlify/functions/send-feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          timestamp: new Date().toISOString(),
           name: name.trim(),
           email: email.trim(),
           feedbackType,
           message: message.trim(),
-          rating: rating || "",
+          rating: rating || undefined,
           page: pageRef.current,
           userAgent: navigator.userAgent,
         }),
@@ -160,18 +177,20 @@ export default function FeedbackForm() {
             </p>
 
             <label className="feedback-field">
-              Name <span className="feedback-optional">(optional)</span>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" maxLength={200} />
+              Name
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" maxLength={200} required />
+              {errors.name ? <span className="feedback-error">{errors.name}</span> : null}
             </label>
 
             <label className="feedback-field">
-              Email <span className="feedback-optional">(optional)</span>
+              Email
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 maxLength={200}
+                required
               />
               {errors.email ? <span className="feedback-error">{errors.email}</span> : null}
             </label>
