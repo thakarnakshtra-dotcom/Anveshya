@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AmbientBackground from "../components/AmbientBackground.jsx";
 import ReminderBell from "../components/ReminderBell.jsx";
+import EventReminder from "../components/EventReminder.jsx";
 import { nextEclipse, meteorShowers, conjunctions } from "../data/astroEvents.js";
 import { fetchAllLatestNews, truncate } from "../utils/spaceNews.js";
 
@@ -368,6 +369,8 @@ export default function News() {
           </div>
         </div>
       </section>
+
+      <EventReminder />
     </main>
   );
 }

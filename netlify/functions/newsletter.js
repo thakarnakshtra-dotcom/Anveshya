@@ -1,4 +1,4 @@
-// Newsletter signup handler.
+// Newsletter / alert-preferences signup handler.
 //
 // The client never talks to Supabase directly — it POSTs an email here,
 // and this function inserts it into Supabase's `newsletter_emails` table
@@ -15,9 +15,20 @@
 // If SUPABASE_URL / SUPABASE_SERVICE_KEY aren't set, this returns a clear
 // 503 rather than pretending the signup was saved — see NEWSLETTER_SETUP.md
 // for how to create the Supabase project and get those values.
+//
+// `name` and `interests` are both optional — the plain home-page signup
+// only ever sends `email`. The News page's alert-preferences form (added
+// later) sends all three; interests is validated against a fixed allow-
+// list rather than storing whatever strings a client sends, since this
+// becomes a real database row, not just a display value. Requires the
+// `name` and `interests` columns from NEWSLETTER_SETUP.md's Part 3 —
+// missing columns fail the insert with a clear Supabase error rather than
+// silently dropping the extra fields.
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_EMAIL_LEN = 255;
+const MAX_NAME_LEN = 255;
+const VALID_INTERESTS = ["discoveries", "missions", "events", "features"];
 
 function corsHeaders() {
   return {
@@ -62,6 +73,16 @@ export async function handler(event) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: "Enter a valid email address." }) };
   }
 
+  const row = { email };
+
+  const name = String(payload.name || "").trim().slice(0, MAX_NAME_LEN);
+  if (name) row.name = name;
+
+  if (Array.isArray(payload.interests)) {
+    const interests = [...new Set(payload.interests.filter((i) => VALID_INTERESTS.includes(i)))];
+    if (interests.length) row.interests = interests;
+  }
+
   try {
     const res = await fetch(`${supabaseUrl}/rest/v1/newsletter_emails`, {
       method: "POST",
@@ -71,9 +92,14 @@ export async function handler(event) {
         Authorization: `Bearer ${serviceKey}`,
         // Ask Postgres to no-op instead of erroring on the `email UNIQUE`
         // constraint — a repeat signup should read as success, not a 409.
+        // Note: on a no-op conflict, Postgres keeps the EXISTING row as-is
+        // rather than merging in a second submission's name/interests —
+        // resubmitting with different preferences won't update them. Fine
+        // for this feature's scope (a one-time preference pick), but worth
+        // knowing if that's ever surprising in the data.
         Prefer: "resolution=ignore-duplicates,return=minimal",
       },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify(row),
     });
 
     if (!res.ok) {

@@ -5536,3 +5536,55 @@ video.sound-media {
   margin-bottom: 8px;
 }
 
+/* ---------- Event/alert subscription (News) ---------- */
+
+.alert-form {
+  max-width: 560px;
+}
+
+.alert-form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.alert-checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 16px;
+  margin-top: 10px;
+}
+
+.alert-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: #c3cbd9;
+  font-size: 13px;
+  font-family: "Archivo", system-ui, sans-serif;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.alert-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: #9db9f2;
+  cursor: pointer;
+}
+
+@media (max-width: 520px) {
+  .alert-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .alert-checkbox-group {
+    grid-template-columns: 1fr;
+  }
+}
+

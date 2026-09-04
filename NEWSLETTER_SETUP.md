@@ -112,6 +112,34 @@ then not until the next Monday. To check it's wired correctly sooner,
 Netlify's function logs (Site → Functions → newsletter-digest) will show
 either "digest sent" or exactly which env var is still missing.
 
+## Part 3 — Alert-preferences columns (required for the News page's subscribe form)
+
+The News page's "Get Alerts For What You Actually Care About" form
+(added after Part 1/2 above) sends a `name` and a list of `interests`
+along with the email — the same `newsletter_emails` table from Part 1
+just needs two more columns to hold them. The home page's simpler
+signup keeps working exactly as before either way; it never sends these
+fields, and the columns are nullable so that's fine.
+
+1. **SQL Editor → New query** again, paste and run:
+
+   ```sql
+   alter table newsletter_emails
+     add column if not exists name varchar(255),
+     add column if not exists interests text[];
+   ```
+
+2. Nothing else to configure — the Netlify function already validates
+   `interests` against a fixed list (discoveries/missions/events/
+   features) before writing, so a row's `interests` column only ever
+   holds those four values, never arbitrary client input.
+
+Until this migration runs, the News page's form will fail with a clear
+"Couldn't subscribe" error rather than a silently-dropped submission —
+Supabase rejects the insert outright when a column doesn't exist yet,
+and the function surfaces that as a real error instead of a fake
+success.
+
 ## Notes
 
 - Until `SUPABASE_URL`/`SUPABASE_SERVICE_KEY` are set, the signup
