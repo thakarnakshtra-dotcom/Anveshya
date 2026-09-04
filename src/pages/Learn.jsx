@@ -474,6 +474,11 @@ export default function Learn() {
   // searchParams the way the section's own initial topic does below.
   const [topSection, setTopSection] = useState("science");
   const [mediaTab, setMediaTab] = useState(MEDIA_TABS[0]);
+  // Ancient Indian Astronomy and Modern Space Science used to stack on
+  // top of each other inside "Science & Astronomy" — real content, but
+  // it made the section one very long scroll. Sub-tabbed instead, same
+  // pattern "Missions & Media" already uses for its own 4 tabs.
+  const [scienceTab, setScienceTab] = useState("ancient");
 
   // Lets other pages deep-link straight into a specific Ancient Astronomy
   // topic (e.g. the Explorer nakshatra/rashi wheel's "More" button) via
@@ -545,23 +550,49 @@ export default function Learn() {
 
             {topSection === "science" ? (
               <div>
-                <div className="section-eyebrow" style={{ marginBottom: 10 }}>Ancient Indian Astronomy</div>
-                <h2 className="modules-heading">Ancient Sky, Modern Science</h2>
-                <p className="page-lede" style={{ margin: "0 0 30px" }}>
-                  Real verses from real texts (Āryabhaṭīya, Sūrya Siddhānta), set next to their modern scientific
-                  equivalents &mdash; with the accuracy stated honestly, mixed record included. Seven topics are
-                  fully researched and sourced for this pass; the rest are marked Coming Soon rather than guessed at.
-                </p>
-                <AncientAstronomy initialTopicId={searchParams.get("topic")} />
+                <div className="section-toggle" role="tablist" aria-label="Science & astronomy section">
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={scienceTab === "ancient"}
+                    className={scienceTab === "ancient" ? "active" : ""}
+                    onClick={() => setScienceTab("ancient")}
+                  >
+                    Ancient Science
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={scienceTab === "modern"}
+                    className={scienceTab === "modern" ? "active" : ""}
+                    onClick={() => setScienceTab("modern")}
+                  >
+                    Modern Science
+                  </button>
+                </div>
 
-                <div className="section-eyebrow" style={{ margin: "50px 0 10px" }}>Modern Space Science</div>
-                <h2 className="modules-heading">Theories That Changed Everything</h2>
-                <p className="page-lede" style={{ margin: "0 0 30px" }}>
-                  General Relativity is fully written up here &mdash; real formula, real historical confirmations,
-                  real sources. The other four theories are marked Coming Soon rather than rushed out two days
-                  before launch.
-                </p>
-                <ModernScience />
+                {scienceTab === "ancient" ? (
+                  <div>
+                    <h2 className="modules-heading">Ancient Sky, Modern Science</h2>
+                    <p className="page-lede" style={{ margin: "0 0 30px" }}>
+                      Real verses from real texts (Āryabhaṭīya, Sūrya Siddhānta), set next to their modern scientific
+                      equivalents &mdash; with the accuracy stated honestly, mixed record included. Seven topics are
+                      fully researched and sourced for this pass; the rest are marked Coming Soon rather than
+                      guessed at.
+                    </p>
+                    <AncientAstronomy initialTopicId={searchParams.get("topic")} />
+                  </div>
+                ) : (
+                  <div>
+                    <h2 className="modules-heading">Theories That Changed Everything</h2>
+                    <p className="page-lede" style={{ margin: "0 0 30px" }}>
+                      General Relativity is fully written up here &mdash; real formula, real historical
+                      confirmations, real sources. The other four theories are marked Coming Soon rather than
+                      rushed out two days before launch.
+                    </p>
+                    <ModernScience />
+                  </div>
+                )}
               </div>
             ) : (
               <div>
