@@ -32,15 +32,27 @@ async function fetchUpcomingLaunches() {
   const json = await res.json();
   const list = json?.results;
   if (!Array.isArray(list)) throw new Error("No launch data");
-  return list.map((l) => ({
-    name: l.name,
-    date: l.net ? new Date(l.net) : null,
-    status: l.status?.name || "Scheduled",
-    provider: l.launch_service_provider?.name,
-    rocket: l.rocket?.configuration?.full_name,
-    location: l.pad?.location?.name,
-    mission: l.mission?.description,
-  }));
+  return list
+    .map((l) => ({
+      name: l.name,
+      date: l.net ? new Date(l.net) : null,
+      status: l.status?.name || "Scheduled",
+      provider: l.launch_service_provider?.name,
+      rocket: l.rocket?.configuration?.full_name,
+      location: l.pad?.location?.name,
+      mission: l.mission?.description,
+    }))
+    // ISRO first, then NASA, then everyone else in the chronological order
+    // Launch Library already returns them in — not a ranking of importance,
+    // just surfacing the two agencies most relevant to this site's likely
+    // audience above an otherwise-identical sort.
+    .sort((a, b) => {
+      // "Organization" (US spelling) — this is the literal string Launch
+      // Library's API returns, curl-verified in data/agencies' PROVIDER_MATCH
+      // in Learn.jsx; "Organisation" would silently never match.
+      const rank = (p) => (p === "Indian Space Research Organization" ? 0 : p === "NASA" ? 1 : 2);
+      return rank(a.provider) - rank(b.provider);
+    });
 }
 
 // ISS current position: wheretheiss.at — free, no key, CORS-open (verified).

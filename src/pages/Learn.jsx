@@ -586,9 +586,9 @@ export default function Learn() {
                   <div>
                     <h2 className="modules-heading">Theories That Changed Everything</h2>
                     <p className="page-lede" style={{ margin: "0 0 30px" }}>
-                      General Relativity is fully written up here &mdash; real formula, real historical
-                      confirmations, real sources. The other four theories are marked Coming Soon rather than
-                      rushed out two days before launch.
+                      General Relativity and Black Holes &amp; Event Horizons are fully written up here &mdash; real
+                      formulas, real historical confirmations, real sources. The other three theories are marked
+                      Coming Soon rather than rushed out.
                     </p>
                     <ModernScience />
                   </div>
