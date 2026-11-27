@@ -7,4 +7,24 @@
        <lastmod>2026-09-03T13:08:16+00:00</lastmod>
        <priority>1.0000</priority>
   </url>
+  <url>
+       <loc>https://anveshya.space/explorer</loc>
+       <lastmod>2026-11-27</lastmod>
+       <priority>0.9</priority>
+  </url>
+  <url>
+       <loc>https://anveshya.space/learn</loc>
+       <lastmod>2026-11-27</lastmod>
+       <priority>0.8</priority>
+  </url>
+  <url>
+       <loc>https://anveshya.space/wallpapers</loc>
+       <lastmod>2026-11-27</lastmod>
+       <priority>0.8</priority>
+  </url>
+  <url>
+       <loc>https://anveshya.space/credits</loc>
+       <lastmod>2026-11-27</lastmod>
+       <priority>0.3</priority>
+  </url>
 </urlset>

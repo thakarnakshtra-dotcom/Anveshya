@@ -1,0 +1,199 @@
+{
+  "categories": [
+    "Planets",
+    "Nebulae",
+    "Galaxies",
+    "Black holes",
+    "Stars",
+    "Abstract cosmos"
+  ],
+  "defaults": {
+    "credit": "Anveshya (original computer-generated artwork)",
+    "license": "Free for personal use. Not for resale or redistribution.",
+    "sourceUrl": "https://anveshya.space/credits#wallpapers"
+  },
+  "items": [
+    {
+      "id": "ringed-giant",
+      "title": "Ringed Giant",
+      "category": "Planets",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/ringed-giant-16x9.jpg", "download": "/wallpapers/hd/ringed-giant-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/ringed-giant-9x19.jpg", "download": "/wallpapers/hd/ringed-giant-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "crescent-world",
+      "title": "Crescent World",
+      "category": "Planets",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/crescent-world-16x9.jpg", "download": "/wallpapers/hd/crescent-world-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/crescent-world-9x19.jpg", "download": "/wallpapers/hd/crescent-world-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "rose-nebula",
+      "title": "Rose Nebula",
+      "category": "Nebulae",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/rose-nebula-16x9.jpg", "download": "/wallpapers/hd/rose-nebula-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/rose-nebula-9x19.jpg", "download": "/wallpapers/hd/rose-nebula-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "blue-veil",
+      "title": "Blue Veil",
+      "category": "Nebulae",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/blue-veil-16x9.jpg", "download": "/wallpapers/hd/blue-veil-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/blue-veil-9x19.jpg", "download": "/wallpapers/hd/blue-veil-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "spiral-galaxy",
+      "title": "Spiral Galaxy",
+      "category": "Galaxies",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/spiral-galaxy-16x9.jpg", "download": "/wallpapers/hd/spiral-galaxy-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/spiral-galaxy-9x19.jpg", "download": "/wallpapers/hd/spiral-galaxy-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "edge-on-galaxy",
+      "title": "Edge-On Galaxy",
+      "category": "Galaxies",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/edge-on-galaxy-16x9.jpg", "download": "/wallpapers/hd/edge-on-galaxy-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/edge-on-galaxy-9x19.jpg", "download": "/wallpapers/hd/edge-on-galaxy-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "accretion-disk",
+      "title": "Accretion Disk",
+      "category": "Black holes",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/accretion-disk-16x9.jpg", "download": "/wallpapers/hd/accretion-disk-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/accretion-disk-9x19.jpg", "download": "/wallpapers/hd/accretion-disk-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "golden-horizon",
+      "title": "Golden Horizon",
+      "category": "Black holes",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/golden-horizon-16x9.jpg", "download": "/wallpapers/hd/golden-horizon-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/golden-horizon-9x19.jpg", "download": "/wallpapers/hd/golden-horizon-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "star-river",
+      "title": "River of Stars",
+      "category": "Stars",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/star-river-16x9.jpg", "download": "/wallpapers/hd/star-river-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/star-river-9x19.jpg", "download": "/wallpapers/hd/star-river-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "red-sun",
+      "title": "Red Sun",
+      "category": "Stars",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/red-sun-16x9.jpg", "download": "/wallpapers/hd/red-sun-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/red-sun-9x19.jpg", "download": "/wallpapers/hd/red-sun-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "wormhole-window",
+      "title": "Wormhole Window",
+      "category": "Abstract cosmos",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/wormhole-window-16x9.jpg", "download": "/wallpapers/hd/wormhole-window-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/wormhole-window-9x19.jpg", "download": "/wallpapers/hd/wormhole-window-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "spacetime-grid",
+      "title": "Spacetime Grid",
+      "category": "Abstract cosmos",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Free for personal use. Not for resale or redistribution.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "free",
+      "variants": [
+        { "aspect": "16:9", "width": 1920, "height": 1080, "preview": "/wallpapers/preview/spacetime-grid-16x9.jpg", "download": "/wallpapers/hd/spacetime-grid-1920x1080.jpg" },
+        { "aspect": "9:19.5", "width": 1080, "height": 2340, "preview": "/wallpapers/preview/spacetime-grid-9x19.jpg", "download": "/wallpapers/hd/spacetime-grid-1080x2340.jpg" }
+      ]
+    },
+    {
+      "id": "deep-horizon",
+      "title": "Deep Horizon",
+      "category": "Black holes",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Premium. Not yet available.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "premium",
+      "variants": [
+        { "aspect": "16:9", "width": 3840, "height": 2160, "preview": "/wallpapers/preview/deep-horizon-16x9.jpg" },
+        { "aspect": "9:19.5", "width": 1440, "height": 3120, "preview": "/wallpapers/preview/deep-horizon-9x19.jpg" }
+      ]
+    },
+    {
+      "id": "aurora-drift",
+      "title": "Aurora Drift",
+      "category": "Abstract cosmos",
+      "credit": "Anveshya (original computer-generated artwork)",
+      "license": "Premium. Not yet available.",
+      "sourceUrl": "https://anveshya.space/credits#wallpapers",
+      "tier": "premium",
+      "variants": [
+        { "aspect": "16:9", "width": 3840, "height": 2160, "preview": "/wallpapers/preview/aurora-drift-16x9.jpg" },
+        { "aspect": "9:19.5", "width": 1440, "height": 3120, "preview": "/wallpapers/preview/aurora-drift-9x19.jpg" }
+      ]
+    }
+  ]
+}

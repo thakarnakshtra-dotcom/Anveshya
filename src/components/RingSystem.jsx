@@ -166,18 +166,6 @@ function ConvergingRing({ onSettled }) {
   );
 }
 
-const INTRO_FLAG = "anveshya-intro-seen";
-
-export function shouldPlayIntro() {
-  try {
-    if (sessionStorage.getItem(INTRO_FLAG)) return false;
-    sessionStorage.setItem(INTRO_FLAG, "1");
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 // Full-screen intro: empty black -> particles converge inward into a thick
 // ring -> it rotates briefly -> fades to reveal the page underneath
 // (already mounted, just hidden behind this opaque overlay).

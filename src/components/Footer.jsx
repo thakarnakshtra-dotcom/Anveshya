@@ -37,6 +37,9 @@ export default function Footer() {
               <Link to="/news">News &amp; Events</Link>
             </li>
             <li>
+              <Link to="/wallpapers">Wallpapers</Link>
+            </li>
+            <li>
               <a href="https://solarsheildai.netlify.app/" target="_blank" rel="noopener noreferrer">
                 Live Dashboard
               </a>
@@ -84,6 +87,9 @@ export default function Footer() {
             </li>
             <li>
               <Link to="/terms">Terms of Service</Link>
+            </li>
+            <li>
+              <Link to="/credits">Credits &amp; Licences</Link>
             </li>
             <li>
               <button

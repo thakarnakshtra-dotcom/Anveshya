@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import LabIcon from "../labs/icons.jsx";
+import { labs } from "../labs/registry.js";
 import AmbientBackground from "../components/AmbientBackground.jsx";
 import MissionCard from "../components/MissionCard.jsx";
 import SoundCard from "../components/SoundCard.jsx";
@@ -466,13 +468,38 @@ function ModernScience() {
   );
 }
 
+function LabLessons() {
+  return (
+    <div>
+      <h2 className="modules-heading">Lessons From the Labs</h2>
+      <p className="page-lede" style={{ margin: "0 0 30px" }}>
+        Every experiment in the labs comes with a lesson: a plain explanation first, then what you see, the equations,
+        the assumptions and the limits. Each point is marked as a mathematical result or an educational analogy.
+      </p>
+      <div className="modules-grid">
+        {labs.map((lab) => (
+          <Link key={lab.slug} to={`/learn/labs/${lab.slug}`} className="module-card">
+            <div className="module-card-top">
+              <LabIcon slug={lab.slug} size={26} />
+              <span className="module-no">{lab.category}</span>
+            </div>
+            <div className="module-title">{lab.title}</div>
+            <div className="module-body">{lab.description}</div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Learn() {
   const [searchParams] = useSearchParams();
   // "Science & Astronomy" is always the section that opens by default —
   // there's no deep link anywhere in this app that expects "Missions &
   // Media" to be the resting state, so it doesn't need to depend on
   // searchParams the way the section's own initial topic does below.
-  const [topSection, setTopSection] = useState("science");
+  // "?section=labs" opens the lab lessons.
+  const [topSection, setTopSection] = useState(() => (searchParams.get("section") === "labs" ? "labs" : "science"));
   const [mediaTab, setMediaTab] = useState(MEDIA_TABS[0]);
   // Ancient Indian Astronomy and Modern Space Science used to stack on
   // top of each other inside "Science & Astronomy" — real content, but
@@ -510,16 +537,18 @@ export default function Learn() {
       <section className="modules-section" style={{ paddingTop: 0 }}>
         <div className="section-grid">
           <div className="section-eyebrow">Why This Page Works This Way</div>
-          <p className="page-lede" style={{ maxWidth: "70ch" }}>
-            Ancient Indian astronomy and modern physics sit together below on purpose &mdash; both are the same
-            underlying activity, centuries apart: careful observation and real math, used to describe the same sky.
-            Neither gets simplified past the point of being true, and neither gets padded with a topic that isn't
-            actually researched yet; unfinished theories are marked Coming Soon rather than guessed at.
-          </p>
-          <p className="page-lede" style={{ maxWidth: "70ch", marginTop: 14 }}>
-            Missions, agencies, and the wider imagery/audio library live in their own section below &mdash; still
-            real, still sourced, just kept separate so this page doesn't turn into one endless scroll on a phone.
-          </p>
+          <div>
+            <p className="page-lede" style={{ maxWidth: "70ch" }}>
+              Ancient Indian astronomy and modern physics sit together below on purpose &mdash; both are the same
+              underlying activity, centuries apart: careful observation and real math, used to describe the same sky.
+              Neither gets simplified past the point of being true, and neither gets padded with a topic that isn't
+              actually researched yet; unfinished theories are marked Coming Soon rather than guessed at.
+            </p>
+            <p className="page-lede" style={{ maxWidth: "70ch", marginTop: 14 }}>
+              Missions, agencies, and the wider imagery/audio library live in their own section below &mdash; still
+              real, still sourced, just kept separate so this page doesn't turn into one endless scroll on a phone.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -546,9 +575,20 @@ export default function Learn() {
               >
                 Missions &amp; Media
               </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={topSection === "labs"}
+                className={topSection === "labs" ? "active" : ""}
+                onClick={() => setTopSection("labs")}
+              >
+                Lab Lessons
+              </button>
             </div>
 
-            {topSection === "science" ? (
+            {topSection === "labs" ? <LabLessons /> : null}
+
+            {topSection === "labs" ? null : topSection === "science" ? (
               <div>
                 <div className="section-toggle" role="tablist" aria-label="Science & astronomy section">
                   <button

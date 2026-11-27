@@ -1,0 +1,45 @@
+/* Anallop is limited to the characters it really draws. Its digits are
+   placeholder boxes and its accented letters have no accents, so those
+   fall through to Poppins. */
+@font-face {
+  font-family: "Anveshya Title";
+  src: url("../../design-reference/fonts/Anallop.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-002F, U+003A-005F, U+0061-007B, U+007D, U+00A0, U+2018-2019, U+201C-201D, U+FB01;
+}
+
+/* Accented letters inside titles, in a weight that matches Anallop. */
+@font-face {
+  font-family: "Anveshya Title";
+  src: url("../../design-reference/fonts/Poppins-SemiBold.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+00C0-00D6, U+00D8-00F6, U+00F8-00FF, U+0178;
+}
+
+@font-face {
+  font-family: "Anveshya Body";
+  src: url("../../design-reference/fonts/Poppins-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Anveshya Body";
+  src: url("../../design-reference/fonts/Poppins-LightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Anveshya Body";
+  src: url("../../design-reference/fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

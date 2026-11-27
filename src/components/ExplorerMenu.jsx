@@ -13,6 +13,22 @@ import BackgroundObjects from "./BackgroundObjects.jsx";
 
 const CARDS = [
   {
+    section: "labs",
+    pinned: true,
+    title: "Labs",
+    tagline: "Black Hole · Wormhole · Relativity · Strings",
+    description: "Interactive physics experiments with real formulas. Choose a lab and open it full screen.",
+    cta: "Choose a lab",
+    icon: (
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 3h6M10 3v6.2L4.8 18a2 2 0 0 0 1.7 3h11a2 2 0 0 0 1.7-3L14 9.2V3" />
+        <path d="M7.6 14.5h8.8" />
+        <circle cx="10.5" cy="17.5" r="0.8" fill="currentColor" stroke="none" />
+        <circle cx="14" cy="18.2" r="0.6" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
     section: "solar-system",
     title: "Solar System",
     tagline: "Real orbital mechanics",
@@ -118,14 +134,15 @@ export default function ExplorerMenu({ onSelect }) {
           <button
             key={card.section}
             type="button"
-            className="explorer-menu-card"
+            className={`explorer-menu-card${card.pinned ? " pinned" : ""}`}
             onClick={() => onSelect(card.section)}
           >
+            {card.pinned ? <span className="explorer-menu-card-pin">Pinned</span> : null}
             <span className="explorer-menu-card-icon">{card.icon}</span>
             <span className="explorer-menu-card-title">{card.title}</span>
             <span className="explorer-menu-card-tagline">{card.tagline}</span>
             <span className="explorer-menu-card-description">{card.description}</span>
-            <span className="explorer-menu-card-cta">Launch &rarr;</span>
+            <span className="explorer-menu-card-cta">{card.cta || "Launch"} &rarr;</span>
           </button>
         ))}
       </div>

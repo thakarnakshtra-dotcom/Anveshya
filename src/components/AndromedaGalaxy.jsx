@@ -245,7 +245,7 @@ function AndromedaScene({ collisionProgress }) {
           <mesh position={[0, 0, -0.05]}>
             <planeGeometry args={[10, 10]} />
             <meshBasicMaterial
-              color="#05070d"
+              color="#000000"
               transparent
               opacity={Math.max(0, 1 - mwOpacity)}
               depthWrite={false}

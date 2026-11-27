@@ -8,7 +8,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function StarIcon({ filled }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill={filled ? "#ffd27f" : "none"} stroke={filled ? "#ffd27f" : "#6f7d94"} strokeWidth="1.4" strokeLinejoin="round">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill={filled ? "#C04A5A" : "none"} stroke={filled ? "#C04A5A" : "#75736C"} strokeWidth="1.4" strokeLinejoin="round">
       <path d="M12 3.5l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" />
     </svg>
   );

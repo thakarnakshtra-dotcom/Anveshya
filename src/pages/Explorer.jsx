@@ -10,6 +10,8 @@ import AndromedaGalaxy from "../components/AndromedaGalaxy.jsx";
 import SaptarshiConstellation from "../components/SaptarshiConstellation.jsx";
 import SpacetimeExplorer from "../components/SpacetimeExplorer.jsx";
 import ExplorerMenu from "../components/ExplorerMenu.jsx";
+import LabsMenu from "../components/LabsMenu.jsx";
+import ManMadeObjects, { findSatelliteInfo, SatelliteInfoPanel } from "../components/ManMadeObjects.jsx";
 
 const detailSections = ["Physical Data", "Atmosphere", "Exploration", "Discovery", "Moons"];
 
@@ -362,6 +364,8 @@ function SceneContents({ mode, selectedName, setSelectedName, interacted, setInt
   const sunRadius = scaleModes[mode].sunRadius;
   const marsPlanet = planets.find((planet) => planet.name === "Mars");
   const jupiterPlanet = planets.find((planet) => planet.name === "Jupiter");
+  const earthPlanet = planets.find((planet) => planet.name === "Earth");
+  const earthRadius = scaleModes[mode].planetRadius(earthPlanet);
   const marsOrbit = scaleModes[mode].orbitDistance(marsPlanet);
   const jupiterOrbit = scaleModes[mode].orbitDistance(jupiterPlanet);
   const beltInner = marsOrbit + (jupiterOrbit - marsOrbit) * 0.18;
@@ -375,7 +379,7 @@ function SceneContents({ mode, selectedName, setSelectedName, interacted, setInt
 
   return (
     <>
-      <color attach="background" args={["#05070d"]} />
+      <color attach="background" args={["#000000"]} />
       <ambientLight intensity={mode === "true" ? 0.32 : 0.14} />
       <Stars radius={360} depth={70} count={1600} factor={3.5} saturation={0} fade speed={0.25} />
       <Sun radius={sunRadius} mode={mode} />
@@ -391,6 +395,14 @@ function SceneContents({ mode, selectedName, setSelectedName, interacted, setInt
           registerPosition={registerPosition}
         />
       ))}
+      <ManMadeObjects
+        mode={mode}
+        earthRadius={earthRadius}
+        positions={positions}
+        selectedName={selectedName}
+        onSelect={setSelectedName}
+        registerPosition={registerPosition}
+      />
       <CameraRig
         selectedName={selectedName}
         mode={mode}
@@ -585,7 +597,10 @@ export default function SolarSystemScene() {
   const [activeTab, setActiveTab] = useState("Overview");
   const [interacted, setInteracted] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const selectedPlanet = planets.find((planet) => planet.name === selectedName) || findMoonInfo(selectedName);
+  const selectedPlanet =
+    planets.find((planet) => planet.name === selectedName) ||
+    findMoonInfo(selectedName) ||
+    findSatelliteInfo(selectedName);
 
   const changeMode = (nextMode) => {
     setMode(nextMode);
@@ -604,6 +619,14 @@ export default function SolarSystemScene() {
     setInteracted(false);
     setExpanded(false);
   };
+
+  if (section === "labs") {
+    return (
+      <main className="solar-system">
+        <LabsMenu onClose={() => setSearchParams({}, { replace: true })} />
+      </main>
+    );
+  }
 
   if (showNakshatras) {
     return (
@@ -684,15 +707,19 @@ export default function SolarSystemScene() {
       </div>
       {selectedPlanet ? (
         <div className="info-panel-stage">
-          <InfoPanel
-            selectedPlanet={selectedPlanet}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            onExpand={() => setExpanded(true)}
-          />
+          {selectedPlanet.isSatellite ? (
+            <SatelliteInfoPanel satellite={selectedPlanet} />
+          ) : (
+            <InfoPanel
+              selectedPlanet={selectedPlanet}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              onExpand={() => setExpanded(true)}
+            />
+          )}
         </div>
       ) : null}
-      {expanded && selectedPlanet && !selectedPlanet.isMoon ? (
+      {expanded && selectedPlanet && !selectedPlanet.isMoon && !selectedPlanet.isSatellite ? (
         <ExpandedPlanetView planet={selectedPlanet} onClose={() => setExpanded(false)} />
       ) : null}
       <div className="status-line">

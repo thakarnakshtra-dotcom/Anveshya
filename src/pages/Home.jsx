@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AmbientBackground from "../components/AmbientBackground.jsx";
+import UniverseHero from "../home/UniverseHero.jsx";
 import { fetchAllLatestNews } from "../utils/spaceNews.js";
 
 const NEWS_TAG_CLASS = { NASA: "news-tag-nasa", ISRO: "news-tag-isro", ESA: "news-tag-esa" };
@@ -43,7 +44,7 @@ function HomeNewsSection() {
                       height="18"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#9DB9F2"
+                      stroke="currentColor"
                       strokeWidth="1.3"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -100,6 +101,13 @@ const modules = [
   },
   {
     no: "04",
+    title: "Wallpapers",
+    to: "/wallpapers",
+    body: "Original space artwork made for Anveshya, free to download in HD for desktop and phone.",
+    icon: "M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM4 16l4.5-4.5L13 16l3-3 4 4M15.5 8.5h.01",
+  },
+  {
+    no: "05",
     title: "About",
     to: "/about",
     body: "The story behind Anveshya — solo-built, India-based, open about what's real and what's still being built.",
@@ -120,237 +128,27 @@ export default function Home() {
     <main className="home">
       <AmbientBackground />
 
-      {/* ---- hero ---- */}
-      <section className="home-hero">
-        <div className="hero-ring-stage">
-        <div
-          style={{
-            position: "relative",
-            // Was min(1180px, 92vw, 116vh) — 1180px wide / 590px tall (2:1)
-            // was the single biggest thing keeping the hero cards and the
-            // "Looking at real space..." line below the fold on a real
-            // browser window (verified with getBoundingClientRect, not
-            // guessed — see the .home-hero comment in styles.css). Capped
-            // lower; the vw/116vh terms below this still do the real work
-            // on narrower viewports; the 880px cap only changes anything
-            // once a viewport is wide enough to have hit 1180px before.
-            width: "min(880px,92vw,116vh)",
-            aspectRatio: "2/1",
-            pointerEvents: "none",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "62%",
-              height: "120%",
-              background: "radial-gradient(closest-side, rgba(255,255,255,.13), rgba(190,205,235,.05) 48%, transparent 74%)",
-              filter: "blur(14px)",
-            }}
-          />
+      {/* ---- hero: 3D universe ---- */}
+      <UniverseHero />
 
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              clipPath: "inset(0 0 50.2% 0)",
-              WebkitMask: "linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
-              mask: "linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: "92%",
-                aspectRatio: "1",
-                transform: "translate(-50%,-50%) perspective(1700px) rotateX(85.6deg)",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: "50%",
-                  animation: "an-spin 34s linear infinite",
-                  background:
-                    "conic-gradient(from 0deg, rgba(255,255,255,.10), rgba(255,255,255,1) 9%, rgba(232,236,244,.62) 18%, rgba(255,255,255,.96) 29%, rgba(206,212,224,.5) 38%, rgba(255,255,255,1) 49%, rgba(222,228,240,.55) 60%, rgba(255,255,255,.92) 71%, rgba(198,206,220,.45) 80%, rgba(255,255,255,1) 90%, rgba(255,255,255,.10))",
-                  WebkitMask:
-                    "radial-gradient(closest-side, transparent 40%, rgba(0,0,0,.3) 45%, #000 50%, #000 84%, rgba(0,0,0,.35) 93%, transparent 100%)",
-                  mask: "radial-gradient(closest-side, transparent 27%, rgba(0,0,0,.25) 30%, #000 34%, #000 82%, rgba(0,0,0,.4) 92%, transparent 100%)",
-                  filter: "blur(.7px) contrast(1.32) saturate(0)",
-                }}
-              />
-            </div>
-          </div>
-
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "20%",
-              aspectRatio: "1",
-              borderRadius: "50%",
-              background: "#000",
-              boxShadow:
-                "0 0 0 1px rgba(255,255,255,.55), 0 0 0 2.6px rgba(255,255,255,.96), 0 0 22px 5px rgba(255,255,255,.4), 0 0 70px 16px rgba(210,224,255,.22)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "26%",
-              aspectRatio: "1",
-              borderRadius: "50%",
-              border: "1px solid rgba(255,255,255,.26)",
-              filter: "blur(1.4px)",
-            }}
-          />
-
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "45%",
-              aspectRatio: "1.95",
-              border: "3px solid rgba(255,255,255,.98)",
-              borderRadius: "50%",
-              clipPath: "inset(0 0 62% 0)",
-              filter: "blur(1px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "56%",
-              aspectRatio: "2.5",
-              border: "1.8px solid rgba(244,247,255,.85)",
-              borderRadius: "50%",
-              clipPath: "inset(0 0 64% 0)",
-              filter: "blur(1.6px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "68%",
-              aspectRatio: "3",
-              border: "1.2px solid rgba(226,233,248,.55)",
-              borderRadius: "50%",
-              clipPath: "inset(0 0 66% 0)",
-              filter: "blur(2.2px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "43%",
-              aspectRatio: "2",
-              border: "2.2px solid rgba(255,255,255,.92)",
-              borderRadius: "50%",
-              clipPath: "inset(66% 0 0 0)",
-              filter: "blur(1.2px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%,-50%)",
-              width: "54%",
-              aspectRatio: "2.6",
-              border: "1.2px solid rgba(230,237,250,.6)",
-              borderRadius: "50%",
-              clipPath: "inset(68% 0 0 0)",
-              filter: "blur(2px)",
-            }}
-          />
-
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              clipPath: "inset(50.2% 0 0 0)",
-              WebkitMask: "linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
-              mask: "linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: "92%",
-                aspectRatio: "1",
-                transform: "translate(-50%,-50%) perspective(1700px) rotateX(85.6deg)",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: "50%",
-                  animation: "an-spin 34s linear infinite",
-                  background:
-                    "conic-gradient(from 0deg, rgba(255,255,255,.10), rgba(255,255,255,1) 9%, rgba(232,236,244,.62) 18%, rgba(255,255,255,.96) 29%, rgba(206,212,224,.5) 38%, rgba(255,255,255,1) 49%, rgba(222,228,240,.55) 60%, rgba(255,255,255,.92) 71%, rgba(198,206,220,.45) 80%, rgba(255,255,255,1) 90%, rgba(255,255,255,.10))",
-                  WebkitMask:
-                    "radial-gradient(closest-side, transparent 40%, rgba(0,0,0,.3) 45%, #000 50%, #000 84%, rgba(0,0,0,.35) 93%, transparent 100%)",
-                  mask: "radial-gradient(closest-side, transparent 27%, rgba(0,0,0,.25) 30%, #000 34%, #000 82%, rgba(0,0,0,.4) 92%, transparent 100%)",
-                  filter: "blur(.7px) contrast(1.32) saturate(0)",
-                }}
-              />
-            </div>
-          </div>
-        </div>
-        </div>
-
-        <div className="hero-grid">
+      {/* ---- introduction ---- */}
+      <section className="modules-section home-intro" style={{ paddingTop: 60, paddingBottom: 0 }}>
+        <div className="section-grid">
+          <div className="section-eyebrow">About Anveshya</div>
           <div>
-            <div className="hero-eyebrow">
-              <span className="hero-eyebrow-rule" />
-              An Independent Space Platform
-            </div>
-            <h1 className="hero-headline">
-              Explore the Universe
-              <br />
-              <span className="hero-headline-muted">one orbit at a time</span>
-            </h1>
-            <p className="hero-poetic">Looking at real space through a window.</p>
-            <p className="hero-sub">
+            <p className="page-lede">
               Anveshya turns real orbital mechanics and NASA imagery into an interactive solar system you can fly
               through.
             </p>
-          </div>
-
-          <div className="hero-cards">
-            {heroCards.map((card) => (
-              <div key={card.kicker} className="hero-card">
-                <div className="hero-card-kicker">{card.kicker}</div>
-                <div className="hero-card-title">{card.title}</div>
-                <div className="hero-card-body">{card.body}</div>
-              </div>
-            ))}
+            <div className="hero-cards">
+              {heroCards.map((card) => (
+                <div key={card.kicker} className="hero-card">
+                  <div className="hero-card-kicker">{card.kicker}</div>
+                  <div className="hero-card-title">{card.title}</div>
+                  <div className="hero-card-body">{card.body}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -392,7 +190,7 @@ export default function Home() {
                       height="20"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#9DB9F2"
+                      stroke="currentColor"
                       strokeWidth="1.3"
                       strokeLinecap="round"
                       strokeLinejoin="round"

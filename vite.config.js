@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
+import { fileURLToPath } from "node:url";
 
 // Dev-only middleware that runs the real Netlify function handler in-process
 // so `npm run dev` can hit the same /.netlify/functions/* path production
@@ -58,6 +59,15 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), netlifyFunctionsDevMiddleware()],
+    build: {
+      rollupOptions: {
+        // The website, and the page that shows one lab with no site around it.
+        input: {
+          main: fileURLToPath(new URL("./index.html", import.meta.url)),
+          labEmbed: fileURLToPath(new URL("./lab-embed.html", import.meta.url)),
+        },
+      },
+    },
     server: {
       port: process.env.PORT ? Number(process.env.PORT) : 5173,
     },
